@@ -1,0 +1,10 @@
+# For information on how to set this up, visit the web page below: #
+# https://github.com/deathmarine/DiabloDrops/wiki/Set.yml-Reference #
+Amber:
+  Bonuses:
+  - +2 Fire
+  - +2 Defense
+Azure:
+  Bonuses:
+  - +2 Defense
+  - 50% Mob Freeze
