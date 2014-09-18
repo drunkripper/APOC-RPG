@@ -41,7 +41,8 @@ public class ChunkEvents implements Listener {
 // this order is to encourage false-early checking so that only 4-5 checks are necessary before it discovers invalidity. 
 
 //Logic below. Don't change this unless you want to break things.
-		if(valid.contains(world.getBlockAt(x, i, z).getType())) /*
+		return valid.contains(world.getBlockAt(x, i, z).getType());
+/*
 				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m))
 				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m))
 				&&valid.contains(world.getBlockAt(x+2*m, i, z))
@@ -58,9 +59,7 @@ public class ChunkEvents implements Listener {
 				&&valid.contains(world.getBlockAt(x-m, i, z-m))
 				&&valid.contains(world.getBlockAt(x+m, i, z-m))
 				&&valid.contains(world.getBlockAt(x-m, i, z+m)))
-		*/ return true;
-		else 
-			return false;
+		*/ 
 	}
 	
 	@EventHandler
