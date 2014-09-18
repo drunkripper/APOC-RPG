@@ -15,7 +15,10 @@ public class ItemAPI {
 		ItemStack Item = new ItemStack(Material);
 		Item.setDurability((short)Plugin.Random.nextInt(120));
 
-		return Item;
+		//I assume we want to put the enchantment subsystem here? 
+//Enchantments will be 1-10 vanilla enchants, or ridiculous other types too? 
+
+return Item;
 	}
 
 	public static void fillChest(Block block) {
