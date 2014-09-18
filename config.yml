@@ -1,3 +1,177 @@
+
+
+# This is an official APOC Gaming plugin.
+# Created by: Wix0a, Unarmed1618, and Zilacon
+# Check us out at http://apocgaming.org
+# Plugin GIT: https://github.com/Zilacon/APOC-RPG
+
+Plugin:
+#Do not edit this!
+ version: 1.0
+#Should operators bypass all permissions?
+ op-bypass-permissions: true
+#Use servers economy for fancy stuff?
+ economy-support: enabled
+#Enable purchasing of names, enchantments, identity tomes, armor/tools/weapons, etc.
+ economy-commands: enabled
+#Should we have permissions or give everyone full access?
+ economy-permissions: enabled
+#This gives support for your MCMMO skills. With this enabled based on your skill level additional items may drop or the drop rate may be increased.
+#Permission: apocrpg.mcmmo
+ mcmmo-support: enabled
+ 
 Dungeons:
-    Spawn: True
-    Chance: 80
+#Set this to false, everything below is ignored.
+ enabled: true
+#Do not tinker with this unless you are running a quantum computer for a server...
+ dungeon-spawn-chance: 5
+#How many chunks apart should the dungeons be? Setting this below 3 will cause dungeonception...
+ dungeon-spacing: 5
+#What type of dungeons do we want to spawn?
+ overworld-dungeon: true
+ ocean-dungeon: true
+ nether-dungeon: true
+ end-dungeon: true
+#Enable chest filling? This will fill the chests within the schematic with random enchanted items.
+ dungeon-chests: true
+#Enable socket gems to spawn in dungeon chests?
+ dungeon-rpg-gems: true
+#Set the min and max amount of items to be spawned into dungeon chests. This includes RPG gear and items.
+ minimum-chest-items: 1
+ maximum-chest-items: 5
+#What kind of items should we spawn in the chests?
+ leather: true
+ wood: true
+ stone: true
+ gold: true
+ chain: true
+ iron: true
+ diamond: true
+#If you are using a forge server and wish to spawn mod items enable this.
+ forge-gear: false
+#If spawning RPG gear wasn't enough throw in your own spice of items! ID:DATA:AMOUNT 1 item per line.
+ dungeon-items: true
+ items:
+  - 264:0:1
+#Lock chest after player opens it? This will prevent the player from hogging all of the loot and refill the chest for the next player.
+#Locking chests protects them which means they cannot be destroyed by anyone or anything.
+#Locked chests and players who have accessed that chest is stored in the dungeonchest.db sqlite file.
+#Setting this to false disables dungeon chest refilling.
+ lock-chests: true
+#Should we lockdown the dungeons too? This stops griefing of dungeons and allows new and old players to continue to explore the dungeons.
+ protect-dungeons: true
+#Should we protect the environment surrounding the dungeon as well? Amount in chunks.
+ protect-dungeon-radius: 2
+  
+
+Monsters:
+#Set this to false, everything below is ignored.
+ enabled: true
+#Choose what type of armor and weapons spawn for mobs.
+  leather-gear: true
+  wood-gear: true
+  stone-gear: true
+  gold-gear: true
+  chain-gear: true
+  iron-gear: true
+  diamond-gear: true
+#If you are using a forge server and wish to use mod items enable this.
+  forge-gear: false
+#Should we give the mobs fancy weapons?
+  weapon-gear: true
+#Should the items held by mobs drop?
+  drop-on-death: true
+#What percent chance should item(s) drop when killed?
+  drop-chance: 10
+#How many item(s) can the mob have and how many have a chance to drop?
+  max-item: 3
+  max-item-drop: 1
+#Should the items held by mobs be enchanted?
+  enchant-gear: true
+#Whats the max level of enchantments for the mobs gear? MAX=10
+  max-enchant: 10
+#Should we crank the difficulty up a notch?
+#Increases the base HP by a percentage. If a mob has 10 HP and you increased it by 100% it now has 20 HP.
+  bonus-mob-hp: 100
+
+Gear:
+#Set this to false to disable custom naming, sets, socketing, random enchanting.
+ enabled: true
+#Set this to false to disable the prefix and suffix naming of gear.
+ custom-names: true
+#Set this to false to re-enable vanilla enchantments.
+#This will re-enable the enchantment level based on enchantment and disallow enchantments that do not belong on that item.
+ custom-enchanting: true
+#Set this to false to disallow salvaging of RPG gear to attain resources from it.
+#To salvage an item simply place it inside of a furnace with fuel.
+#Permission: apocrpg.salvage
+ furnace-salvage: true
+#Set this to false to disallow players moving enchantments from an item to book and vice versa.
+#Permission: apocrpg.enchant-transfer
+ enchantment-transfer: true
+ 
+Commands:
+#This allows you to purchase an enchantment for your item.
+ - rpgenchant
+#This allows you to remove all enchantments for your item.
+ - rpgdisenchant
+#This allows you to salvage all armors, tools, weapons in your inventory.
+ - rpgsalvage
+#This allows you to buy a random item, identity tomes, names, socket gems, and lore.
+ - rpgbuy
+#This sells ALL RPG gear in your inventory for economy based on its durability remaining.
+ - rpgsell
+ - rpphelp
+ - rpgversion
+ - rpgreload
+
+Command-Settings:
+#How much will it cost per enchantment level to enchant an item? $250 x10 = $2500
+ cost-to-enchant: 250
+#How much will it cost to disenchant an item?
+ cost-to-disenchant: 50
+#How much will it cost to buy a random RPG item?
+ cost-for-gear: 750
+#How much will it cost to buy a identity tome?
+ cost-for-tome: 500
+#How much will it cost to buy a name or lore?
+ cost-for-name: 100
+ cost-for-lore: 150
+#How much will it cost to buy a socket gem?
+ cost-for-gem: 500
+#How much will it cost to salvage an item?
+ cost-to-salvage: 15
+#How much per durability should a player get from selling gear?
+ leather-rate: 0.10
+ wood-rate: 0.10
+ stone-rate: 0.10
+ gold-rate: 0.10
+ chain-rate: 0.02
+ iron-rate: 0.02
+ diamond-rate: 0.01
+ forge-rate: 0.02
+#How much salvage per 50% durability should a player get from salvaged items?
+ salvage-ratio: 1
+ 
+ 
+#Below is where the naming magic comes into play. Add any name for a prefix of an item.
+#Use "quotations" for best results. Not using "quotations" while using ' will result in a YAML Syntax Error.
+RPG-Prefix:
+ - "Unarmed's"
+ - "Zilacon's"
+ - "WIX0A's"
+ 
+#Below is where the naming magic comes into play. Add any name for a suffix of an item.
+#Use "quotations" for best results. Not using "quotations" while using ' will result in a YAML Syntax Error.
+RPG-Suffix:
+ - "Dominion"
+ - "Execution"
+ - "Obliteration"
+
+#Below are set names. If a player gets a full set of armor with the same set name they get a set bonus.
+#Use "quotations" for best results. Not using "quotations" while using ' will result in a YAML Syntax Error.
+RPG-Set:
+ - "Unarmed's"
+ - "Zilacon's"
+ - "WIX0A's"
+
