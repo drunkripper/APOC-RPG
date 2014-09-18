@@ -32,11 +32,11 @@ public class ChunkEvents implements Listener {
 		valid.add(Material.STONE);
 		
 		// the pattern of the below logic checks these blocks where -- is of length m, skipped. 
-//9-------5--------2
+//9-------5-------2
 //---17--11--14----
 //6--12--1---10---4
 //---15--13--16----
-//3-------7---------8
+//3-------7-------8
 
 // this order is to encourage false-early checking so that only 4-5 checks are necessary before it discovers invalidity. 
 
