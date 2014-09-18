@@ -43,22 +43,22 @@ public class ChunkEvents implements Listener {
 //Logic below. Don't change this unless you want to break things.
 		return valid.contains(world.getBlockAt(x, i, z).getType());
 /*
-				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m))
-				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m))
-				&&valid.contains(world.getBlockAt(x+2*m, i, z))
-				&&valid.contains(world.getBlockAt(x, i, z+2*m))
-				&&valid.contains(world.getBlockAt(x-2*m, i, z))
-				&&valid.contains(world.getBlockAt(x, i, z-2*m))
-				&&valid.contains(world.getBlockAt(x+2*m, i, z-2*m))
-				&&valid.contains(world.getBlockAt(x-2*m, i, z+2*m))
-				&&valid.contains(world.getBlockAt(x+m, i, z))
-				&&valid.contains(world.getBlockAt(x, i, z+m))
-				&&valid.contains(world.getBlockAt(x-m, i, z))
-				&&valid.contains(world.getBlockAt(x, i, z-m))
-				&&valid.contains(world.getBlockAt(x+m, i, z+m))
-				&&valid.contains(world.getBlockAt(x-m, i, z-m))
-				&&valid.contains(world.getBlockAt(x+m, i, z-m))
-				&&valid.contains(world.getBlockAt(x-m, i, z+m)))
+				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m).getType())
+				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m).getType())
+				&&valid.contains(world.getBlockAt(x+2*m, i, z).getType())
+				&&valid.contains(world.getBlockAt(x, i, z+2*m).getType())
+				&&valid.contains(world.getBlockAt(x-2*m, i, z).getType())
+				&&valid.contains(world.getBlockAt(x, i, z-2*m).getType())
+				&&valid.contains(world.getBlockAt(x+2*m, i, z-2*m).getType())
+				&&valid.contains(world.getBlockAt(x-2*m, i, z+2*m).getType())
+				&&valid.contains(world.getBlockAt(x+m, i, z).getType())
+				&&valid.contains(world.getBlockAt(x, i, z+m).getType())
+				&&valid.contains(world.getBlockAt(x-m, i, z).getType())
+				&&valid.contains(world.getBlockAt(x, i, z-m).getType())
+				&&valid.contains(world.getBlockAt(x+m, i, z+m).getType())
+				&&valid.contains(world.getBlockAt(x-m, i, z-m).getType())
+				&&valid.contains(world.getBlockAt(x+m, i, z-m).getType())
+				&&valid.contains(world.getBlockAt(x-m, i, z+m).getType()))
 		*/ 
 	}
 	
