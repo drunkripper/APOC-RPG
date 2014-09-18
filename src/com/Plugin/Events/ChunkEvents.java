@@ -17,7 +17,7 @@ import com.Plugin.Generation.Schematic;
 import com.Plugin.Main.Plugin;
 
 public class ChunkEvents implements Listener {
-	
+	//method for checking world against valid pasting rules
 	private boolean isBlockValid(World world, int x, int i, int z) {
 		//Add a config element for size of spawn flat
 		
@@ -31,8 +31,16 @@ public class ChunkEvents implements Listener {
 		valid.add(Material.GRASS);
 		valid.add(Material.STONE);
 		
-		
-		// Logic below. Don't change this unless you want to break things.
+		// the pattern of the below logic checks these blocks where -- is of length m, skipped. 
+//9-------5--------2
+//---17--11--14----
+//6--12--1---10---4
+//---15--13--16----
+//3-------7---------8
+
+// this order is to encourage false-early checking so that only 4-5 checks are necessary before it discovers invalidity. 
+
+//Logic below. Don't change this unless you want to break things.
 		if(valid.contains(world.getBlockAt(x, i, z))
 				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m))
 				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m))
