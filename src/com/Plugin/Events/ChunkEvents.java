@@ -41,8 +41,8 @@ public class ChunkEvents implements Listener {
 // this order is to encourage false-early checking so that only 4-5 checks are necessary before it discovers invalidity. 
 
 //Logic below. Don't change this unless you want to break things.
-		return valid.contains(world.getBlockAt(x, i, z).getType());
-/*
+		return valid.contains(world.getBlockAt(x, i, z).getType())
+
 				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m).getType())
 				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m).getType())
 				&&valid.contains(world.getBlockAt(x+2*m, i, z).getType())
@@ -58,8 +58,8 @@ public class ChunkEvents implements Listener {
 				&&valid.contains(world.getBlockAt(x+m, i, z+m).getType())
 				&&valid.contains(world.getBlockAt(x-m, i, z-m).getType())
 				&&valid.contains(world.getBlockAt(x+m, i, z-m).getType())
-				&&valid.contains(world.getBlockAt(x-m, i, z+m).getType()))
-		*/ 
+				&&valid.contains(world.getBlockAt(x-m, i, z+m).getType());
+		
 	}
 	
 	@EventHandler
@@ -72,7 +72,7 @@ public class ChunkEvents implements Listener {
 			int z=16*Chunk.getZ()*Plugin.Random.nextInt(15);
 			
 			for (int i=World.getMaxHeight()-1; i>0; i--) {
-				//if (World.getBlockAt(x, i, z).getType() != Material.AIR) 
+				//if (World.getBlockAt(x, i, z).getType() != Material.AIR) {
 				if(isBlockValid(World,x, i, z))	{
 					y = i;
 					break;
@@ -84,6 +84,8 @@ public class ChunkEvents implements Listener {
 				File File = new File(Plugin.LandRuins + "/" + List[Plugin.Random.nextInt(List.length)]);
 				try {
 					Schematic.pasteSchematic(World, new Location(World, x, y, z), Schematic.loadSchematic(File));
+					System.out.println("new dungeon at y: " + y + "x : " + x +"z : " + z );
+					//Plugin.Plugin.getServer().getPlayer("unarmed1618").sendMessage("New dungeon at y: " + y);
 				} catch (IOException e) {
 					System.err.println(ChatColor.RED + "APOC-RPG Error!");
 					e.printStackTrace();
