@@ -19,6 +19,10 @@ import com.Plugin.jnbt.ShortTag;
 import com.Plugin.jnbt.StringTag;
 import com.Plugin.jnbt.Tag;
 
+// imports above;
+
+
+
 public class Schematic {
  
     private byte[] blocks;
@@ -26,7 +30,7 @@ public class Schematic {
     private short width;
     private short length;
     private short height;
- 
+ //Constructor for schematic objects 
     public Schematic(byte[] blocks, byte[] data, short width, short length, short height) {
         this.blocks = blocks;
         this.data = data;
@@ -34,7 +38,7 @@ public class Schematic {
         this.length = length;
         this.height = height;
     }
-    
+    //Getters and setters 
     public byte[] getBlocks() {
         return blocks;
     }
@@ -55,7 +59,8 @@ public class Schematic {
         return height;
     }
     
-    public static Schematic loadSchematic(File file) throws IOException {
+    //File IO load method
+public static Schematic loadSchematic(File file) throws IOException {
         FileInputStream stream = new FileInputStream(file);
         NBTInputStream nbtStream = new NBTInputStream(new GZIPInputStream(stream));
  
@@ -86,7 +91,7 @@ public class Schematic {
         nbtStream.close();
         return new Schematic(blocks, blockData, width, length, height);
     }
-    
+    //Puts the schematic into the world
     @SuppressWarnings("deprecation")
 	public static void pasteSchematic(World world, Location loc, Schematic schematic) {
         byte[] blocks = schematic.getBlocks();
