@@ -1,5 +1,6 @@
 package com.Plugin.Main;
 
+import com.Plugin.Commands.ApocRPGCommand;
 import com.Plugin.Events.ChunkEvents;
 import com.Plugin.Events.EntityEvents;
 
@@ -29,6 +30,8 @@ public class Plugin extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(ChunkListener, this);
 		getServer().getPluginManager().registerEvents(EntityListener, this);
+		getCommand("generateitem").setExecutor(new ApocRPGCommand());
+		getCommand("generateuseful").setExecutor(new ApocRPGCommand());
 	}
 
 	public void onDisable() {
