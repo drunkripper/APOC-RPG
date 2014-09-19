@@ -20,7 +20,11 @@ public class ApocRPGCommand implements CommandExecutor{
 		return true;
 		}
 		else if(arg1.getLabel().equals("generateuseful")) {
-			ItemStack item = ItemAPI.generateUsefulItem();
+			ItemStack item;
+			if(arg3.length==0)
+				item = ItemAPI.generateUsefulItem(0);
+			else
+				item = ItemAPI.generateUsefulItem(Integer.parseInt(arg3[0]));
 			((Player)arg0).getInventory().addItem(item);
 			return true;
 		}
