@@ -1,8 +1,11 @@
 package com.Plugin.Main;
 
 import com.Plugin.Events.ChunkEvents;
+import com.Plugin.Events.EntityEvents;
+
 import java.io.File;
 import java.util.Random;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Plugin extends JavaPlugin {
@@ -13,6 +16,7 @@ public class Plugin extends JavaPlugin {
 	public static File LandRuins = null;
 	
 	public static ChunkEvents ChunkListener = new ChunkEvents();
+	public static EntityEvents EntityListener = new EntityEvents();
 
 	public void onEnable() {
 		Plugin = this;
@@ -24,6 +28,7 @@ public class Plugin extends JavaPlugin {
 		}
 		
 		getServer().getPluginManager().registerEvents(ChunkListener, this);
+		getServer().getPluginManager().registerEvents(EntityListener, this);
 	}
 
 	public void onDisable() {
