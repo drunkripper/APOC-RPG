@@ -58,7 +58,8 @@ int[] bowTable = {48,49,50,51}; //4
 			
 		if(type==0)	Item.addUnsafeEnchantment(Enchantment.getById(enchantsTable[Plugin.Random.nextInt(22)]), Plugin.Random.nextInt(10)+1);
 else if(type==1)
-	//Armor	Item.addUnsafeEnchantment(Enchantment.getById(armorTable[Plugin.Random.nextInt(9)]), Plugin.Random.nextInt(10)+1);
+	//Armor
+	Item.addUnsafeEnchantment(Enchantment.getById(armorTable[Plugin.Random.nextInt(9)]), Plugin.Random.nextInt(10)+1);
 else if(type==2)
 //Weapon
 Item.addUnsafeEnchantment(Enchantment.getById(weaponTable[Plugin.Random.nextInt(7)]), Plugin.Random.nextInt(10)+1);
