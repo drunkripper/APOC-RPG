@@ -25,29 +25,52 @@ public class ItemAPI {
 		ItemStack Item = new ItemStack(Material);
 		return diablofy(Item);
 	}
+/**
+* Diablofy wrapper:
+* <p>
+* this will diablofy the item that is passed to it in the classic way. This is a wrapper to preserve method signature.
+*/
+public static ItemStack diablofy(ItemStack Item) {
+return diablofy(Item, 0);
+}
 	/**
 	 * Diablofy
 	 * <p>
 	 * Takes an item and adds random ass enchantments to it.
 	 * @param Item
+* @param type  an Int that determines how to diablofy- 0=ignored (Normal) 1=armor (Useful) 2=weapon (Useful) 3=tool (Useful) 4=bow (useful)
 	 * @return Funky Item
 	 */
-	public static ItemStack diablofy(ItemStack Item) {
+	public static ItemStack diablofy(ItemStack Item, int type) {
 
 		Item.setDurability((short)Plugin.Random.nextInt(120));
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		/////////////////
 		int[] enchantsTable = {0, 1, 2, 3,4 ,5, 6, 7, 16, 17,18, 19, 20, 21,32,33,34,35,48,49,50,51};
+int[] armorTable ={0,1,2,3,4,5,6,7,34};// 9
+int[] toolTable = {32,33,34,35}; //4
+int[] weaponTable = {16,17,18,19,20,21,34}; //7
+int[] bowTable = {48,49,50,51}; //4
 		int hasEnchants = Plugin.Random.nextInt(maxEnchants);
 		for(int i = 0; i<hasEnchants;i++)
 		{
 			
-			Item.addUnsafeEnchantment(Enchantment.getById(enchantsTable[Plugin.Random.nextInt(22)]), Plugin.Random.nextInt(10)+1);
-		
+		if(type==0)	Item.addUnsafeEnchantment(Enchantment.getById(enchantsTable[Plugin.Random.nextInt(22)]), Plugin.Random.nextInt(10)+1);
+else if(type==1)
+	//Armor	Item.addUnsafeEnchantment(Enchantment.getById(armorTable[Plugin.Random.nextInt(9)]), Plugin.Random.nextInt(10)+1);
+else if(type==2)
+//Weapon
+Item.addUnsafeEnchantment(Enchantment.getById(weaponTable[Plugin.Random.nextInt(7)]), Plugin.Random.nextInt(10)+1);
+else if(type==3)
+//Tool
+Item.addUnsafeEnchantment(Enchantment.getById(toolTable[Plugin.Random.nextInt(4)]), Plugin.Random.nextInt(10)+1);
+else if(type==4)
+//Bow
+Item.addUnsafeEnchantment(Enchantment.getById(bowTable[Plugin.Random.nextInt(4)]), Plugin.Random.nextInt(10)+1);
+
 		}
-		//I assume we want to put the enchantment subsystem here? 
-//Enchantments will be 1-10 vanilla enchants, or ridiculous other types too? 
+		
 
 return Item;
 	}
@@ -59,7 +82,14 @@ return Item;
 		
 	}
 
-	public static void fillChest(Block block) {
+public static ItemStack generateUsefulItem(){
+
+return createItem();
+//placeholder
+
+}
+	
+public static void fillChest(Block block) {
 		if (block.getType() == Material.CHEST) {
 			Chest Chest = (Chest)block.getState();
 
