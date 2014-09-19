@@ -85,9 +85,46 @@ return Item;
 
 public static ItemStack generateUsefulItem(){
 
-return createItem();
-//placeholder
+return generateUsefulItem(0);
+//placeholder to create generic signature
 
+}
+
+public static ItemStack generateUsefulItem(int variety){
+int[] toolMaterials = { 1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24};
+int[] weapMaterials = { 1,5,6,10,11,15,16,20,21,25};
+//armor materials is 26 +r20
+if(variety==0)
+variety+=Plugin.Random.nextInt(4) +1;
+if(variety==1) {
+//armor
+Material Material = Materials[26+Plugin.Random.nextInt(20)];
+		ItemStack Item = new ItemStack(Material);
+		return diablofy(Item, variety);
+		
+}
+else if (variety ==2) {
+//weapon
+Material Material = weapMaterials[Plugin.Random.nextInt(weapMaterials.length)];
+		ItemStack Item = new ItemStack(Material);
+		return diablofy(Item, variety);
+		
+}
+else if(variety ==3) {
+//tool
+Material Material = toolMaterials[Plugin.Random.nextInt(toolMaterials.length)];
+		ItemStack Item = new ItemStack(Material);
+		return diablofy(Item, variety);
+		
+}
+else if(variety ==4){
+//bow
+Material Material = Materials[0];
+		ItemStack Item = new ItemStack(Material);
+		return diablofy(Item, variety);
+		
+}
+else return generateUsefulItem();
 }
 	
 public static void fillChest(Block block) {
