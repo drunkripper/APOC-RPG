@@ -18,15 +18,15 @@ public class EntityEvents implements Listener {
 			int Amount = Plugin.Random.nextInt(2) + 1;
 			for (int i=0; i<Amount; i++) {
 				int Gear = Plugin.Random.nextInt(5);
-				if (Gear == 1) {
-					Entity.getEquipment().setItemInHand(ItemAPI.createItem());
-				} else if (Gear == 2) {
+				if (Gear == 0) {
+					Entity.getEquipment().setItemInHand(ItemAPI.createArmor(4));
+				} else if (Gear == 1) {
 					Entity.getEquipment().setHelmet(ItemAPI.createArmor(0));
-				} else if (Gear == 3) {
+				} else if (Gear == 2) {
 					Entity.getEquipment().setChestplate(ItemAPI.createArmor(1));
-				} else if (Gear == 4) {
+				} else if (Gear == 3) {
 					Entity.getEquipment().setLeggings(ItemAPI.createArmor(2));
-				} else if (Gear == 5) {
+				} else if (Gear == 4) {
 					Entity.getEquipment().setBoots(ItemAPI.createArmor(3));
 				}
 			}
