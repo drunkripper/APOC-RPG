@@ -47,28 +47,80 @@ return diablofy(Item, 0);
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		/////////////////
-		int[] enchantsTable = {0, 1, 2, 3,4 ,5, 6, 7, 16, 17,18, 19, 20, 21,32,33,34,35,48,49,50,51};
-int[] armorTable ={0,1,2,3,4,5,6,7,34};// 9
-int[] toolTable = {32,33,34,35}; //4
-int[] weaponTable = {16,17,18,19,20,21,34}; //7
-int[] bowTable = {48,49,50,51}; //4
+		Enchantment[] enchantsTable = {Enchantment.PROTECTION_ENVIRONMENTAL
+				,Enchantment.PROTECTION_FIRE
+				,Enchantment.PROTECTION_FALL
+				,Enchantment.PROTECTION_EXPLOSIONS
+				,Enchantment.PROTECTION_PROJECTILE
+				,Enchantment.OXYGEN
+				,Enchantment.WATER_WORKER
+				,Enchantment.THORNS
+				,Enchantment.DAMAGE_ALL
+				,Enchantment.DAMAGE_UNDEAD
+				,Enchantment.DAMAGE_ARTHROPODS
+				,Enchantment.KNOCKBACK
+				,Enchantment.FIRE_ASPECT
+				,Enchantment.LOOT_BONUS_MOBS
+				,Enchantment.DIG_SPEED
+				,Enchantment.SILK_TOUCH
+				,Enchantment.DURABILITY
+				,Enchantment.LOOT_BONUS_BLOCKS
+				,Enchantment.ARROW_DAMAGE
+				,Enchantment.ARROW_KNOCKBACK
+				,Enchantment.ARROW_FIRE
+				,Enchantment.ARROW_INFINITE
+				};
+
+// 9
+Enchantment[] armorTable = {
+		Enchantment.PROTECTION_ENVIRONMENTAL
+		,Enchantment.PROTECTION_FIRE
+		,Enchantment.PROTECTION_FALL
+		,Enchantment.PROTECTION_EXPLOSIONS
+		,Enchantment.PROTECTION_PROJECTILE
+		,Enchantment.OXYGEN
+		,Enchantment.WATER_WORKER
+		,Enchantment.THORNS
+		,Enchantment.DURABILITY
+};
+//4
+Enchantment[] toolTable = {Enchantment.DIG_SPEED
+		,Enchantment.SILK_TOUCH
+		,Enchantment.DURABILITY
+		,Enchantment.LOOT_BONUS_BLOCKS}; //7
+Enchantment[] weaponTable = {
+		Enchantment.DAMAGE_ALL
+		,Enchantment.DAMAGE_UNDEAD
+		,Enchantment.DAMAGE_ARTHROPODS
+		,Enchantment.KNOCKBACK
+		,Enchantment.FIRE_ASPECT
+		,Enchantment.LOOT_BONUS_MOBS
+		,Enchantment.DURABILITY
+};
+//4
+Enchantment[] bowTable = {
+		Enchantment.ARROW_DAMAGE
+		,Enchantment.ARROW_KNOCKBACK
+		,Enchantment.ARROW_FIRE
+		,Enchantment.ARROW_INFINITE
+};
 		int hasEnchants = Plugin.Random.nextInt(maxEnchants);
 		for(int i = 0; i<hasEnchants;i++)
 		{
 			
-		if(type==0)	Item.addUnsafeEnchantment(Enchantment.getById(enchantsTable[Plugin.Random.nextInt(22)]), Plugin.Random.nextInt(10)+1);
+		if(type==0)	Item.addUnsafeEnchantment(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1);
 else if(type==1)
 	//Armor
-	Item.addUnsafeEnchantment(Enchantment.getById(armorTable[Plugin.Random.nextInt(9)]), Plugin.Random.nextInt(10)+1);
+	Item.addUnsafeEnchantment(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1);
 else if(type==2)
 //Weapon
-Item.addUnsafeEnchantment(Enchantment.getById(weaponTable[Plugin.Random.nextInt(7)]), Plugin.Random.nextInt(10)+1);
+Item.addUnsafeEnchantment(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1);
 else if(type==3)
 //Tool
-Item.addUnsafeEnchantment(Enchantment.getById(toolTable[Plugin.Random.nextInt(4)]), Plugin.Random.nextInt(10)+1);
+Item.addUnsafeEnchantment(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1);
 else if(type==4)
 //Bow
-Item.addUnsafeEnchantment(Enchantment.getById(bowTable[Plugin.Random.nextInt(4)]), Plugin.Random.nextInt(10)+1);
+Item.addUnsafeEnchantment(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1);
 
 		}
 		
