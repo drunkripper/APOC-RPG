@@ -105,14 +105,14 @@ Material Material = Materials[26+Plugin.Random.nextInt(20)];
 }
 else if (variety ==2) {
 //weapon
-Material Material = weapMaterials[Plugin.Random.nextInt(weapMaterials.length)];
+Material Material = Materials[weapMaterials[Plugin.Random.nextInt(weapMaterials.length)]];
 		ItemStack Item = new ItemStack(Material);
 		return diablofy(Item, variety);
 		
 }
 else if(variety ==3) {
 //tool
-Material Material = toolMaterials[Plugin.Random.nextInt(toolMaterials.length)];
+Material Material = Materials[toolMaterials[Plugin.Random.nextInt(toolMaterials.length)]];
 		ItemStack Item = new ItemStack(Material);
 		return diablofy(Item, variety);
 		
