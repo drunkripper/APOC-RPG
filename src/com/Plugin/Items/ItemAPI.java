@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemAPI {
 	
@@ -44,6 +45,9 @@ return diablofy(Item, 0);
 	public static ItemStack diablofy(ItemStack Item, int type) {
 
 		Item.setDurability((short)Plugin.Random.nextInt(120));
+		ItemMeta Meta = Item.getItemMeta();
+		Meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
+		Item.setItemMeta(Meta);
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		/////////////////
