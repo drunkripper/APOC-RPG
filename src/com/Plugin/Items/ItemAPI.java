@@ -50,6 +50,7 @@ return diablofy(Item, 0);
 		Item.setDurability((short)Plugin.Random.nextInt(120));
 		ItemMeta Meta = Item.getItemMeta();
 		Meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
+	
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		/////////////////
@@ -114,19 +115,19 @@ Enchantment[] bowTable = {
 		for(int i = 0; i<hasEnchants;i++)
 		{
 			
-		if(type==0)	Item.addUnsafeEnchantment(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1);
+		if(type==0)	Meta.addEnchant(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1,true);
 else if(type==1)
 	//Armor
-	Item.addUnsafeEnchantment(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1);
+	Meta.addEnchant(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1,true);
 else if(type==2)
 //Weapon
-Item.addUnsafeEnchantment(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1);
+Meta.addEnchant(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1,true);
 else if(type==3)
 //Tool
-Item.addUnsafeEnchantment(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1);
+Meta.addEnchant(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 else if(type==4)
 //Bow
-Item.addUnsafeEnchantment(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1);
+Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 
 		}
 		String[] Effects = {"Strength"};
