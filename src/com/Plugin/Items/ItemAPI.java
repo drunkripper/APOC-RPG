@@ -1,5 +1,8 @@
 package com.Plugin.Items;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.Plugin.Main.Plugin;
 
 import org.bukkit.Material;
@@ -47,7 +50,6 @@ return diablofy(Item, 0);
 		Item.setDurability((short)Plugin.Random.nextInt(120));
 		ItemMeta Meta = Item.getItemMeta();
 		Meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
-		Item.setItemMeta(Meta);
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		/////////////////
@@ -127,7 +129,15 @@ else if(type==4)
 Item.addUnsafeEnchantment(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1);
 
 		}
-		
+		String[] Effects = {"Strength"};
+		if (Plugin.Random.nextInt(100) <= 10) {
+			String Effect = Effects[Plugin.Random.nextInt(Effects.length)];
+			List<String> Lore = new ArrayList<String>();
+			Lore.add("Effects:");
+			Lore.add(Effect);
+			Meta.setLore(Lore);
+		}
+		Item.setItemMeta(Meta);
 
 return Item;
 	}

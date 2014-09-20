@@ -29,6 +29,6 @@ public class Settings {
 	}
 	
 	public String getRandomSuffix() {
-		return Prefixes.get(Plugin.Random.nextInt(Prefixes.size()));
+		return Suffixes.get(Plugin.Random.nextInt(Suffixes.size()));
 	}
 }
