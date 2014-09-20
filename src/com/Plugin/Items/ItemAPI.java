@@ -53,6 +53,7 @@ return diablofy(Item, 0);
 	
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
+		int minEnchants = 1;
 		/////////////////
 		Enchantment[] enchantsTable = {Enchantment.PROTECTION_ENVIRONMENTAL
 				,Enchantment.PROTECTION_FIRE
@@ -111,7 +112,7 @@ Enchantment[] bowTable = {
 		,Enchantment.ARROW_FIRE
 		,Enchantment.ARROW_INFINITE
 };
-		int hasEnchants = Plugin.Random.nextInt(maxEnchants);
+		int hasEnchants = Plugin.Random.nextInt(maxEnchants-minEnchants)+minEnchants;
 		for(int i = 0; i<hasEnchants;i++)
 		{
 			
@@ -130,7 +131,31 @@ else if(type==4)
 Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 
 		}
-		String[] Effects = {"Strength"};
+		//Effects with -ing are targeted on the enemy. Otherwise targeted on the holder/wearer.
+		String[] Effects = { "Speed",
+				"Slowing",
+				"Haste",
+				"Fatiguing",
+				"Strength",
+				"Sanctifying",
+				"Desecrating",
+				"Jumpfulness",
+				"Nauseating",
+				"Regeneration",
+				"Resistance",
+				"Fire Resistance",
+				"Scuba",
+				"Invisibility",
+				"Blinding",
+				"Night Vision",
+				"Hungering",
+				"Weakening",
+				"Poisoning",
+				"Withering",
+				"Health",
+				"Absorption",
+				"Saturation"}; //All these effects are helpful for the user.
+								//Unpleasant effects can be added as well.
 		if (Plugin.Random.nextInt(100) <= 10) {
 			String Effect = Effects[Plugin.Random.nextInt(Effects.length)];
 			List<String> Lore = new ArrayList<String>();

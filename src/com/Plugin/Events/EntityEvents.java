@@ -1,10 +1,13 @@
 package com.Plugin.Events;
 
+import java.util.ArrayList;
+
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+//import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -41,24 +44,88 @@ public class EntityEvents implements Listener {
 	
 	@EventHandler
 	public void onItemSwitched(PlayerItemHeldEvent event) {
-		ItemStack Hand = event.getPlayer().getItemInHand();
-		if (Hand != null) {
-			ItemMeta Meta = Hand.getItemMeta();
+/*		//This is checking for item effects granted to the player
+		Player p = event.getPlayer();
+		ItemStack Hand = p.getItemInHand();
+		ItemStack[] Armors = p.getEquipment().getArmorContents();
+		ArrayList<ItemStack> stuff = new ArrayList<>(); 
+		ArrayList<ItemMeta> metas = new ArrayList<>();
+		
+		if(Hand!=null)
+			stuff.add(Hand);
+		for(ItemStack a:Armors)
+			if(a!=null)
+				stuff.add(a);//Keep only the non null armor objects
+		if(!stuff.isEmpty())
+			{for(ItemStack a:stuff)
+				metas.add(a.getItemMeta());//All Metas now live here
+		
+		
 			try {
+				
+				for(ItemMeta Meta:metas)
+				{
 				String Effect = Meta.getLore().get(1);
-				if (Effect != null) {
-					System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
-					if (Effect.equals("Strength")) {
-						event.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 200000, 1000));
+				System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
+					if(Effect.endsWith("ing"))
+					{
+						//Unimplemented...
 					}
-				} else {
-					if (event.getPlayer().getInventory().getItem(event.getPreviousSlot()).getItemMeta().getLore().get(1).equals("Strength")) {
-						event.getPlayer().removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+					else
+					{
+						switch(Effect) {
+						case "Speed":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1));
+							break;
+						case "Haste":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 1));
+							break;
+						case "Strength":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 1));
+							break;
+						case "Jumpfulness":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 600, 1));
+							break;
+						case "Regeneration":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 1));
+							break;
+						case "Resistance":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 1));
+							break;
+						case "Fire Resistance":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 600, 1));
+							break;
+						case "Scuba":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 600, 1));
+							break;
+						case "Invisibility":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 600, 1));
+							break;
+						case "Night Vision":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 600, 1));
+							break;
+						case "Health":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 600, 1));
+							break;
+						case "Absorption":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 600, 1));
+							break;
+						case "Saturation":
+							p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 600, 1));
+							break;
+						}
 					}
 				}
+				
+					/*if (p.getInventory().getItem(event.getPreviousSlot()).getItemMeta().getLore().get(1).equals("Strength")) {
+						System.out.println("Removing effect");
+						
+						p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+					}
+			
 			} catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
 				System.out.println("Item has no Effect");
 			}
-		}
+		}*/
 	}
 }
