@@ -131,38 +131,8 @@ else if(type==4)
 Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 
 		}
-		//Effects with -ing are targeted on the enemy. Otherwise targeted on the holder/wearer.
-		String[] Effects = { "Speed",
-				"Slowing",
-				"Haste",
-				"Fatiguing",
-				"Strength",
-				"Sanctifying",
-				"Desecrating",
-				"Jumpfulness",
-				"Nauseating",
-				"Regeneration",
-				"Resistance",
-				"Fire Resistance",
-				"Scuba",
-				"Invisibility",
-				"Blinding",
-				"Night Vision",
-				"Hungering",
-				"Weakening",
-				"Poisoning",
-				"Withering",
-				"Health",
-				"Absorption",
-				"Saturation"}; //All these effects are helpful for the user.
-								//Unpleasant effects can be added as well.
-		if (Plugin.Random.nextInt(100) <= 10) {
-			String Effect = Effects[Plugin.Random.nextInt(Effects.length)];
-			List<String> Lore = new ArrayList<String>();
-			Lore.add("Effects:");
-			Lore.add(Effect);
-			Meta.setLore(Lore);
-		}
+		
+		
 		Item.setItemMeta(Meta);
 
 return Item;
@@ -173,6 +143,48 @@ return Item;
 		return diablofy(Item);
 		
 		
+	}
+	public static ItemStack createSocket() {
+		//Effects with -ing are targeted on the enemy. Otherwise targeted on the holder/wearer.
+		ItemStack socket = new ItemStack(Material.EMERALD);
+		String[] Effects = { "Speed",
+						"Slowing",
+						"Haste",
+						"Fatiguing",
+						"Strength",
+						"Sanctifying",
+						"Desecrating",
+						"Jumpfulness",
+						"Nauseating",
+						"Regeneration",
+						"Resistance",
+						"Fire Resistance",
+						"Scuba",
+						"Invisibility",
+						"Blinding",
+						"Night Vision",
+						"Hungering",
+						"Weakening",
+						"Poisoning",
+						"Withering",
+						"Health",
+						"Absorption",
+						"Saturation"}; //All these effects are helpful for the user.
+										//Unpleasant effects can be added as well.
+		ItemMeta Meta = socket.getItemMeta();
+
+		String Effect = Effects[Plugin.Random.nextInt(Effects.length)];
+		int effectLevel = Plugin.Random.nextInt(3) + 1;
+		int minDur = Plugin.Random.nextInt(2);
+		int secDur = Plugin.Random.nextInt(50)+10;
+		List<String> Lore = new ArrayList<String>();
+		Lore.add("Socket");
+		Lore.add("------");
+		Lore.add(Effect);
+		Lore.add("Level "+ effectLevel);
+		Lore.add(minDur + ":" + secDur);
+		Meta.setLore(Lore);
+		return null;
 	}
 
 public static ItemStack generateUsefulItem(){
