@@ -61,8 +61,8 @@ public class Plugin extends JavaPlugin {
 						
 						for(ItemMeta Meta:metas)
 						{
-						String Effect = Meta.getLore().get(1);
-						int level = Integer.parseInt(Meta.getLore().get(2).substring(7));
+						String Effect = Meta.getLore().get(0);
+						int level = Integer.parseInt(Meta.getLore().get(1).substring(6));
 						System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
 							if(Effect.endsWith("ing"))
 							{
@@ -125,7 +125,7 @@ public class Plugin extends JavaPlugin {
 					}
 				}
 				}
-			}}, 600l, 600l);
+			}}, 0l, 600l);
 			
 		saveDefaultConfig();
 		Settings = new Settings(getConfig());

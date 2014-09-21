@@ -40,8 +40,8 @@ public class SocketEvents implements Listener {
 				event.getPlayer().sendMessage("Select the item with an empty Socket and right click.");
 			} else if (Player.getItemInHand().getItemMeta().getLore().get(0).equals("(Socket)")) {
 				if (SelectedSocket.containsKey(event.getPlayer())) {
-					SelectedSocket.put(Player, null);
 					ItemMeta Meta = SelectedSocket.get(Player).getItemMeta();
+					SelectedSocket.put(Player, null);
 					if (Meta != null) {
 						List<String> Lore = Meta.getLore();
 						String Name = Lore.get(2);
@@ -50,8 +50,9 @@ public class SocketEvents implements Listener {
 						ItemMeta ItemMeta = Player.getItemInHand().getItemMeta();
 						List<String> SelectedLore = ItemMeta.getLore();
 						SelectedLore.set(0, Name);
-						SelectedLore.set(1, Lore.get(3));
-						SelectedLore.set(2, Lore.get(4));
+						SelectedLore.add(Lore.get(3));
+						SelectedLore.add(Lore.get(4));
+						ItemMeta.setLore(SelectedLore);
 						Player.getItemInHand().setItemMeta(ItemMeta);
 					}
 				} else {
