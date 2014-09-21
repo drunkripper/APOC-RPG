@@ -184,7 +184,8 @@ return Item;
 		Lore.add("Level "+ effectLevel);
 		Lore.add(minDur + ":" + secDur);
 		Meta.setLore(Lore);
-		return null;
+		socket.setItemMeta(Meta);
+		return socket;
 	}
 
 public static ItemStack generateUsefulItem(){
@@ -237,8 +238,13 @@ public static void fillChest(Block block) {
 
 			Chest.getInventory().clear();
 			int Amount = Plugin.Random.nextInt(6) + 2;
-			for (int i = 0; i < Amount; i++)
-				Chest.getInventory().addItem(createItem());
+			for (int i = 0; i < Amount; i++) {
+				if (Plugin.Random.nextInt(100) <= 10) {
+					Chest.getInventory().addItem(createSocket());
+				} else {
+					Chest.getInventory().addItem(createItem());
+				}
+			}
     }
   }
 }

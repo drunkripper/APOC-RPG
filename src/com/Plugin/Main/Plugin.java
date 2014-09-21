@@ -27,10 +27,10 @@ public class Plugin extends JavaPlugin {
 	public static ChunkEvents ChunkListener = new ChunkEvents();
 	public static EntityEvents EntityListener = new EntityEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
-	public static SocketEvents SocketListener = new SocketEvents();
+	public static SocketEvents SocketListener = null;
 	public void onEnable() {
-		
 		Plugin = this;
+		SocketListener = new SocketEvents();
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){
 			public void run(){
 				Player[] ps = Plugin.getServer().getOnlinePlayers();
@@ -139,6 +139,7 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getCommand("generateitem").setExecutor(new ApocRPGCommand());
 		getCommand("generateuseful").setExecutor(new ApocRPGCommand());
+		getCommand("generatesocket").setExecutor(new ApocRPGCommand());
 	}
 
 	public void onDisable() {

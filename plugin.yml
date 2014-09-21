@@ -13,4 +13,7 @@ commands:
         description: Allows user to spawn a useful item.
         aliases: [genuseful, ddu]
         usage: /<command> [type]
-        
+    generatesocket:
+        description: Allows user to spawn sockets
+        aliases: [gensocket, dds]
+        usage: /generatesocket

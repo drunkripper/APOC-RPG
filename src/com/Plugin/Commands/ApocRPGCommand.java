@@ -33,6 +33,9 @@ public class ApocRPGCommand implements CommandExecutor {
 			}
 			Player.getInventory().addItem(item);
 			return true;
+		} else if (Command.getLabel().equals("generatesocket")) {
+			Player.getInventory().addItem(ItemAPI.createSocket());
+			return true;
 		} else {
 			System.out.println("Unkown command sent.");
 			return false;
