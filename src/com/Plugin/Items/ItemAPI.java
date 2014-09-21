@@ -183,7 +183,7 @@ return Item;
 		int minDur = Plugin.Random.nextInt(2);
 		int secDur = Plugin.Random.nextInt(50)+10;
 		List<String> Lore = new ArrayList<String>();
-		Lore.add("(Socket)");
+		Lore.add("Socket");
 		Lore.add("------");
 		Lore.add(Effect);
 		Lore.add("Level "+ effectLevel);

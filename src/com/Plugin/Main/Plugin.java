@@ -50,7 +50,7 @@ public class Plugin extends JavaPlugin {
 						stuff.add(a);//Keep only the non null armor objects
 				if(!stuff.isEmpty())
 					{for(ItemStack a:stuff)
-						if(a.getItemMeta()!=null&&a.getItemMeta().getLore()!=null&&a.getItemMeta().getLore().get(1)!=null)
+						if(a.getItemMeta()!=null&&a.getItemMeta().getLore()!=null&&(!a.getItemMeta().getLore().get(0).equals("Socket"))&&a.getItemMeta().getLore().get(1)!=null)
 						{
 							System.out.println(a.toString());
 							metas.add(a.getItemMeta());//All Metas now live here
