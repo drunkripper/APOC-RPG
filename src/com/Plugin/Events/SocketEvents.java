@@ -41,16 +41,19 @@ public class SocketEvents implements Listener {
 			} else if (Player.getItemInHand().getItemMeta().getLore().get(0).equals("(Socket)")) {
 				if (SelectedSocket.containsKey(event.getPlayer())) {
 					SelectedSocket.put(Player, null);
-					List<String> Lore = SelectedSocket.get(Player).getItemMeta().getLore();
-					String Name = Lore.get(2);
-					//int Level = Integer.parseInt(Lore.get(3).substring(7));
-					//long Duration = Long.parseLong(Lore.get(4).split(":")[0])*20 + Long.parseLong(Lore.get(4).split(":")[1]) * 60 * 20;
-					ItemMeta ItemMeta = Player.getItemInHand().getItemMeta();
-					List<String> SelectedLore = ItemMeta.getLore();
-					SelectedLore.set(0, Name);
-					SelectedLore.set(1, Lore.get(3));
-					SelectedLore.set(2, Lore.get(4));
-					Player.getItemInHand().setItemMeta(ItemMeta);
+					ItemMeta Meta = SelectedSocket.get(Player).getItemMeta();
+					if (Meta != null) {
+						List<String> Lore = Meta.getLore();
+						String Name = Lore.get(2);
+						//int Level = Integer.parseInt(Lore.get(3).substring(7));
+						//long Duration = Long.parseLong(Lore.get(4).split(":")[0])*20 + Long.parseLong(Lore.get(4).split(":")[1]) * 60 * 20;
+						ItemMeta ItemMeta = Player.getItemInHand().getItemMeta();
+						List<String> SelectedLore = ItemMeta.getLore();
+						SelectedLore.set(0, Name);
+						SelectedLore.set(1, Lore.get(3));
+						SelectedLore.set(2, Lore.get(4));
+						Player.getItemInHand().setItemMeta(ItemMeta);
+					}
 				} else {
 					event.getPlayer().sendMessage("No socket selected!");
 				}
