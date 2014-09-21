@@ -62,6 +62,7 @@ public class Plugin extends JavaPlugin {
 						for(ItemMeta Meta:metas)
 						{
 						String Effect = Meta.getLore().get(1);
+						int level = Integer.parseInt(Meta.getLore().get(2).substring(7));
 						System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
 							if(Effect.endsWith("ing"))
 							{
@@ -71,43 +72,43 @@ public class Plugin extends JavaPlugin {
 							{
 								switch(Effect) {
 								case "Speed":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 680, level));
 									break;
 								case "Haste":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 680, level));
 									break;
 								case "Strength":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 680, level));
 									break;
 								case "Jumpfulness":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 680, level));
 									break;
 								case "Regeneration":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 680, level));
 									break;
 								case "Resistance":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 680, level));
 									break;
 								case "Fire Resistance":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 680, level));
 									break;
 								case "Scuba":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 680, level));
 									break;
 								case "Invisibility":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 680, level));
 									break;
 								case "Night Vision":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 680, level));
 									break;
 								case "Health":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 680, level));
 									break;
 								case "Absorption":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 680, level));
 									break;
 								case "Saturation":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 680, 1));
+									p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 680, level));
 									break;
 								}
 							}
