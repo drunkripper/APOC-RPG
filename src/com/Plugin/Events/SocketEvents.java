@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +18,7 @@ import com.Plugin.Main.Plugin;
 public class SocketEvents implements Listener {
 	
 	private HashMap<Player, ItemStack> SelectedSocket = new HashMap<Player, ItemStack>();
+	private HashMap<Player, Integer> SelectedSlot = new HashMap<Player, Integer>();
 	
 	public SocketEvents() {
 		Plugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Plugin.Plugin, new Runnable(){
@@ -37,10 +39,18 @@ public class SocketEvents implements Listener {
 		if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
 			if (Player.getItemInHand().getItemMeta().getLore().get(0).equals("Socket")) {
 				SelectedSocket.put(Player, event.getPlayer().getItemInHand());
+				SelectedSlot.put(Player, event.getPlayer().getInventory().getHeldItemSlot());
 				event.getPlayer().sendMessage("Select the item with an empty Socket and right click.");
 			} else if (Player.getItemInHand().getItemMeta().getLore().get(0).equals("(Socket)")) {
 				if (SelectedSocket.containsKey(event.getPlayer())) {
 					ItemMeta Meta = SelectedSocket.get(Player).getItemMeta();
+					ItemStack Used = new ItemStack(Material.COAL);
+					ItemMeta itemMeta = Used.getItemMeta();
+					ArrayList<String> lore = new ArrayList<String>();
+					lore.add("Used socket");
+					itemMeta.setLore(lore);
+					Used.setItemMeta(itemMeta);
+					event.getPlayer().getInventory().setItem(SelectedSlot.get(Player), Used);
 					SelectedSocket.put(Player, null);
 					if (Meta != null) {
 						List<String> Lore = Meta.getLore();
