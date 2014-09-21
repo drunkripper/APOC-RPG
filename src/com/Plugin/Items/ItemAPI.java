@@ -131,7 +131,7 @@ else if(type==4)
 Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 if(Plugin.Random.nextGaussian()<0.1)
 {
-	List<String> lore = Meta.getLore();
+	List<String> lore = new ArrayList<String>();
 	lore.add("(Socket)");
 	Meta.setLore(lore);
 }
