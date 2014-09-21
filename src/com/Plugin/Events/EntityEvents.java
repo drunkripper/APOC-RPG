@@ -1,18 +1,12 @@
 package com.Plugin.Events;
 
-import java.util.ArrayList;
-
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import com.Plugin.Items.ItemAPI;
 import com.Plugin.Main.Plugin;
@@ -21,7 +15,8 @@ public class EntityEvents implements Listener {
 	
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
-		if (Plugin.Random.nextInt(100) <= 25) {
+		EntityType Type = Event.getEntityType();
+		if ((Type == EntityType.CREEPER || Type == EntityType.ZOMBIE || Type == EntityType.PIG_ZOMBIE || Type == EntityType.SKELETON || Type == EntityType.SPIDER || Type == EntityType.GHAST || Type == EntityType.ENDERMAN || Type == EntityType.WITHER || Type == EntityType.ENDER_DRAGON) && Plugin.Random.nextInt(100) <= 25) {
 		LivingEntity Entity = Event.getEntity();
 		
 			int Amount = Plugin.Random.nextInt(2) + 1;
