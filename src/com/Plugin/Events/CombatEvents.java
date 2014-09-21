@@ -47,12 +47,14 @@ public class CombatEvents implements Listener {
 							if(im.getLore()!=null)
 							{	
 					//			System.out.println("has Lore(1):" + im.getLore().get(1));
-								String lore = im.getLore().get(1);
+								String name = im.getLore().get(1);
+								Integer level = Integer.parseInt(im.getLore().get(2).substring(7));
+								Integer duration = Integer.parseInt(im.getLore().get(3).split(":")[0])*20 + Integer.parseInt(im.getLore().get(3).split(":")[1]) * 60 * 20;
 						
-								if(lore!=null)
+								if(name!=null)
 							
 								{
-									e.addPotionEffect(new PotionEffect(effects.get(lore),200,1));
+									e.addPotionEffect(new PotionEffect(effects.get(name),duration,level-1));
 								}
 							}
 						}

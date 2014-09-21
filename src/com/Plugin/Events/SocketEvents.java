@@ -48,6 +48,8 @@ public class SocketEvents implements Listener {
 					ItemMeta ItemMeta = Player.getItemInHand().getItemMeta();
 					List<String> SelectedLore = ItemMeta.getLore();
 					SelectedLore.set(0, Name);
+					SelectedLore.set(1, Lore.get(3));
+					SelectedLore.set(2, Lore.get(4));
 					Player.getItemInHand().setItemMeta(ItemMeta);
 				} else {
 					event.getPlayer().sendMessage("No socket selected!");
