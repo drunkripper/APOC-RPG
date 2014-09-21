@@ -4,6 +4,7 @@ import com.Plugin.Commands.ApocRPGCommand;
 import com.Plugin.Events.ChunkEvents;
 import com.Plugin.Events.CombatEvents;
 import com.Plugin.Events.EntityEvents;
+import com.Plugin.Events.SocketEvents;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class Plugin extends JavaPlugin {
 	public static ChunkEvents ChunkListener = new ChunkEvents();
 	public static EntityEvents EntityListener = new EntityEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
+	public static SocketEvents SocketListener = new SocketEvents();
 	public void onEnable() {
 		
 		Plugin = this;
@@ -134,6 +136,7 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ChunkListener, this);
 		getServer().getPluginManager().registerEvents(EntityListener, this);
 		getServer().getPluginManager().registerEvents(CombatListener, this);
+		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getCommand("generateitem").setExecutor(new ApocRPGCommand());
 		getCommand("generateuseful").setExecutor(new ApocRPGCommand());
 	}
