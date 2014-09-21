@@ -184,6 +184,7 @@ return Item;
 		Lore.add("Level "+ effectLevel);
 		Lore.add(minDur + ":" + secDur);
 		Meta.setLore(Lore);
+		socket.setItemMeta(Meta);
 		return socket;
 	}
 
