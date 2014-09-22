@@ -45,6 +45,8 @@ Dungeons:
     chain: true
     iron: true
     diamond: true
+    socket-gems: true
+    identity-books: true
     #If you are using a forge server and wish to spawn mod items enable this.
     forge-gear: false
     #If spawning RPG gear wasn't enough throw in your own spice of items! ID:DATA:AMOUNT 1 item per line.
@@ -73,6 +75,8 @@ Monsters:
     chain-gear: true
     iron-gear: true
     diamond-gear: true
+    socket-gems: true
+    identity-books: true
     #If you are using a forge server and wish to use mod items enable this.
     forge-gear: false
     #Should we give the mobs fancy weapons?
@@ -107,21 +111,11 @@ Gear:
     #Set this to false to disallow players moving enchantments from an item to book and vice versa.
     #Permission: apocrpg.enchant-transfer
     enchantment-transfer: true
- 
-Commands:
-    #This allows you to purchase an enchantment for your item.
-    - rpgenchant
-    #This allows you to remove all enchantments for your item.
-    - rpgdisenchant
-    #This allows you to salvage all armors, tools, weapons in your inventory.
-    - rpgsalvage
-    #This allows you to buy a random item, identity tomes, names, socket gems, and lore.
-    - rpgbuy
-    #This sells ALL RPG gear in your inventory for economy based on its durability remaining.
-    - rpgsell
-    - rpphelp
-    - rpgversion
-    - rpgreload
+    #This will disallow players to sell an item that has been repaired to earn economy.
+    #Turning this off could result in server economy exploiting.
+    no-sell-on-repair: true
+    #This does the same as above, just with materials.
+    no-salvage-on-repair: true
 
 Command-Settings:
     #How much will it cost per enchantment level to enchant an item? $250 x10 = $2500
