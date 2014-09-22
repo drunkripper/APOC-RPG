@@ -62,6 +62,9 @@ Dungeons:
     protect-dungeons: true
     #Should we protect the environment surrounding the dungeon as well? Amount in chunks.
     protect-dungeon-radius: 2
+    #Type in all world names you do not want dungeons spawning into here.
+    disable-dungeons-on-world:
+     - the_end
   
 
 Monsters:
@@ -95,6 +98,12 @@ Monsters:
     #Should we crank the difficulty up a notch?
     #Increases the base HP by a percentage. If a mob has 10 HP and you increased it by 100% it now has 20 HP.
     bonus-mob-hp: 100
+    #Type in all world names you do not want customized mob gear spawned on mobs into here.
+    disable-mob-gear-on-world:
+     - example
+    #Type in all world names you do not want customized mob gear to drop from mobs into here.
+    disable-mob-gear-drops-on-world:
+     - example
 
 Gear:
     #Set this to false to disable custom naming, sets, socketing, random enchanting.
