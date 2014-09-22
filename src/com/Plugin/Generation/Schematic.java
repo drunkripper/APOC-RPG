@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import com.Plugin.Items.ItemAPI;
+import com.Plugin.Main.Plugin;
 import com.Plugin.jnbt.ByteArrayTag;
 import com.Plugin.jnbt.CompoundTag;
 import com.Plugin.jnbt.NBTInputStream;
@@ -113,7 +114,12 @@ public static Schematic loadSchematic(File file) throws IOException {
                     if (block.getType() == Material.CHEST) {
                     	ItemAPI.fillChest(block);
                     } else if (block.getType() == Material.MOB_SPAWNER) {
-                    	((CreatureSpawner) block.getState()).setCreatureType(CreatureType.ZOMBIE);
+                    	CreatureSpawner Spawner = (CreatureSpawner) block.getState();
+                    	if (Plugin.Random.nextInt(100) <= 50) {
+                    		Spawner.setCreatureType(CreatureType.ZOMBIE);
+                    	} else {
+                    		Spawner.setCreatureType(CreatureType.SKELETON);
+                    	}
                     }
                 }
             }
