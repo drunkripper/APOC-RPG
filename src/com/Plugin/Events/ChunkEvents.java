@@ -84,8 +84,6 @@ public class ChunkEvents implements Listener {
 				File File = new File(Plugin.LandRuins + "/" + List[Plugin.Random.nextInt(List.length)]);
 				try {
 					Schematic.pasteSchematic(World, new Location(World, x, y, z), Schematic.loadSchematic(File));
-					System.out.println("new dungeon at y: " + y + "x : " + x +"z : " + z );
-					//Plugin.Plugin.getServer().getPlayer("unarmed1618").sendMessage("New dungeon at y: " + y);
 				} catch (IOException e) {
 					System.err.println(ChatColor.RED + "APOC-RPG Error!");
 					e.printStackTrace();

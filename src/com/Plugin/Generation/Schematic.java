@@ -19,6 +19,9 @@ import com.Plugin.jnbt.ShortTag;
 import com.Plugin.jnbt.StringTag;
 import com.Plugin.jnbt.Tag;
 
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.CreatureType;
+
 // imports above;
 
 
@@ -109,6 +112,8 @@ public static Schematic loadSchematic(File file) throws IOException {
                     block.setTypeIdAndData(blocks[index], blockData[index], true);
                     if (block.getType() == Material.CHEST) {
                     	ItemAPI.fillChest(block);
+                    } else if (block.getType() == Material.MOB_SPAWNER) {
+                    	((CreatureSpawner) block.getState()).setCreatureType(CreatureType.ZOMBIE);
                     }
                 }
             }

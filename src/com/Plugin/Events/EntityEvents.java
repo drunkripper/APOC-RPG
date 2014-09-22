@@ -17,8 +17,7 @@ public class EntityEvents implements Listener {
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
 		EntityType Type = Event.getEntityType();
 		if ((Type == EntityType.CREEPER || Type == EntityType.ZOMBIE || Type == EntityType.PIG_ZOMBIE || Type == EntityType.SKELETON || Type == EntityType.SPIDER || Type == EntityType.GHAST || Type == EntityType.ENDERMAN || Type == EntityType.WITHER || Type == EntityType.ENDER_DRAGON) && Plugin.Random.nextInt(100) <= 25) {
-		LivingEntity Entity = Event.getEntity();
-		
+			LivingEntity Entity = Event.getEntity();
 			int Amount = Plugin.Random.nextInt(2) + 1;
 			for (int i=0; i<Amount; i++) {
 				int Gear = Plugin.Random.nextInt(5);
