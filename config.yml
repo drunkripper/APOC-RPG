@@ -64,7 +64,7 @@ Dungeons:
     protect-dungeon-radius: 2
     #Type in all world names you do not want dungeons spawning into here.
     disable-dungeons-on-world:
-     - the_end
+     - example
   
 
 Monsters:
@@ -169,15 +169,12 @@ RPG-Suffix:
     - "Dominion"
     - "Execution"
     - "Obliteration"
-    - "Utter Foolishness"
-    - "Complete Lack of Surprise"
 
 #Below are set names. If a player gets a full set of armor with the same set name they get a set bonus.
 #Use "quotations" for best results. Not using "quotations" while using ' will result in a YAML Syntax Error.
 RPG-Set:
     - "Unarmed's"
     - "DeathMarine's"
-    - "Kanye's"
     - "Zilacon's"
     - "WIX0A's"
     - "Jack's"
