@@ -44,7 +44,7 @@ public class CombatEvents implements Listener {
 						{
 				//			System.out.println("has Meta:" +i.getItemMeta().toString());
 							ItemMeta im = i.getItemMeta();
-							if(im.getLore()!=null)
+							if(im.getLore()!=null&&im.getLore().size()>2)
 							{	
 					//			System.out.println("has Lore(1):" + im.getLore().get(1));
 								String name = im.getLore().get(0);

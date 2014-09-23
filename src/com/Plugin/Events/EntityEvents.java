@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.player.PlayerInventoryEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
@@ -56,8 +57,14 @@ public class EntityEvents implements Listener {
 		//Bukkit.getServer().broadcastMessage(devent.getMessage());
 	}
 	@EventHandler
-	public void onInventoryClick(InventoryInteractEvent event) {
+	public void onInventoryClick(InventoryClickEvent event) {
 		Player po= (Player) event.getWhoClicked();
+		EffectPollingEvent devent = new EffectPollingEvent(po);
+		Bukkit.getServer().getPluginManager().callEvent(devent);
+	}
+	@EventHandler
+	public void onInventoryClose(InventoryCloseEvent event) {
+		Player po = (Player)event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 	}
