@@ -17,3 +17,7 @@ commands:
         description: Allows user to spawn sockets
         aliases: [gensocket, dds]
         usage: /generatesocket
+    apocrpg:
+        description: Shows all available commands
+        aliases: [rpg]
+        usage: /apocrpg, /rpg

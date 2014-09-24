@@ -52,6 +52,7 @@ public class Plugin extends JavaPlugin {
 		getCommand("generateitem").setExecutor(new ApocRPGCommand());
 		getCommand("generateuseful").setExecutor(new ApocRPGCommand());
 		getCommand("generatesocket").setExecutor(new ApocRPGCommand());
+		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 	}
 
 	public void onDisable() {
