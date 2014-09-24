@@ -20,7 +20,7 @@ public class CombatEvents implements Listener {
 		effects.put("Slowing", PotionEffectType.SLOW);
 		effects.put("Fatiguing", PotionEffectType.SLOW_DIGGING);
 		effects.put("Sanctifying", PotionEffectType.HEAL);
-		effects.put("Desecrating", PotionEffectType.HARM);
+		//effects.put("Desecrating", PotionEffectType.HARM);
 		effects.put("Nauseating", PotionEffectType.CONFUSION);
 		effects.put("Blinding", PotionEffectType.BLINDNESS);
 		effects.put("Hungering", PotionEffectType.HUNGER);
@@ -48,7 +48,7 @@ public class CombatEvents implements Listener {
 							{	
 					//			System.out.println("has Lore(1):" + im.getLore().get(1));
 								String name = im.getLore().get(0);
-								Integer level = Integer.parseInt(im.getLore().get(1).substring(6));
+								Integer level = Integer.parseInt(im.getLore().get(1).substring(6))-1;
 								Integer duration = Integer.parseInt(im.getLore().get(2).split(":")[0])*20 + Integer.parseInt(im.getLore().get(2).split(":")[1]) * 60 * 20;
 						
 								if(name!=null)

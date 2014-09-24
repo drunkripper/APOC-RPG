@@ -32,16 +32,16 @@ public class ApocRPGCommand implements CommandExecutor {
 			if (args.length == 0) {
 				ChatColor CommandColor = ChatColor.GOLD;
 				ChatColor DescColor = ChatColor.BLUE;
-				Player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "- Buy an enchanted item");
-				Player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "- Buy an enchanted item with specific enchant");
-				Player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "- Buy a specific enchanted item");
-				Player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "- Buy an enchanted item with specific name");
-				Player.sendMessage(CommandColor + "/apocrpg buy book " + DescColor + "- Buy an identity tome");
-				Player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "- Buy a socket gem");
-				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "- sell an APOC-RPG Item");
-				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "- sell all APOC-RPG Items in inventory");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "- repair an APOC-RPG Item");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "- repair all APOC-RPG Items in inventory");
+				Player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "           | Buy an enchanted item");
+				Player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "| Put an enchantment on held item");
+				Player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "      | Buy a specific enchanted item");
+				Player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "     | Buy an enchanted item with a set name");
+				Player.sendMessage(CommandColor + "/apocrpg buy book " + DescColor + "     | Buy an identity tome");
+				Player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "       | Buy a socket gem");
+				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "            | Sell an APOC-RPG Item");
+				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "        | Sell all APOC-RPG Items in inventory");
+				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair an APOC-RPG Item");
+				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair all APOC-RPG Items in inventory");
 			} else {
 				String arg1 = args[0];
 				if (arg1.equals("buy")) {

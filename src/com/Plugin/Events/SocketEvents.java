@@ -24,7 +24,7 @@ public class SocketEvents implements Listener {
 		Plugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Plugin.Plugin, new Runnable(){
 			public void run() {
 				for (Player Player : Plugin.Plugin.getServer().getOnlinePlayers()) {
-					if (SelectedSocket.containsKey(Player)) {
+					if (SelectedSocket.containsKey(Player) && SelectedSocket.get(Player) != null) {
 						SelectedSocket.put(Player, null);
 						Player.sendMessage("Socket unselected!");
 					}

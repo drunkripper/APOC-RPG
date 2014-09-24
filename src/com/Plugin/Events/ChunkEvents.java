@@ -66,7 +66,7 @@ public class ChunkEvents implements Listener {
 	public void onChunkLoaded(ChunkPopulateEvent event) {
 		World World = event.getWorld();
 		Chunk Chunk = event.getChunk();
-		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.Chance")) {
+		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.Chance") && Plugin.Settings.areDungeonsEnabledInWorld(World)) {
 			int x=16*Chunk.getX()*Plugin.Random.nextInt(15);
 			int y = 0;
 			int z=16*Chunk.getZ()*Plugin.Random.nextInt(15);
