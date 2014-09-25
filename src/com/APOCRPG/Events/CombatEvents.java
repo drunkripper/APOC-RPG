@@ -1,4 +1,4 @@
-package com.Plugin.Events;
+package com.APOCRPG.Events;
 
 import java.util.HashMap;
 

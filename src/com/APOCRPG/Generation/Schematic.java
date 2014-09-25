@@ -1,4 +1,4 @@
-package com.Plugin.Generation;
+package com.APOCRPG.Generation;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -11,14 +11,14 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import com.Plugin.Items.ItemAPI;
-import com.Plugin.Main.Plugin;
-import com.Plugin.jnbt.ByteArrayTag;
-import com.Plugin.jnbt.CompoundTag;
-import com.Plugin.jnbt.NBTInputStream;
-import com.Plugin.jnbt.ShortTag;
-import com.Plugin.jnbt.StringTag;
-import com.Plugin.jnbt.Tag;
+import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.jnbt.ByteArrayTag;
+import com.APOCRPG.jnbt.CompoundTag;
+import com.APOCRPG.jnbt.NBTInputStream;
+import com.APOCRPG.jnbt.ShortTag;
+import com.APOCRPG.jnbt.StringTag;
+import com.APOCRPG.jnbt.Tag;
 
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.CreatureType;
@@ -27,6 +27,7 @@ import org.bukkit.entity.CreatureType;
 
 
 
+@SuppressWarnings("deprecation")
 public class Schematic {
  
     private byte[] blocks;
@@ -96,8 +97,7 @@ public static Schematic loadSchematic(File file) throws IOException {
         return new Schematic(blocks, blockData, width, length, height);
     }
     //Puts the schematic into the world
-    @SuppressWarnings("deprecation")
-	public static void pasteSchematic(World world, Location loc, Schematic schematic) {
+    public static void pasteSchematic(World world, Location loc, Schematic schematic) {
         byte[] blocks = schematic.getBlocks();
         byte[] blockData = schematic.getData();
  

@@ -1,4 +1,4 @@
-package com.Plugin.Events;
+package com.APOCRPG.Events;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.Plugin.Main.Plugin;
+import com.APOCRPG.Main.Plugin;
 
 public class SocketEvents implements Listener {
 	

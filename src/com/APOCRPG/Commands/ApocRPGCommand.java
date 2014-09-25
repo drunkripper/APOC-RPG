@@ -1,4 +1,4 @@
-package com.Plugin.Commands;
+package com.APOCRPG.Commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -9,9 +9,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.Plugin.Items.ItemAPI;
-import com.Plugin.Main.Economy;
-import com.Plugin.Main.Plugin;
+import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.Main.Economy;
+import com.APOCRPG.Main.Plugin;
 
 public class ApocRPGCommand implements CommandExecutor {
 

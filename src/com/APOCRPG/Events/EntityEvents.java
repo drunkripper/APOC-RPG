@@ -1,4 +1,4 @@
-package com.Plugin.Events;
+package com.APOCRPG.Events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
@@ -9,14 +9,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.player.PlayerInventoryEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import com.Plugin.Items.ItemAPI;
-import com.Plugin.Main.Plugin;
+import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.Main.Plugin;
 
 public class EntityEvents implements Listener {
 	

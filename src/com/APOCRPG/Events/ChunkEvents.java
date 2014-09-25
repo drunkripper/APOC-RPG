@@ -1,4 +1,4 @@
-package com.Plugin.Events;
+package com.APOCRPG.Events;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,8 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkPopulateEvent;
 
-import com.Plugin.Generation.Schematic;
-import com.Plugin.Main.Plugin;
+import com.APOCRPG.Generation.Schematic;
+import com.APOCRPG.Main.Plugin;
 
 public class ChunkEvents implements Listener {
 	//method for checking world against valid pasting rules
@@ -66,7 +66,7 @@ public class ChunkEvents implements Listener {
 	public void onChunkLoaded(ChunkPopulateEvent event) {
 		World World = event.getWorld();
 		Chunk Chunk = event.getChunk();
-		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.Chance") && Plugin.Settings.areDungeonsEnabledInWorld(World)) {
+		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.dungeon-spawn-chance") && Plugin.Settings.areDungeonsEnabledInWorld(World)) {
 			int x=16*Chunk.getX()*Plugin.Random.nextInt(15);
 			int y = 0;
 			int z=16*Chunk.getZ()*Plugin.Random.nextInt(15);
