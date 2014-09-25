@@ -5,18 +5,6 @@ authors: [WIX0A,unarmed1618]
 description: Plugin
 
 commands:
-    generateitem:
-        description: Allows user to spawn a generated item.
-        aliases: [genitem, dd]
-        usage: /<command> 
-    generateuseful:
-        description: Allows user to spawn a useful item.
-        aliases: [genuseful, ddu]
-        usage: /<command> [type]
-    generatesocket:
-        description: Allows user to spawn sockets
-        aliases: [gensocket, dds]
-        usage: /generatesocket
     apocrpg:
         description: Main command
         aliases: [rpg]

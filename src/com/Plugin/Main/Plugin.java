@@ -49,9 +49,6 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(CombatListener, this);
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getServer().getPluginManager().registerEvents(PollListener, this);
-		getCommand("generateitem").setExecutor(new ApocRPGCommand());
-		getCommand("generateuseful").setExecutor(new ApocRPGCommand());
-		getCommand("generatesocket").setExecutor(new ApocRPGCommand());
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 	}
 

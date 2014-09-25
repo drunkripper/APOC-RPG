@@ -21,14 +21,7 @@ public class ApocRPGCommand implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
 		Player Player = (Player) Sender;
-		if (Command.getLabel().equals("generateitem")) {
-			ItemStack item = ItemAPI.createItem();
-			Player.getInventory().addItem(item);
-			return true;
-		} else if (Command.getLabel().equals("generatesocket")) {
-			Player.getInventory().addItem(ItemAPI.createSocket());
-			return true;
-		} else if (Command.getLabel().equals("apocrpg")) {
+		if (Command.getLabel().equals("apocrpg")) {
 			if (args.length == 0) {
 				ChatColor CommandColor = ChatColor.GOLD;
 				ChatColor DescColor = ChatColor.BLUE;
