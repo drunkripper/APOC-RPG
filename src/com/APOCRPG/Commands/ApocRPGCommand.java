@@ -17,7 +17,14 @@ public class ApocRPGCommand implements CommandExecutor {
 
 	int gearCost = Plugin.Settings.getInt("Command-Settings.cost-for-gear");
 	int gemCost = Plugin.Settings.getInt("Command-Settings.cost-for-gem");
-	
+	int tomeCost = Plugin.Settings.getInt("Command-Settings.cost-for-tome");
+	int nameCost = Plugin.Settings.getInt("Command-Settings.cost-for-name");
+	int loreCost = Plugin.Settings.getInt("Command-Settings.cost-for-lore");
+	int enchantCost = Plugin.Settings.getInt("Command-Settings.cost-to-enchant");
+	int disenchantCost = Plugin.Settings.getInt("Command-Settings.cost-to-disenchant");
+	int salvageCost = Plugin.Settings.getInt("Command-Settings.cost-to-salvage");
+	int repairCost = Plugin.Settings.getInt("Command-Settings.cost-to-repair");
+
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
 		Player Player = (Player) Sender;
@@ -25,16 +32,16 @@ public class ApocRPGCommand implements CommandExecutor {
 			if (args.length == 0) {
 				ChatColor CommandColor = ChatColor.GOLD;
 				ChatColor DescColor = ChatColor.BLUE;
-				Player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "           | Buy an enchanted item");
-				Player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "| Put an enchantment on held item");
-				Player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "      | Buy a specific enchanted item");
-				Player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "     | Buy an enchanted item with a set name");
-				Player.sendMessage(CommandColor + "/apocrpg buy book " + DescColor + "     | Buy an identity tome");
-				Player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "       | Buy a socket gem");
-				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "            | Sell an APOC-RPG Item");
-				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "        | Sell all APOC-RPG Items in inventory");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair an APOC-RPG Item");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair all APOC-RPG Items in inventory");
+				Player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "           | Buy an enchanted item.");
+				Player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "| Buy a enchantment.");
+				Player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "      | Buy a random RPG item.");
+				Player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "     | Buy an enchanted item with a set name.");
+				Player.sendMessage(CommandColor + "/apocrpg buy book " + DescColor + "     | Buy an identity tome.");
+				Player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "       | Buy a socket gem.");
+				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "            | Sell a APOC-RPG item.");
+				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "        | Sell all APOC-RPG items in inventory.");
+				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair a item.");
+				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair all items in inventory.");
 			} else {
 				String arg1 = args[0];
 				if (arg1.equals("buy")) {
@@ -55,7 +62,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								Item.setItemMeta(meta);
 								Inventory.addItem(Item);
 							} else {
-								Player.sendMessage(ChatColor.RED + "Not enough money!");
+								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 							}
 						} else if (arg2.equals("book")) {
 							
@@ -64,14 +71,14 @@ public class ApocRPGCommand implements CommandExecutor {
 								Economy.removeMoney(Player, gemCost);
 								Inventory.addItem(ItemAPI.createSocket());
 							} else {
-								Player.sendMessage(ChatColor.RED + "Not enough money!");
+								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 							}
 						}
 					} else if (Economy.hasMoney(Player, gearCost)) {
 						Economy.removeMoney(Player, gearCost);
 						Inventory.addItem(ItemAPI.createItem());
 					} else {
-						Player.sendMessage(ChatColor.RED + "Not enough money!");
+						Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 					}
 				} else if (arg1.equals("repair")) {
 					
@@ -79,7 +86,7 @@ public class ApocRPGCommand implements CommandExecutor {
 			}
 			return true;
 		} else {
-			System.out.println("Unkown command sent.");
+			System.out.println("[APOC-RPG] Unkown command sent.");
 			return false;
 		}
 	}
