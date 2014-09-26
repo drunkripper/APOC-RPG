@@ -141,7 +141,9 @@ Command-Settings:
     #How much will it cost to buy a socket gem?
     cost-for-gem: 500
     #How much will it cost to salvage an item?
-    cost-to-salvage: 15
+    cost-to-salvage: 25
+    #How much will it cost to repair a single item?
+    cost-to-repair: 500
     #How much per durability should a player get from selling gear?
     leather-rate: 0.10
     wood-rate: 0.10
