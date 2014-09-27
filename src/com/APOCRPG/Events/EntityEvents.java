@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
-import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 
 public class EntityEvents implements Listener {

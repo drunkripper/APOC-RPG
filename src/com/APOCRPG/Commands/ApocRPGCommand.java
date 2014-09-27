@@ -9,7 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Economy;
 import com.APOCRPG.Main.Plugin;
 

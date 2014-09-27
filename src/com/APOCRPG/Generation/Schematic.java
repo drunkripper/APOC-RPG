@@ -11,7 +11,7 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import com.APOCRPG.Items.ItemAPI;
+import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.jnbt.ByteArrayTag;
 import com.APOCRPG.jnbt.CompoundTag;
