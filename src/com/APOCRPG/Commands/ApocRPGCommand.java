@@ -43,7 +43,7 @@ public class ApocRPGCommand implements CommandExecutor {
 				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "            | Sell a APOC-RPG item.");
 				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "        | Sell all APOC-RPG items in inventory.");
 				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair a item.");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair all items in inventory.");
+				Player.sendMessage(CommandColor + "/apocrpg repair all" + DescColor + "         | Repair all items in inventory.");
 			} else {
 				String arg1 = args[0];
 				if (arg1.equals("buy")) {
