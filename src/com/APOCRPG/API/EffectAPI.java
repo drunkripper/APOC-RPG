@@ -43,6 +43,8 @@ public class EffectAPI {
 	public static Effect getRandomEffect() {
 		int Random = Plugin.Random.nextInt(5);
 		switch (Random) {
+			case 0:
+				return getRandomEffect("Armor");
 			case 1:
 				return getRandomEffect("Armor");
 			case 2:
@@ -58,6 +60,7 @@ public class EffectAPI {
 	}
 	
 	public static Effect getRandomEffect(String Type) {
+		System.out.println(Type);
 		switch(Type) {
 			case "Armor":
 				return new Effect(ArmorEffects[Plugin.Random.nextInt(ArmorEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
@@ -70,6 +73,7 @@ public class EffectAPI {
 			case "Tool":
 				return new Effect(ToolEffects[Plugin.Random.nextInt(ToolEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
 		}
+		System.out.println("Null");
 		return null;
 	}
 	

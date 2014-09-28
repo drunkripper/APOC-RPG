@@ -151,7 +151,7 @@ return Item;
 	}
 	public static ItemStack createSocket() {
 		//Effects with -ing are targeted on the enemy. Otherwise targeted on the holder/wearer.
-		/*ItemStack socket = new ItemStack(Material.EMERALD);
+		ItemStack socket = new ItemStack(Material.EMERALD);
 		String[] Effects = { "Speed",
 						"Slowing",
 						"Haste",
@@ -190,8 +190,8 @@ return Item;
 		Lore.add(minDur + ":" + secDur);
 		Meta.setLore(Lore);
 		socket.setItemMeta(Meta);
-		return socket;*/
-		return GemAPI.createGem();
+		return socket;
+		//return GemAPI.createGem();
 	}
 
 public static ItemStack generateUsefulItem(){

@@ -28,6 +28,10 @@ public class Settings {
 		return this.Config.getInt(key);
 	}
 	
+	public double getDouble(String key) {
+		return this.Config.getDouble(key);
+	}
+	
 	public String getRandomPrefix() {
 		return Prefixes.get(Plugin.Random.nextInt(Prefixes.size()));
 	}

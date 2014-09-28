@@ -1,6 +1,7 @@
 package com.APOCRPG.Commands;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -9,21 +10,22 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.APOCRPG.API.GemAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Economy;
 import com.APOCRPG.Main.Plugin;
 
 public class ApocRPGCommand implements CommandExecutor {
 
-	int gearCost = Plugin.Settings.getInt("Command-Settings.cost-for-gear");
-	int gemCost = Plugin.Settings.getInt("Command-Settings.cost-for-gem");
-	int tomeCost = Plugin.Settings.getInt("Command-Settings.cost-for-tome");
-	int nameCost = Plugin.Settings.getInt("Command-Settings.cost-for-name");
-	int loreCost = Plugin.Settings.getInt("Command-Settings.cost-for-lore");
-	int enchantCost = Plugin.Settings.getInt("Command-Settings.cost-to-enchant");
-	int disenchantCost = Plugin.Settings.getInt("Command-Settings.cost-to-disenchant");
-	int salvageCost = Plugin.Settings.getInt("Command-Settings.cost-to-salvage");
-	int repairCost = Plugin.Settings.getInt("Command-Settings.cost-to-repair");
+	double gearCost = Plugin.Settings.getDouble("Command-Settings.cost-for-gear");
+	double gemCost = Plugin.Settings.getDouble("Command-Settings.cost-for-gem");
+	double tomeCost = Plugin.Settings.getDouble("Command-Settings.cost-for-tome");
+	double nameCost = Plugin.Settings.getDouble("Command-Settings.cost-for-name");
+	double loreCost = Plugin.Settings.getDouble("Command-Settings.cost-for-lore");
+	double enchantCost = Plugin.Settings.getDouble("Command-Settings.cost-to-enchant");
+	double disenchantCost = Plugin.Settings.getDouble("Command-Settings.cost-to-disenchant");
+	double salvageCost = Plugin.Settings.getDouble("Command-Settings.cost-to-salvage");
+	double repairCost = Plugin.Settings.getDouble("Command-Settings.cost-to-repair");
 
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
@@ -69,7 +71,8 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equals("gem")) {
 							if (Economy.hasMoney(Player, gemCost)) {
 								Economy.removeMoney(Player, gemCost);
-								Inventory.addItem(ItemAPI.createSocket());
+								//Inventory.addItem(ItemAPI.createSocket());
+								Inventory.addItem(GemAPI.createGem());
 							} else {
 								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 							}
@@ -81,7 +84,16 @@ public class ApocRPGCommand implements CommandExecutor {
 						Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 					}
 				} else if (arg1.equals("repair")) {
-					
+					ItemStack InHand = Player.getItemInHand();
+					int Difference = Material.getMaterial(InHand.getTypeId()).getMaxDurability() - InHand.getDurability();
+					double Cost = repairCost * Difference;
+					if (Economy.hasMoney(Player, Cost)) {
+						Economy.removeMoney(Player, Cost);
+						Player.sendMessage("Repaired " + Difference + " durability for " + Economy.format(Cost));
+						InHand.setDurability(Material.getMaterial(InHand.getTypeId()).getMaxDurability());
+					} else {
+						Player.sendMessage("You don't have enough money! You need " + Economy.format(Cost));
+					}
 				}
 			}
 			return true;

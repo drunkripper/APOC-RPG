@@ -22,7 +22,7 @@ public class Economy {
 		Economy.withdrawPlayer(Player, amount);
 	}
 	
-	public String format(double amount) {
+	public static String format(double amount) {
 		return Economy.format(amount);
 	}
 	
