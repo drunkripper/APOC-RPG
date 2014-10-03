@@ -155,6 +155,8 @@ Command-Settings:
     forge-rate: 0.02
     #How much salvage per 50% durability should a player get from salvaged items?
     salvage-ratio: 1
+    #How much EXP does a player get for each level of enchantments?
+    disenchant-exp: 5
  
  
 #Below is where the naming magic comes into play. Add any name for a prefix of an item.
