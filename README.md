@@ -1,7 +1,7 @@
 APOC-RPG What is it?
 ========
 
-This project is an official plugin designed and programmed by the Apocalyptic Gaming Network's development team.
+This project is an official plugin designed and programmed by the [Apocalyptic Gaming Network's](http://apocgaming.org) development team.
 
 This plugin enables many RPG like features into minecraft such as:
 - Randomized naming for items.
