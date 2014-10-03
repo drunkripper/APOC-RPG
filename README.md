@@ -38,7 +38,7 @@ Plugin Permissions:
 ===========
 Mostly everything is available for all players except the commands, operators have all permissions by default.
 - apocrpg.mcmmo - Gives players mcmmo bonuses from combat levels.
-- apocrpg.buy   - Gives full access to buy commands such as: name, lore, enchant, socket, gem, book, gear.
+- apocrpg.buy   - Gives access to: BUY name, lore, enchant, socket, gem, book, gear.
 - apocrpg.disenchant - Gives access to disenchant items and earn experience from it for a price.
 - apocrpg.salvage    - Gives access to salvage items for their materials.
 - apocrpg.repair     - Gives access to repair any item with durability for a price.
