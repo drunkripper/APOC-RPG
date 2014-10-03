@@ -30,18 +30,18 @@ This plugin enables many RPG like features into minecraft such as:
  - Repairing an item locks it, disallowing players to sell the item for economy.
  - Customizing an item makes it player bound. Disallowing players to drop the item or place the item into a different players inventory.
 - Disable the dungeon spawning or mob drops/mob equips per world.
-- Do you like customization? So do we! Complete plugin control in the config with on/off switches for everything to save resources on your server to customizing the amount of item that spawn, drop, dungeon spawn chance, economy cost for everything, and much much more!
+- Do you like customization? So do we! Complete plugin control in the config with on/off switches for everything to save resources on your server to customizing the amount of items that spawn, drop, dungeon spawn chance, economy cost for everything, and much much more!
 
 This plugin is all about customizing the game to its fullest for dungeons and gear while giving you full control to change and modify every aspect of the plugin within the configuration.
 
 Plugin Permissions:
 ===========
 Mostly everything is available for all players except the commands, operators have all permissions by default.
-apocrpg.mcmmo - Gives players mcmmo bonuses from combat levels.
-apocrpg.buy   - Gives full access to buy commands such as: name, lore, enchant, socket, gem, book, gear.
-apocrpg.disenchant - Gives access to disenchant items and earn experience from it for a price.
-apocrpg.salvage    - Gives access to salvage items for their materials.
-apocrpg.repair     - Gives access to repair any item with durability for a price.
+- apocrpg.mcmmo - Gives players mcmmo bonuses from combat levels.
+- apocrpg.buy   - Gives full access to buy commands such as: name, lore, enchant, socket, gem, book, gear.
+- apocrpg.disenchant - Gives access to disenchant items and earn experience from it for a price.
+- apocrpg.salvage    - Gives access to salvage items for their materials.
+- apocrpg.repair     - Gives access to repair any item with durability for a price.
 
 License & Permissions:
 ===========
