@@ -124,7 +124,9 @@ public class ApocRPGCommand implements CommandExecutor {
 					} else if ( arg2.equalsIgnoreCase("all")){
 						Inventory inventory = Player.getInventory();
 						
-						for ( int i = 0; i < inventory.getSize(); i++){
+						// ignore the first 9 slots [0-8] as we don't want to
+						// disenchant items in the action bar
+						for ( int i = 9; i < inventory.getSize(); i++){
 							item = inventory.getItem(i);
 							if ( item != null && !item.getEnchantments().isEmpty() ) {
 								items.add(item);
