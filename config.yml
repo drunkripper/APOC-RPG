@@ -142,8 +142,8 @@ Command-Settings:
     cost-for-gem: 500
     #How much will it cost to salvage an item?
     cost-to-salvage: 25
-    #How much will it cost to repair a single item?
-    cost-to-repair: 500
+    #What is the maximum amount to repair an item? 1% = $10 by default.
+    cost-to-repair: 1000
     #How much per durability should a player get from selling gear?
     leather-rate: 0.10
     wood-rate: 0.10
