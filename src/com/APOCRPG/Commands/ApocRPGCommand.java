@@ -80,7 +80,13 @@ public class ApocRPGCommand implements CommandExecutor {
 								}
 							}
 						} else if (arg2.equalsIgnoreCase("item")) {
-							
+							if (Economy.hasMoney(Player, gearCost)) {
+								Economy.removeMoney(Player, gearCost);
+								ItemStack Item = ItemAPI.createItem();
+								Inventory.addItem(Item);
+							} else {
+								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
+							}
 						} else if (arg2.equalsIgnoreCase("name")) {
 							if (Economy.hasMoney(Player, gearCost)) {
 								Economy.removeMoney(Player, gearCost);
