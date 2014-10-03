@@ -1,6 +1,7 @@
 package com.APOCRPG.Commands;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -28,7 +29,7 @@ public class ApocRPGCommand implements CommandExecutor {
 	double disenchantCost = Plugin.Settings.getDouble("Command-Settings.cost-to-disenchant");
 	double salvageCost = Plugin.Settings.getDouble("Command-Settings.cost-to-salvage");
 	double repairCost = Plugin.Settings.getDouble("Command-Settings.cost-to-repair");
-
+	
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
 		String arg1 = new String();
@@ -103,13 +104,9 @@ public class ApocRPGCommand implements CommandExecutor {
 						Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 					}
 				} else if (arg1.equals("repair")) {
-					double curDurability = 0;
-					double maxDurability = 0;
-					double pctDmg = 0;
 					double cost = 0;
 					double totalCost = 0;
-					Inventory inventory = Player.getInventory();
-					int invSize = inventory.getSize();
+					
 					ItemStack item = null;
 					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 						
@@ -117,44 +114,47 @@ public class ApocRPGCommand implements CommandExecutor {
 						item = Player.getItemInHand();
 						if ( item != null && item.getDurability() > 0 ) {
 							items.add(item);
-							curDurability = (double)item.getDurability();
-							maxDurability = (double)Material.getMaterial(item.getTypeId()).getMaxDurability();
-							pctDmg = (curDurability / maxDurability);
-							if ( pctDmg > 0.0 ) {
-								cost = repairCost * pctDmg;
-								totalCost += cost;
-							}							
 						}
 					} else if ( arg2.equalsIgnoreCase("all")){
-						for ( int i = 0; i < invSize; i++){
+						Inventory inventory = Player.getInventory();
+						ItemStack[] armor = Player.getPlayer().getInventory().getArmorContents();
+						
+						for ( int i = 0; i < inventory.getSize(); i++){
 							item = inventory.getItem(i);
 							if ( item != null && item.getDurability() > 0 ) {
 								items.add(item);
-								curDurability = (double)item.getDurability();
-								maxDurability = (double)Material.getMaterial(item.getTypeId()).getMaxDurability();
-								pctDmg = (curDurability / maxDurability);
-								if ( pctDmg > 0.0 ) {
-									cost = repairCost * pctDmg;
-									totalCost += cost;
-								}							
+							}
+						}
+						for ( int j = 0; j < armor.length; j++ ){
+							item = armor[j];
+							if ( item != null && item.getDurability() > 0 ) {
+								items.add(item);
 							}
 						}
 					}
-					if ( totalCost == 0 ) {
+					cost = items.size() * repairCost;
+					
+					if ( cost == 0 ) {
 						Player.sendMessage("You have nothing to repair.");
-					} else if ( Economy.hasMoney(Player, totalCost)) {
+					} else if ( Economy.hasMoney(Player, cost)) {
 						StringBuffer itemNames = new StringBuffer();
 						Economy.removeMoney(Player, totalCost);
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
 							item.setDurability(Short.parseShort("0"));
-							if ( j == 0 ){
-								itemNames.append(item.getItemMeta().getDisplayName());
-							} else {
-								itemNames.append(", "+item.getItemMeta().getDisplayName());
+							/*
+							 * fix this section where it won't throw errors
+							ItemMeta meta = item.getItemMeta();
+							List<String> lore = meta.getLore();
+							if ( lore == null || !lore.contains("Used Item")) {
+								lore.add(lore.size(),"Used Item");
+								meta.setLore(lore);
+								item.setItemMeta(meta);
 							}
+							*/
 						}
-						Player.sendMessage("You have repaired your " + itemNames.toString() + " for " + Economy.format(cost) + " economy.");
+						Player.sendMessage("You have repaired your item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy.");
+							
 					} else {
 						Player.sendMessage("You don't have enough money! You need " + Economy.format(cost) + " economy.");
 					}
