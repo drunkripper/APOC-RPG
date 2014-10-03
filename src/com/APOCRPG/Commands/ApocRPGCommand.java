@@ -1,5 +1,7 @@
 package com.APOCRPG.Commands;
 
+import java.util.ArrayList;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -29,6 +31,10 @@ public class ApocRPGCommand implements CommandExecutor {
 
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
+		String arg1 = new String();
+		String arg2 = new String();
+		String arg3 = new String();
+		
 		Player Player = (Player) Sender;
 		if (Command.getLabel().equals("apocrpg")) {
 			if (args.length == 0) {
@@ -45,14 +51,27 @@ public class ApocRPGCommand implements CommandExecutor {
 				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "         | Repair a item.");
 				Player.sendMessage(CommandColor + "/apocrpg repair all" + DescColor + "         | Repair all items in inventory.");
 			} else {
-				String arg1 = args[0];
+				for ( int i = 0; i < args.length; i++){
+					if ( i == 0 )
+						arg1 = args[i];
+					else if ( i == 1 )
+						arg2 = args[i];
+					else if ( i == 2 )
+						arg3 = args[i];
+				}
 				if (arg1.equals("buy")) {
 					Inventory Inventory = Player.getInventory();
 					if (args.length > 1) {
-						String arg2 = args[1];
 						
 						if (arg2.equals("enchant")) {
-							
+							if (arg3.equalsIgnoreCase("list")){
+								ItemStack item = Player.getItemInHand();
+								if ( item == null ) {
+									Player.sendMessage(ChatColor.RED + "[APOC-RPG] No item being held!");
+								} else {
+									Player.sendMessage(ChatColor.RED + "[APOC-RPG] Item durability: " + item.getDurability());
+								}
+							}
 						} else if (arg2.equals("item")) {
 							
 						} else if (arg2.equals("name")) {
@@ -84,15 +103,60 @@ public class ApocRPGCommand implements CommandExecutor {
 						Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 					}
 				} else if (arg1.equals("repair")) {
-					ItemStack InHand = Player.getItemInHand();
-					int Difference = Material.getMaterial(InHand.getTypeId()).getMaxDurability() - InHand.getDurability();
-					double Cost = repairCost * Difference;
-					if (Economy.hasMoney(Player, Cost)) {
-						Economy.removeMoney(Player, Cost);
-						Player.sendMessage("Repaired " + Difference + " durability for " + Economy.format(Cost));
-						InHand.setDurability(Material.getMaterial(InHand.getTypeId()).getMaxDurability());
+					double curDurability = 0;
+					double maxDurability = 0;
+					double pctDmg = 0;
+					double cost = 0;
+					double totalCost = 0;
+					Inventory inventory = Player.getInventory();
+					int invSize = inventory.getSize();
+					ItemStack item = null;
+					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+						
+					if ( arg2 == null || arg2.equals("")) {
+						item = Player.getItemInHand();
+						if ( item != null && item.getDurability() > 0 ) {
+							items.add(item);
+							curDurability = (double)item.getDurability();
+							maxDurability = (double)Material.getMaterial(item.getTypeId()).getMaxDurability();
+							pctDmg = (curDurability / maxDurability);
+							if ( pctDmg > 0.0 ) {
+								cost = repairCost * pctDmg;
+								totalCost += cost;
+							}							
+						}
+					} else if ( arg2.equalsIgnoreCase("all")){
+						for ( int i = 0; i < invSize; i++){
+							item = inventory.getItem(i);
+							if ( item != null && item.getDurability() > 0 ) {
+								items.add(item);
+								curDurability = (double)item.getDurability();
+								maxDurability = (double)Material.getMaterial(item.getTypeId()).getMaxDurability();
+								pctDmg = (curDurability / maxDurability);
+								if ( pctDmg > 0.0 ) {
+									cost = repairCost * pctDmg;
+									totalCost += cost;
+								}							
+							}
+						}
+					}
+					if ( totalCost == 0 ) {
+						Player.sendMessage("You have nothing to repair.");
+					} else if ( Economy.hasMoney(Player, totalCost)) {
+						StringBuffer itemNames = new StringBuffer();
+						Economy.removeMoney(Player, totalCost);
+						for ( int j = 0; j < items.size(); j++){
+							item = items.get(j);
+							item.setDurability(Short.parseShort("0"));
+							if ( j == 0 ){
+								itemNames.append(item.getItemMeta().getDisplayName());
+							} else {
+								itemNames.append(", "+item.getItemMeta().getDisplayName());
+							}
+						}
+						Player.sendMessage("You have repaired your " + itemNames.toString() + " for " + Economy.format(cost) + " economy.");
 					} else {
-						Player.sendMessage("You don't have enough money! You need " + Economy.format(Cost));
+						Player.sendMessage("You don't have enough money! You need " + Economy.format(cost) + " economy.");
 					}
 				}
 			}
