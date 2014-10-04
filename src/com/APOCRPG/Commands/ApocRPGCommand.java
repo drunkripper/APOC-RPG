@@ -94,7 +94,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								Economy.removeMoney(Player, gearCost);
 								ItemStack Item = ItemAPI.createItem();
 								ItemMeta meta = Item.getItemMeta();
-								meta.setDisplayName(args[2]);
+								meta.setDisplayName(arg3);
 								Item.setItemMeta(meta);
 								Inventory.addItem(Item);
 							} else {

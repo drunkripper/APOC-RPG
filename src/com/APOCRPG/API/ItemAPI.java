@@ -140,12 +140,13 @@ public class ItemAPI {
 			else if(type==4)
 				//Bow
 				Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
-				if(Plugin.Random.nextGaussian()<0.1)
-				{
-					List<String> lore = new ArrayList<String>();
-					lore.add("(Socket)");
-					Meta.setLore(lore);
-				}
+			
+			if(Plugin.Random.nextGaussian()<0.1)
+			{
+				List<String> lore = new ArrayList<String>();
+				lore.add("(Socket)");
+				Meta.setLore(lore);
+			}
 		}
 		Item.setItemMeta(Meta);
 
