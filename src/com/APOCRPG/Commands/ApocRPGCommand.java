@@ -73,10 +73,9 @@ public class ApocRPGCommand implements CommandExecutor {
 						if (arg2.equalsIgnoreCase("enchant")) {
 							if (arg3.equalsIgnoreCase("list")){
 								ItemStack item = Player.getItemInHand();
-								if ( item == null ) {
+								if ( item == null || item.getType().name().equalsIgnoreCase("air") ) {
 									Player.sendMessage(ChatColor.RED + "[APOC-RPG] No item being held!");
 								} else {
-									Player.sendMessage(ChatColor.RED + "[APOC-RPG] Item durability: " + item.getDurability());
 								}
 							}
 						} else if (arg2.equalsIgnoreCase("item")) {

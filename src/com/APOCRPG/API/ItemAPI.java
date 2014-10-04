@@ -60,7 +60,8 @@ public class ItemAPI {
 		int maxEnchants = 6;
 		int minEnchants = 1;
 		/////////////////
-		Enchantment[] enchantsTable = {Enchantment.PROTECTION_ENVIRONMENTAL
+		Enchantment[] enchantsTable = {
+				 Enchantment.PROTECTION_ENVIRONMENTAL
 				,Enchantment.PROTECTION_FIRE
 				,Enchantment.PROTECTION_FALL
 				,Enchantment.PROTECTION_EXPLOSIONS
@@ -86,7 +87,7 @@ public class ItemAPI {
 		
 		// 9
 		Enchantment[] armorTable = {
-				Enchantment.PROTECTION_ENVIRONMENTAL
+				 Enchantment.PROTECTION_ENVIRONMENTAL
 				,Enchantment.PROTECTION_FIRE
 				,Enchantment.PROTECTION_FALL
 				,Enchantment.PROTECTION_EXPLOSIONS
@@ -97,7 +98,8 @@ public class ItemAPI {
 				,Enchantment.DURABILITY
 		};
 		//4
-		Enchantment[] toolTable = {Enchantment.DIG_SPEED
+		Enchantment[] toolTable = {
+				 Enchantment.DIG_SPEED
 				,Enchantment.SILK_TOUCH
 				,Enchantment.DURABILITY
 				,Enchantment.LOOT_BONUS_BLOCKS
@@ -105,7 +107,7 @@ public class ItemAPI {
 		
 		//7
 		Enchantment[] weaponTable = {
-				Enchantment.DAMAGE_ALL
+				 Enchantment.DAMAGE_ALL
 				,Enchantment.DAMAGE_UNDEAD
 				,Enchantment.DAMAGE_ARTHROPODS
 				,Enchantment.KNOCKBACK
@@ -116,10 +118,10 @@ public class ItemAPI {
 		
 		//4
 		Enchantment[] bowTable = {
-			Enchantment.ARROW_DAMAGE
-			,Enchantment.ARROW_KNOCKBACK
-			,Enchantment.ARROW_FIRE
-			,Enchantment.ARROW_INFINITE
+				 Enchantment.ARROW_DAMAGE
+				,Enchantment.ARROW_KNOCKBACK
+				,Enchantment.ARROW_FIRE
+				,Enchantment.ARROW_INFINITE
 		};
 		
 		int hasEnchants = Plugin.Random.nextInt(maxEnchants-minEnchants)+minEnchants;
