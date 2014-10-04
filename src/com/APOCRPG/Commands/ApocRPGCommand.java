@@ -71,6 +71,8 @@ public class ApocRPGCommand implements CommandExecutor {
 					if (args.length > 1) {
 						
 						if (arg2.equalsIgnoreCase("enchant")) {
+							Player.sendMessage(ChatColor.RED + "[APOC-RPG] This command is still under development.");
+							/*
 							if (arg3.equalsIgnoreCase("list")){
 								ItemStack item = Player.getItemInHand();
 								if ( item == null || item.getType().name().equalsIgnoreCase("air") ) {
@@ -78,6 +80,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								} else {
 								}
 							}
+							*/
 						} else if (arg2.equalsIgnoreCase("item")) {
 							if (Economy.hasMoney(Player, gearCost)) {
 								Economy.removeMoney(Player, gearCost);
