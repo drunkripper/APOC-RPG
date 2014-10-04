@@ -51,6 +51,8 @@ Dungeons:
     forge-gear: false
     #If spawning RPG gear wasn't enough throw in your own spice of items! ID:DATA:AMOUNT 1 item per line.
     dungeon-items: true
+    #How many of the listed dungeon items should be the max to spawn in a single chest?
+    max-dungeon-items: 2
     items:
         - 264:0:1
     #Lock chest after player opens it? This will prevent the player from hogging all of the loot and refill the chest for the next player.
@@ -89,7 +91,7 @@ Monsters:
     #What percent chance should item(s) drop when killed?
     drop-chance: 10
     #How many item(s) can the mob have and how many have a chance to drop?
-    max-item: 3
+    max-item: 4
     max-item-drop: 1
     #Should the items held by mobs be enchanted?
     enchant-gear: true
