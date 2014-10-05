@@ -17,6 +17,8 @@ Plugin:
     #This gives support for your MCMMO skills. With this enabled based on your skill level additional items may drop or the drop rate may be increased.
     #Permission: apocrpg.mcmmo
     mcmmo-support: enabled
+    #Turn this on to enable debug logs. All debugging logs will be stored in /Logs/Type.yml
+    debug: false
  
 Dungeons:
     #Set this to false, everything below is ignored.
@@ -127,6 +129,53 @@ Gear:
     no-sell-on-repair: true
     #This does the same as above, just with materials.
     no-salvage-on-repair: true
+    #What tier of gear should we allow enchantments on? (Random generation)
+    enchant-allow-common: true
+    enchant-allow-uncommon: true
+    enchant-allow-rare: true
+    enchant-allow-unique: true
+    enchant-allow-set: true
+    enchant-allow-legendary: true
+    #What is the minimum amount of enchantments for each tier?
+    enchant-min-common: 0
+    enchant-min-uncommon: 1
+    enchant-min-rare: 2
+    enchant-min-unique: 3
+    enchant-min-set: 3
+    enchant-min-legendary: 4
+    #What is the maximum amount of enchantments for each tier?
+    enchant-max-common: 1
+    enchant-max-uncommon: 2
+    enchant-max-rare: 4
+    enchant-max-unique: 6
+    enchant-max-set: 6
+    enchant-max-legendary: 10
+    #What tier of gear should we allow sockets on?
+    tier-sockets-common: true
+    tier-sockets-uncommon: true
+    tier-sockets-rare: true
+    tier-sockets-unique: true
+    tier-sockets-set: true
+    tier-sockets-legendary: true
+    #What is the maximum amount of sockets for each tier? MAX = 3
+    sockets-max-common: 0
+    sockets-max-uncommon: 1
+    sockets-max-rare: 2
+    sockets-max-unique: 3
+    sockets-max-legendary: 3
+    #What tier of gear should we allow prefix/suffix naming on?
+    tier-naming-common: false
+    tier-naming-uncommon: true
+    tier-naming-rare: true
+    tier-naming-unique: true
+    tier-naming-legendary: true
+    #What color should the tiers names be? Based off of BUKKIT http://jd.bukkit.org/rb/apidocs/org/bukkit/ChatColor.html
+    tier-color-common: WHITE
+    tier-color-uncommon: BLUE
+    tier-color-rare: YELLOW
+    tier-color-unique: GOLD
+    tier-color-set: GREEN
+    tier-color-legendary: DARK_RED
 
 Command-Settings:
     #How much will it cost per enchantment level to enchant an item? $250 x10 = $2500
