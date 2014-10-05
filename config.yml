@@ -39,14 +39,13 @@ Dungeons:
     #Set the min and max amount of items to be spawned into dungeon chests. This includes RPG gear and items.
     minimum-chest-items: 1
     maximum-chest-items: 5
-    #What kind of items should we spawn in the chests?
-    leather: true
-    wood: true
-    stone: true
-    gold: true
-    chain: true
-    iron: true
-    diamond: true
+    #What tiers of items should we spawn in the chests?
+    dungeon-spawn-common: true
+    dungeon-spawn-uncommon: true
+    dungeon-spawn-rare: true
+    dungeon-spawn-unique: true
+    dungeon-spawn-set: true
+    dungeon-spawn-legendary: true
     socket-gems: true
     identity-books: true
     #If you are using a forge server and wish to spawn mod items enable this.
@@ -74,14 +73,13 @@ Dungeons:
 Monsters:
     #Set this to false, everything below is ignored.
     enabled: true
-    #Choose what type of armor and weapons spawn for mobs.
-    leather-gear: true
-    wood-gear: true
-    stone-gear: true
-    gold-gear: true
-    chain-gear: true
-    iron-gear: true
-    diamond-gear: true
+    #Choose what tiers of items spawn for mobs.
+    monster-spawn-common: true
+    monster-spawn-uncommon: true
+    monster-spawn-rare: true
+    monster-spawn-unique: true
+    monster-spawn-set: true
+    monster-spawn-legendary: true
     socket-gems: true
     identity-books: true
     #If you are using a forge server and wish to use mod items enable this.
@@ -94,7 +92,7 @@ Monsters:
     drop-chance: 10
     #How many item(s) can the mob have and how many have a chance to drop?
     max-item: 4
-    max-item-drop: 1
+    max-item-drop: 2
     #Should the items held by mobs be enchanted?
     enchant-gear: true
     #Whats the max level of enchantments for the mobs gear? MAX=10
@@ -173,10 +171,20 @@ Gear:
     tier-color-legendary: DARK_RED
 
 Command-Settings:
-    #How much will it cost per enchantment level to enchant an item? $250 x10 = $2500
-    cost-to-enchant: 250
-    #How much will it cost to disenchant an item?
-    cost-to-disenchant: 50
+    #How much will it cost per level of enchantment?
+    cost-to-enchant-1: 500
+    cost-to-enchant-2: 750
+    cost-to-enchant-3: 1000
+    cost-to-enchant-4: 1250
+    cost-to-enchant-5: 1500
+    cost-to-enchant-6: 1750
+    cost-to-enchant-7: 2000
+    cost-to-enchant-8: 2250
+    cost-to-enchant-9: 2500
+    cost-to-enchant-10: 2750
+    #How much will it cost to disenchant an item per enchant level?
+    #If a item has 10 levels of enchantments the default value will give you 50 EXP for $2.50
+    cost-to-disenchant: 0.25
     #How much will it cost to buy a random RPG item?
     cost-for-gear: 750
     #How much will it cost to buy a identity tome?
@@ -188,6 +196,14 @@ Command-Settings:
     cost-for-gem: 500
     #How much will it cost to salvage an item?
     cost-to-salvage: 25
+    #How much will it cost to add a socket?
+    cost-to-socket-1: 1500
+    cost-to-socket-2: 3000
+    cost-to-socket-3: 4500
+    #How much will it cost to remove a socket?
+    cost-to-desocket: 1000
+    #How much will it cost to remove a gem?
+    cost-to-degem: 500
     #What is the maximum amount to repair an item? 1% = $10 by default.
     cost-to-repair: 1000
     #How much per durability should a player get from selling gear?
