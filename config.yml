@@ -112,11 +112,6 @@ Monsters:
 Gear:
     #Set this to false to disable custom naming, sets, socketing, random enchanting.
     enabled: true
-    #Set this to false to disable the prefix and suffix naming of gear.
-    custom-names: true
-    #Set this to false to re-enable vanilla enchantments.
-    #This will re-enable the enchantment level based on enchantment and disallow enchantments that do not belong on that item.
-    custom-enchanting: true
     #Set this to false to disallow salvaging of RPG gear to attain resources from it.
     #To salvage an item simply place it inside of a furnace with fuel.
     #Permission: apocrpg.salvage
