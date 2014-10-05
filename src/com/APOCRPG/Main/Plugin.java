@@ -69,7 +69,6 @@ public class Plugin extends JavaPlugin {
 	}
 	
 	public static boolean containsLoreText(ItemMeta meta, String s) {
-		System.out.println("containsLoreText(ItemMeta meta, String s)");
 		boolean retval = false;
 		if ( meta != null && meta.hasLore()){
 			ArrayList<String> lore = (ArrayList<String>)meta.getLore();
@@ -83,7 +82,6 @@ public class Plugin extends JavaPlugin {
 	}
 	
 	public static boolean containsLoreText(ItemStack item, String s) {
-		System.out.println("containsLoreText(ItemStack item, String s)");
 		boolean retval = false;
 		if ( item != null && !item.getType().equals(Material.AIR) ) {
 			ItemMeta meta = item.getItemMeta();
@@ -93,7 +91,6 @@ public class Plugin extends JavaPlugin {
 	}
 	
 	public static void addLoreText(ArrayList<String> lore, String s1, String s2 ){
-		System.out.println("addLoreText(ArrayList<String> lore, String s1, String s2 )");
 		if ( s1 == null ) { return; } //{ return lore; }
 		
 		if ( lore == null ){ lore = new ArrayList<String>(); }
@@ -103,12 +100,10 @@ public class Plugin extends JavaPlugin {
 	}
 	
 	public static void addLoreText(ArrayList<String> lore, String s1){
-		System.out.println("addLoreText(ArrayList<String> lore, String s1)");
 		addLoreText( lore, s1, null);
 	}
 	
 	public static ItemMeta addLoreText(ItemMeta meta, String s1, String s2){
-		System.out.println("addLoreText(ItemMeta meta, String s1, String s2)");
 		if ( meta != null && !containsLoreText(meta, s1)){
 			ArrayList<String> lore = (ArrayList<String>)meta.getLore();
 			addLoreText( lore, s1, s2);
@@ -118,19 +113,16 @@ public class Plugin extends JavaPlugin {
 	}
 	
 	public static ItemMeta addLoreText(ItemMeta meta, String s1){
-		System.out.println("addLoreText(ItemMeta meta, String s1)");
 		return addLoreText( meta, s1, null );
 	}
 	
 	public static void addLoreText(ItemStack item, String s1, String s2){
-		System.out.println("addLoreText(ItemStack item, String s1, String s2)");
 		if ( item != null && !item.getType().equals(Material.AIR) ) { 
 			item.setItemMeta(addLoreText( item.getItemMeta(), s1, s2 ));
 		}
 	}
 	
 	public static void addLoreText(ItemStack item, String s1 ){
-		System.out.println("addLoreText(ItemStack item, String s1 )");
 		addLoreText( item, s1, null );
 	}
 	
