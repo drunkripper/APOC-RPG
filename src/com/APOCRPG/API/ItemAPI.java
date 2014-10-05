@@ -34,13 +34,27 @@ public class ItemAPI {
 		ItemStack Item = new ItemStack(Material);
 		return diablofy(Item);
 	}
+	
+	public static ItemStack createTome(){
+		Material mat = Material.ENCHANTED_BOOK;
+		ItemStack item = new ItemStack(mat);
+		ItemMeta meta = item.getItemMeta();
+		ArrayList<String> lore = (ArrayList<String>)meta.getLore();
+		if ( lore == null ) { lore = new ArrayList<String>(); }
+		lore.add(Plugin.LORE_TOME);
+		meta.setLore(lore);
+		meta.setDisplayName(Plugin.DISPLAY_NAME_TOME);
+		item.setItemMeta(meta);
+		return item;
+	}
+	
 	/**
 	* Diablofy wrapper:
 	* <p>
 	* this will diablofy the item that is passed to it in the classic way. This is a wrapper to preserve method signature.
 	*/
 	public static ItemStack diablofy(ItemStack Item) {
-	return diablofy(Item, 0);
+		return diablofy(Item, 0);
 	}
 	/**
 	 * Diablofy

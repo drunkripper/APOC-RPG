@@ -1,5 +1,7 @@
 package com.APOCRPG.Events;
 
+import java.util.ArrayList;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -7,11 +9,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.inventory.ItemStack;
 
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
@@ -65,5 +69,12 @@ public class EntityEvents implements Listener {
 		Player po = (Player)event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
+	}
+	@EventHandler
+	public void onEnitityDeath(EntityDeathEvent event){
+		EntityType et = event.getEntityType();
+		LivingEntity e = event.getEntity();
+		ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
+		if ( is == null ){ is = new ArrayList<ItemStack>(); }
 	}
 }

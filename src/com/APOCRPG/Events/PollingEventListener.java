@@ -40,7 +40,7 @@ public final class PollingEventListener implements Listener{
 				&&a.getItemMeta().getLore().get(1)!=null
 				)
 				{
-					System.out.println(a.toString());
+					//System.out.println(a.toString());
 					if(a.getItemMeta()!=null)
 						metas.add(a.getItemMeta());//All Metas now live here
 					//System.out.println(metas.get(0));

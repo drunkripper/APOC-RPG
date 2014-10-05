@@ -90,18 +90,27 @@ public class ApocRPGCommand implements CommandExecutor {
 								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 							}
 						} else if (arg2.equalsIgnoreCase("name")) {
-							if (Economy.hasMoney(Player, gearCost)) {
-								Economy.removeMoney(Player, gearCost);
-								ItemStack Item = ItemAPI.createItem();
-								ItemMeta meta = Item.getItemMeta();
-								meta.setDisplayName(arg3);
-								Item.setItemMeta(meta);
-								Inventory.addItem(Item);
+							ItemStack item = Player.getItemInHand();
+							if ( arg3 == null || arg3.replaceAll("_", " ").trim().equals("")){
+								Player.sendMessage(ChatColor.RED+"[APOC-RPG] Invalid item name");
+							} else if (item == null || item.getType().equals(Material.AIR)) {
+								Player.sendMessage(ChatColor.RED+"[APOC-RPG] You have nothing in your hand to name!");
+							} else if ( !Economy.hasMoney(Player, nameCost)) {
+								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
+							} else {
+								Economy.removeMoney(Player, nameCost);
+								ItemMeta meta = item.getItemMeta();
+								meta.setDisplayName(arg3.replaceAll("_"," ").trim());
+								Plugin.addLoreText(meta, Plugin.LORE_PLAYER_BOUND, Player.getName() );
+								item.setItemMeta(meta);
+							}
+						} else if (arg2.equalsIgnoreCase("book")) {
+							if (Economy.hasMoney(Player, tomeCost)) {
+								Economy.removeMoney(Player, tomeCost);
+								Inventory.addItem(ItemAPI.createTome());
 							} else {
 								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
 							}
-						} else if (arg2.equalsIgnoreCase("book")) {
-							
 						} else if (arg2.equalsIgnoreCase("gem")) {
 							if (Economy.hasMoney(Player, gemCost)) {
 								Economy.removeMoney(Player, gemCost);
@@ -174,6 +183,9 @@ public class ApocRPGCommand implements CommandExecutor {
 				} else if (arg1.equalsIgnoreCase("repair")) {
 					double cost = 0;
 					ItemStack item = null;
+					boolean _repaired = false;
+					boolean _bound = false;
+					
 					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 						
 					if ( arg2 == null || arg2.trim().equalsIgnoreCase("")) {
@@ -209,6 +221,9 @@ public class ApocRPGCommand implements CommandExecutor {
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
 							item.setDurability(Short.parseShort("0"));
+							Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, Player.getName());
+							Plugin.addLoreText(item, Plugin.LORE_REPAIRED );
+							
 							/*
 							 * fix this section where it won't throw errors
 							ItemMeta meta = item.getItemMeta();
