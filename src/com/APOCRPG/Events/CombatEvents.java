@@ -13,6 +13,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.APOCRPG.Main.Plugin;
+
 public class CombatEvents implements Listener {
 	HashMap<String, PotionEffectType> effects = new HashMap<String,PotionEffectType>();
 	public CombatEvents()
@@ -33,31 +35,33 @@ public class CombatEvents implements Listener {
 	public void onHit(EntityDamageByEntityEvent event) {
 		//System.out.println("EntityDamageByEntity event fired!");
 		if(event.getDamager().getType().equals(EntityType.PLAYER)&&event.getEntityType().isAlive())
-		{		Player p = (Player)event.getDamager();
-		LivingEntity e = (LivingEntity)event.getEntity();
+		{		
+			Player p = (Player)event.getDamager();
+			LivingEntity e = (LivingEntity)event.getEntity();
 
-//		System.out.println("Player " + p.getDisplayName() +" is swinging at livingEntity" + e.getType());
+			// System.out.println("Player " + p.getDisplayName() +" is swinging at livingEntity" + e.getType());
 			if(p.getItemInHand() !=null)
 			{//	System.out.println("has "+ p.getItemInHand().toString() +" in hand");
 				ItemStack i = p.getItemInHand();
 				if(i.hasItemMeta())
-						{
-				//			System.out.println("has Meta:" +i.getItemMeta().toString());
-							ItemMeta im = i.getItemMeta();
-							if(im.getLore()!=null&&im.getLore().size()>2)
-							{	
-					//			System.out.println("has Lore(1):" + im.getLore().get(1));
-								String name = im.getLore().get(0);
-								Integer level = Integer.parseInt(im.getLore().get(1).substring(6))-1;
-								Integer duration = Integer.parseInt(im.getLore().get(2).split(":")[0])*20 + Integer.parseInt(im.getLore().get(2).split(":")[1]) * 60 * 20;
-						
-								if(name!=null)
-							
-								{
-									e.addPotionEffect(new PotionEffect(effects.get(name),duration,level-1));
-								}
+				{
+					//System.out.println("has Meta:" +i.getItemMeta().toString());
+					if ( Plugin.containsLoreText(i, "Gem of")) {
+						ItemMeta im = i.getItemMeta();
+						if(im.getLore()!=null&&im.getLore().size()>2)
+						{	
+							// System.out.println("has Lore(1):" + im.getLore().get(1));
+							String name = im.getLore().get(0);
+							Integer level = Integer.parseInt(im.getLore().get(1).substring(6))-1;
+							Integer duration = Integer.parseInt(im.getLore().get(2).split(":")[0])*20 + Integer.parseInt(im.getLore().get(2).split(":")[1]) * 60 * 20;
+					
+							if(name!=null)
+							{
+								e.addPotionEffect(new PotionEffect(effects.get(name),duration,level-1));
 							}
 						}
+					}
+				}
 			}
 			else return;
 		}	

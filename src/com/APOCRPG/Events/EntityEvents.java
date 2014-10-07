@@ -73,8 +73,13 @@ public class EntityEvents implements Listener {
 	@EventHandler
 	public void onEnitityDeath(EntityDeathEvent event){
 		EntityType et = event.getEntityType();
-		LivingEntity e = event.getEntity();
-		ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
-		if ( is == null ){ is = new ArrayList<ItemStack>(); }
+		System.out.println("Dead: "+et.name().toString()+" by: "+event.getEventName());
+		LivingEntity entity = event.getEntity();
+		if ( entity instanceof Player ){
+			ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
+			for ( ItemStack item:is){
+				((Player) entity).sendMessage("Dropping: "+item.getItemMeta().getDisplayName());
+			}
+		}
 	}
 }

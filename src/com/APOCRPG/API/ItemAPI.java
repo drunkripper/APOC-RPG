@@ -64,12 +64,13 @@ public class ItemAPI {
 	 * @param type  an Int that determines how to diablofy- 0=ignored (Normal) 1=armor (Useful) 2=weapon (Useful) 3=tool (Useful) 4=bow (useful)
 	 * @return Funky Item
 	 */
-	public static ItemStack diablofy(ItemStack Item, int type) {
-
-		Item.setDurability((short)Plugin.Random.nextInt(120));
-		ItemMeta Meta = Item.getItemMeta();
-		Meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
-	
+	public static ItemStack diablofy(ItemStack item, int type) {
+		short dur = 0;
+		item.setDurability(dur);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
+		List<String> lore = meta.getLore();
+		if ( lore == null ) { lore = new ArrayList<String>();}
 		////////////////Set max enchants to this value///////////////
 		int maxEnchants = 6;
 		int minEnchants = 1;
@@ -141,36 +142,75 @@ public class ItemAPI {
 		int hasEnchants = Plugin.Random.nextInt(maxEnchants-minEnchants)+minEnchants;
 		for(int i = 0; i<hasEnchants;i++)
 		{
-			if(type==0)	Meta.addEnchant(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1,true);
+			if(type==0)	meta.addEnchant(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1,true);
 			else if(type==1)
 				//Armor
-				Meta.addEnchant(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1,true);
+				meta.addEnchant(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1,true);
 			else if(type==2)
 				//Weapon
-				Meta.addEnchant(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1,true);
+				meta.addEnchant(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1,true);
 			else if(type==3)
 				//Tool
-				Meta.addEnchant(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
+				meta.addEnchant(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 			else if(type==4)
 				//Bow
-				Meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
+				meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
 			
 			if(Plugin.Random.nextGaussian()<0.1)
 			{
-				List<String> lore = new ArrayList<String>();
 				lore.add("(Socket)");
-				Meta.setLore(lore);
+				meta.setLore(lore);
 			}
 		}
-		Item.setItemMeta(Meta);
+		item.setItemMeta(meta);
 
-		return Item;
+		return item;
 	}
 	
 	public static ItemStack createItem() {
 		Material Material = Materials[Plugin.Random.nextInt(Materials.length)];
 		ItemStack Item = new ItemStack(Material);
 		return diablofy(Item);
+	}
+	
+	public static ItemStack generateUsefulItem(){
+		return generateUsefulItem(0);
+		//placeholder to create generic signature
+	}
+
+	public static ItemStack generateUsefulItem(int variety){
+		int[] toolMaterials = { 1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24};
+		int[] weapMaterials = { 1,5,6,10,11,15,16,20,21,25};
+		//armor materials is 26 +r20
+		if(variety==0)
+			variety+=Plugin.Random.nextInt(4) +1;
+		if(variety==1) {
+			//armor
+			Material Material = Materials[26+Plugin.Random.nextInt(20)];
+			ItemStack Item = new ItemStack(Material);
+			return diablofy(Item, variety);
+				
+		}
+		else if (variety ==2) {
+			//weapon
+			Material Material = Materials[weapMaterials[Plugin.Random.nextInt(weapMaterials.length)]];
+			ItemStack Item = new ItemStack(Material);
+			return diablofy(Item, variety);
+					
+		}
+		else if(variety ==3) {
+			//tool
+			Material Material = Materials[toolMaterials[Plugin.Random.nextInt(toolMaterials.length)]];
+			ItemStack Item = new ItemStack(Material);
+			return diablofy(Item, variety);
+		}
+		else if(variety ==4){
+			//bow
+			Material Material = Materials[0];
+			ItemStack Item = new ItemStack(Material);
+			return diablofy(Item, variety);
+		}
+		else return generateUsefulItem();
 	}
 	
 	public static ItemStack createSocket() {
@@ -218,46 +258,6 @@ public class ItemAPI {
 		//return GemAPI.createGem();
 	}
 
-	public static ItemStack generateUsefulItem(){
-		return generateUsefulItem(0);
-		//placeholder to create generic signature
-	}
-
-	public static ItemStack generateUsefulItem(int variety){
-		int[] toolMaterials = { 1,2,3,4,6,7,8,9,11,12,13,14,16,17,18,19,21,22,23,24};
-		int[] weapMaterials = { 1,5,6,10,11,15,16,20,21,25};
-		//armor materials is 26 +r20
-		if(variety==0)
-			variety+=Plugin.Random.nextInt(4) +1;
-		if(variety==1) {
-			//armor
-			Material Material = Materials[26+Plugin.Random.nextInt(20)];
-			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
-				
-		}
-		else if (variety ==2) {
-			//weapon
-			Material Material = Materials[weapMaterials[Plugin.Random.nextInt(weapMaterials.length)]];
-			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
-					
-		}
-		else if(variety ==3) {
-			//tool
-			Material Material = Materials[toolMaterials[Plugin.Random.nextInt(toolMaterials.length)]];
-			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
-		}
-		else if(variety ==4){
-			//bow
-			Material Material = Materials[0];
-			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
-		}
-		else return generateUsefulItem();
-	}
-	
 	public static void fillChest(Block block) {
 		if (block.getType() == Material.CHEST) {
 			Chest Chest = (Chest)block.getState();

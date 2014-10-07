@@ -23,123 +23,148 @@ import com.APOCRPG.Main.Plugin;
 
 public class ApocRPGCommand implements CommandExecutor {
 
-	double gearCost = Plugin.Settings.getDouble("Command-Settings.cost-for-gear");
-	double gemCost = Plugin.Settings.getDouble("Command-Settings.cost-for-gem");
-	double tomeCost = Plugin.Settings.getDouble("Command-Settings.cost-for-tome");
-	double nameCost = Plugin.Settings.getDouble("Command-Settings.cost-for-name");
-	double loreCost = Plugin.Settings.getDouble("Command-Settings.cost-for-lore");
-	double enchantCost = Plugin.Settings.getDouble("Command-Settings.cost-to-enchant");
-	double disenchantCost = Plugin.Settings.getDouble("Command-Settings.cost-to-disenchant");
-	double disenchantXP = Plugin.Settings.getDouble("Command-Settings.disenchant-exp");
-	double salvageCost = Plugin.Settings.getDouble("Command-Settings.cost-to-salvage");
-	double repairCost = Plugin.Settings.getDouble("Command-Settings.cost-to-repair");
-	
 	@Override
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
+		ChatColor CommandColor = ChatColor.GOLD;
+		ChatColor DescColor = ChatColor.BLUE;
 		String arg1 = new String();
 		String arg2 = new String();
 		String arg3 = new String();
 		
-		Player Player = (Player) Sender;
+		Player _player = (Player) Sender;
+		
 		if (Command.getLabel().equalsIgnoreCase("apocrpg")) {
 			if (args.length == 0) {
-				ChatColor CommandColor = ChatColor.GOLD;
-				ChatColor DescColor = ChatColor.BLUE;
-				Player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "             | Buy an enchanted item.");
-				Player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "  | Buy an enchantment.");
-				Player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "       | Buy a random RPG item.");
-				Player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "      | Buy an enchanted item with a set name.");
-				Player.sendMessage(CommandColor + "/apocrpg buy book " + DescColor + "      | Buy an identity tome.");
-				Player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "        | Buy a socket gem.");
-				Player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "             | Sell a APOC-RPG item.");
-				Player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "         | Sell all APOC-RPG items in inventory.");
-				Player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "          | Repair an item.");
-				Player.sendMessage(CommandColor + "/apocrpg repair all" + DescColor + "      | Repair all items in inventory.");
-				Player.sendMessage(CommandColor + "/apocrpg disenchant" + DescColor + "     | Disenchant an item.");
-				Player.sendMessage(CommandColor + "/apocrpg disenchant all" + DescColor + " | Disenchant all items in inventory (except for worn armor).");
+				_player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "             | Buy an enchanted item.");
+				_player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "  | Buy an enchantment.");
+				_player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "        | Buy a socket gem.");
+				_player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "       | Buy a random RPG item.");
+				_player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your item.");
+				_player.sendMessage(CommandColor + "/apocrpg buy tome " + DescColor + "      | Buy an identity tome.");
+				_player.sendMessage(CommandColor + "/apocrpg disenchant" + DescColor + "     | Disenchant an item.");
+				_player.sendMessage(CommandColor + "/apocrpg disenchant all" + DescColor + " | Disenchant all items in inventory (except for worn armor).");
+				_player.sendMessage(CommandColor + "/apocrpg sell" + DescColor + "             | Sell a APOC-RPG item.");
+				_player.sendMessage(CommandColor + "/apocrpg sell all" + DescColor + "         | Sell all APOC-RPG items in inventory.");
+				_player.sendMessage(CommandColor + "/apocrpg repair" + DescColor + "          | Repair an item.");
+				_player.sendMessage(CommandColor + "/apocrpg repair all" + DescColor + "      | Repair all items in inventory.");
+				_player.sendMessage(CommandColor + "/apocrpg version" + DescColor + "      | Show version information.");
 			} else {
 				for ( int i = 0; i < args.length; i++){
 					if ( i == 0 )
-						arg1 = args[i];
+						arg1 = ((String)args[i]).toLowerCase();
 					else if ( i == 1 )
-						arg2 = args[i];
+						arg2 = ((String)args[i]).toLowerCase();
 					else if ( i == 2 )
 						arg3 = args[i];
 				}
-				if (arg1.equalsIgnoreCase("buy")) {
-					Inventory Inventory = Player.getInventory();
+				
+				if (arg1.equalsIgnoreCase("version")) {
+					_player.sendMessage(CommandColor + "APOC RPG Plugin | Version "+Plugin.VERSION);
+					_player.sendMessage(CommandColor + "Programmed by the Apocalyptic Gaming Network");
+					_player.sendMessage(CommandColor + "http://apocgaming.org");
+					_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
+				}
+				else if ( !_player.hasPermission("apocrpg."+arg1+((arg2 != null && !arg2.trim().equals(""))?"."+arg2:""))){
+					_player.sendMessage(Plugin.APOCRPG_ERROR_NO_PERMISSION);
+					return true;
+				}
+				else if (arg1.equalsIgnoreCase("buy")) {
+					Inventory Inventory = _player.getInventory();
 					if (args.length > 1) {
-						
 						if (arg2.equalsIgnoreCase("enchant")) {
-							Player.sendMessage(ChatColor.RED + "[APOC-RPG] This command is still under development.");
+							_player.sendMessage(Plugin.APOCRPG_ERROR+"This command is still under development.");
 							/*
 							if (arg3.equalsIgnoreCase("list")){
-								ItemStack item = Player.getItemInHand();
+								ItemStack item = _player.getItemInHand();
 								if ( item == null || item.getType().name().equalsIgnoreCase("air") ) {
-									Player.sendMessage(ChatColor.RED + "[APOC-RPG] No item being held!");
+									_player.sendMessage(Plugin.APOCRPG_ERROR+"No item being held!");
 								} else {
 								}
 							}
 							*/
-						} else if (arg2.equalsIgnoreCase("item")) {
-							if (Economy.hasMoney(Player, gearCost)) {
-								Economy.removeMoney(Player, gearCost);
-								ItemStack Item = ItemAPI.createItem();
-								Inventory.addItem(Item);
-							} else {
-								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
-							}
-						} else if (arg2.equalsIgnoreCase("name")) {
-							ItemStack item = Player.getItemInHand();
-							if ( arg3 == null || arg3.replaceAll("_", " ").trim().equals("")){
-								Player.sendMessage(ChatColor.RED+"[APOC-RPG] Invalid item name");
-							} else if (item == null || item.getType().equals(Material.AIR)) {
-								Player.sendMessage(ChatColor.RED+"[APOC-RPG] You have nothing in your hand to name!");
-							} else if ( !Economy.hasMoney(Player, nameCost)) {
-								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
-							} else {
-								Economy.removeMoney(Player, nameCost);
-								ItemMeta meta = item.getItemMeta();
-								meta.setDisplayName(arg3.replaceAll("_"," ").trim());
-								Plugin.addLoreText(meta, Plugin.LORE_PLAYER_BOUND, Player.getName() );
-								item.setItemMeta(meta);
-							}
-						} else if (arg2.equalsIgnoreCase("book")) {
-							if (Economy.hasMoney(Player, tomeCost)) {
-								Economy.removeMoney(Player, tomeCost);
-								Inventory.addItem(ItemAPI.createTome());
-							} else {
-								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
-							}
 						} else if (arg2.equalsIgnoreCase("gem")) {
-							if (Economy.hasMoney(Player, gemCost)) {
-								Economy.removeMoney(Player, gemCost);
+							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEM)) {
+								Economy.removeMoney(_player, Plugin.COST_BUY_GEM);
 								//Inventory.addItem(ItemAPI.createSocket());
 								Inventory.addItem(GemAPI.createGem());
 							} else {
-								Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
+								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY);
+							}
+						} else if (arg2.equalsIgnoreCase("item")) {
+							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
+								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
+								ItemStack item = ItemAPI.createItem();
+								Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
+								Inventory.addItem(item);
+							}
+						} else if (arg2.equalsIgnoreCase("name")) {
+							ItemStack item = _player.getItemInHand();
+							if ( arg3 != null) {
+								arg3 = arg3.replaceAll("_", " ").trim();
+							}
+							if ( arg3 == null || arg3.equals(Plugin.LORE_UNKNOWN_ITEM)){
+								_player.sendMessage(Plugin.APOCRPG_ERROR+"Invalid item name!");
+							} else if (item == null || item.getType().equals(Material.AIR)) {
+								_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
+							} else if ( !Economy.hasMoney(_player, Plugin.COST_BUY_NAME)) {
+								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY);
+							} else {
+								Economy.removeMoney(_player, Plugin.COST_BUY_NAME);
+								ItemMeta meta = item.getItemMeta();
+								meta.setDisplayName(arg3.replaceAll("_"," ").trim());
+								Plugin.addLoreText(meta, Plugin.LORE_PLAYER_BOUND, _player.getName() );
+								item.setItemMeta(meta);
+							}
+						} else if (arg2.equalsIgnoreCase("tome")) {
+							if (Economy.hasMoney(_player, Plugin.COST_BUY_TOME)) {
+								Economy.removeMoney(_player, Plugin.COST_BUY_TOME);
+								Inventory.addItem(ItemAPI.createTome());
+							} else {
+								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY);
+							}
+						} else if (arg2.equalsIgnoreCase("unknown")) {
+							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
+								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
+								ItemStack item = ItemAPI.createItem();
+								if ( item.getItemMeta().hasEnchants() ) {
+									Map<Enchantment, Integer> enchants = item.getEnchantments();
+									Iterator it = enchants.keySet().iterator();
+									while (it.hasNext()){
+										Enchantment _ench = (Enchantment)it.next();
+										item.removeEnchantment(_ench);
+									}
+								}
+								Plugin.clearLore(item);
+								ItemMeta meta = item.getItemMeta();
+								meta.setDisplayName("Unidentified Item");
+								meta.setLore(null);
+								item.setItemMeta(meta);
+								Inventory.addItem(item);
+							} else {
+								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY);
 							}
 						}
-					} else if (Economy.hasMoney(Player, gearCost)) {
-						Economy.removeMoney(Player, gearCost);
-						Inventory.addItem(ItemAPI.createItem());
 					} else {
-						Player.sendMessage(ChatColor.RED + "[APOC-RPG] Not enough money!");
+						_player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "  | Buy an enchantment.");
+						_player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "        | Buy a socket gem.");
+						_player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "       | Buy a random RPG item.");
+						_player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your item.");
+						_player.sendMessage(CommandColor + "/apocrpg buy tome " + DescColor + "      | Buy an identity tome.");
 					}
 				} else if (arg1.equalsIgnoreCase("disenchant")) {
 					double cost = 0;
 					double totalXP = 0;
 					
 					ItemStack item = null;
-					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+					List<ItemStack> items = new ArrayList<ItemStack>();
 						
 					if ( arg2 == null || arg2.trim().equalsIgnoreCase("")) {
-						item = Player.getItemInHand();
+						item = _player.getItemInHand();
 						if ( item != null && !item.getEnchantments().isEmpty() ) {
 							items.add(item);
 						}
 					} else if ( arg2.equalsIgnoreCase("all")){
-						Inventory inventory = Player.getInventory();
+						Inventory inventory = _player.getInventory();
 						
 						// ignore the first 9 slots [0-8] as we don't want to
 						// disenchant items in the action bar
@@ -150,15 +175,15 @@ public class ApocRPGCommand implements CommandExecutor {
 							}
 						}
 					} else {
-						Player.sendMessage(ChatColor.RED + "Error: Unknown command : '"+arg1+" "+arg2+"'");
+						_player.sendMessage(Plugin.APOCRPG_ERROR + "Unknown command : '"+arg1+" "+arg2+"'");
 						return true;
 					}
-					cost = items.size() * disenchantCost;
+					cost = items.size() * Plugin.COST_DISENCHANT;
 					
 					if ( cost == 0 ) {
-						Player.sendMessage("You have nothing to disenchant.");
-					} else if ( Economy.hasMoney(Player, cost)) {
-						Economy.removeMoney(Player, cost);
+						_player.sendMessage("You have nothing to disenchant.");
+					} else if ( Economy.hasMoney(_player, cost)) {
+						Economy.removeMoney(_player, cost);
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
 							Map enchantments = item.getEnchantments();
@@ -167,35 +192,37 @@ public class ApocRPGCommand implements CommandExecutor {
 								while (it.hasNext()){
 									Enchantment ench = (Enchantment)it.next();
 									int levels = ((Integer)enchantments.get(ench)).intValue();
-									totalXP += (levels * disenchantXP);
+									totalXP += (levels * Plugin.EXP_DISENCHANT);
 									item.removeEnchantment(ench);
 								}
 							}
 						}
 						if ( totalXP > 0 ){
-							Player.giveExp((int)totalXP);
+							_player.giveExp((int)totalXP);
 						}
-						Player.sendMessage("You have disenchanted "+items.size()+" item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy and received "+(int)totalXP+" XP.");
+						_player.sendMessage("You have disenchanted "+items.size()+" item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy and received "+(int)totalXP+" XP.");
 							
 					} else {
-						Player.sendMessage("You don't have enough money! You need " + Economy.format(cost) + " economy.");
+						_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY+"You need " + Economy.format(cost) + " economy.");
 					}
+				} else if (arg1.equalsIgnoreCase("reload")) {
+					Plugin.loadConfig();
 				} else if (arg1.equalsIgnoreCase("repair")) {
 					double cost = 0;
 					ItemStack item = null;
 					boolean _repaired = false;
 					boolean _bound = false;
 					
-					ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+					List<ItemStack> items = new ArrayList<ItemStack>();
 						
 					if ( arg2 == null || arg2.trim().equalsIgnoreCase("")) {
-						item = Player.getItemInHand();
+						item = _player.getItemInHand();
 						if ( item != null && item.getDurability() > 0 ) {
 							items.add(item);
 						}
 					} else if ( arg2.equalsIgnoreCase("all")){
-						Inventory inventory = Player.getInventory();
-						ItemStack[] armor = Player.getPlayer().getInventory().getArmorContents();
+						Inventory inventory = _player.getInventory();
+						ItemStack[] armor = _player.getPlayer().getInventory().getArmorContents();
 						
 						for ( int i = 0; i < inventory.getSize(); i++){
 							item = inventory.getItem(i);
@@ -210,41 +237,30 @@ public class ApocRPGCommand implements CommandExecutor {
 							}
 						}
 					} else {
-						Player.sendMessage(ChatColor.RED + "Error: Unknown command : '"+arg1+" "+arg2+"'");
+						_player.sendMessage(Plugin.APOCRPG_ERROR + "Unknown command : '"+arg1+" "+arg2+"'");
 					}
-					cost = items.size() * repairCost;
+					cost = items.size() * Plugin.COST_REPAIR;
 					
 					if ( cost == 0 ) {
-						Player.sendMessage("You have nothing to repair.");
-					} else if ( Economy.hasMoney(Player, cost)) {
-						Economy.removeMoney(Player, cost);
+						_player.sendMessage("You have nothing to repair.");
+					} else if ( Economy.hasMoney(_player, cost)) {
+						Economy.removeMoney(_player, cost);
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
 							item.setDurability(Short.parseShort("0"));
-							Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, Player.getName());
+							Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
 							Plugin.addLoreText(item, Plugin.LORE_REPAIRED );
-							
-							/*
-							 * fix this section where it won't throw errors
-							ItemMeta meta = item.getItemMeta();
-							List<String> lore = meta.getLore();
-							if ( lore == null || !lore.contains("Used Item")) {
-								lore.add(lore.size(),"Used Item");
-								meta.setLore(lore);
-								item.setItemMeta(meta);
-							}
-							*/
 						}
-						Player.sendMessage("You have repaired your item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy.");
+						_player.sendMessage("You have repaired your item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy.");
 							
 					} else {
-						Player.sendMessage("You don't have enough money! You need " + Economy.format(cost) + " economy.");
+						_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY+"You need " + Economy.format(cost) + " economy.");
 					}
 				}
 			}
 			return true;
 		} else {
-			System.out.println("[APOC-RPG] Unkown command sent.");
+			System.out.println(Plugin.APOCRPG_ERROR+"Unknown command sent.");
 			return false;
 		}
 	}

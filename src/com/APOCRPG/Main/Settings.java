@@ -40,6 +40,10 @@ public class Settings {
 		return Suffixes.get(Plugin.Random.nextInt(Suffixes.size()));
 	}
 	
+	public String getString(String key) {
+		return this.Config.getString(key);
+	}
+	
 	public boolean areDungeonsEnabledInWorld(World world) {
 		return !DisabledWorlds.contains(world.getName());
 	}

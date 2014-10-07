@@ -10,11 +10,13 @@ import com.APOCRPG.Events.SocketEvents;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.server.v1_7_R3.Material;
 
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -31,11 +33,45 @@ public class Plugin extends JavaPlugin {
 	public static EntityEvents EntityListener = new EntityEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
 	public static SocketEvents SocketListener = null;
+	// global constants - general
+	public static String APOCRPG_ERROR = ChatColor.RED+"[APOC-RPG] ";
+	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR+"You have nothing in your hand!";
+	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR+"You do not have permission for that command!";
+	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR+"Not enough money!";
 	public static String DISPLAY_NAME_TOME = "Identify Tome";
+	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = "Unidentified Item";
 	public static String LORE_ITEM_SOCKET = "(Socket)";
 	public static String LORE_PLAYER_BOUND = ChatColor.WHITE+"Player Bound:";
 	public static String LORE_REPAIRED = ChatColor.DARK_GRAY+"Repaired";
 	public static String LORE_TOME = "Identify the Unknown";
+	public static String LORE_UNKNOWN_ITEM = "Unidentified Item";
+	// global constants - config settings
+	public static double COST_BUY_GEAR = 750;
+	public static double COST_BUY_GEM = 500;
+	public static double COST_BUY_LORE = 150;
+	public static double COST_BUY_NAME = 100;
+	public static double COST_BUY_TOME = 500;
+	public static double COST_DISENCHANT = 0.25;
+	public static double COST_ENCHANT_LVL_1  = 500;
+	public static double COST_ENCHANT_LVL_2  = 750;
+	public static double COST_ENCHANT_LVL_3  = 1000;
+	public static double COST_ENCHANT_LVL_4  = 1250;
+	public static double COST_ENCHANT_LVL_5  = 1500;
+	public static double COST_ENCHANT_LVL_6  = 1750;
+	public static double COST_ENCHANT_LVL_7  = 2000;
+	public static double COST_ENCHANT_LVL_8  = 2250;
+	public static double COST_ENCHANT_LVL_9  = 2500;
+	public static double COST_ENCHANT_LVL_10 = 2750;
+	public static double COST_REMOVE_GEM = 500;
+	public static double COST_REMOVE_SOCKET = 1000;
+	public static double COST_REPAIR = 1000;
+	public static double COST_SALVAGE = 25;
+	public static double COST_SOCKET_1 = 1500;
+	public static double COST_SOCKET_2 = 3000;
+	public static double COST_SOCKET_3 = 4500;
+	public static Boolean DEBUG = false;
+	public static double EXP_DISENCHANT = 5;
+	public static String VERSION = "";
 	
 	public void onEnable() {
 		Plugin = this;
@@ -51,6 +87,7 @@ public class Plugin extends JavaPlugin {
 			
 		saveDefaultConfig();
 		Settings = new Settings(getConfig());
+		loadConfig();
 		LandRuins = new File(getDataFolder(), "/LandRuins");
 		if (!LandRuins.exists()) {
 			LandRuins.mkdir();
@@ -70,8 +107,8 @@ public class Plugin extends JavaPlugin {
 	
 	public static boolean containsLoreText(ItemMeta meta, String s) {
 		boolean retval = false;
-		if ( meta != null && meta.hasLore()){
-			ArrayList<String> lore = (ArrayList<String>)meta.getLore();
+		if ( meta != null && meta.hasLore() && !meta.getLore().isEmpty()){
+			List<String> lore = (List<String>)meta.getLore();
 			for (String l:lore){
 				if ( l.startsWith(s) ) {
 					return true;
@@ -90,22 +127,36 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 	
-	public static void addLoreText(ArrayList<String> lore, String s1, String s2 ){
+	
+	public static List<String> getLoreContaining(ItemStack item, String s){
+		List<String> retval = new ArrayList<String>();
+		if ( containsLoreText(item, s)) {
+			List<String> lore = (List<String>)item.getItemMeta().getLore();
+			for ( String l:lore ){
+				if (l.startsWith(s)){
+					retval.add(l);
+				}
+			}
+		}
+		return retval;
+	}
+	
+	public static void addLoreText(List<String> lore, String s1, String s2 ){
 		if ( s1 == null ) { return; } //{ return lore; }
 		
-		if ( lore == null ){ lore = new ArrayList<String>(); }
+		if ( lore == null || lore.isEmpty() ){ lore = new ArrayList<String>(); }
 		
 		lore.add((s1 == null ? "" : s1.trim() ) + (s2 != null && !s2.trim().equals("")? (" "+s2.trim()) : "" ));
 		//return lore;
 	}
 	
-	public static void addLoreText(ArrayList<String> lore, String s1){
+	public static void addLoreText(List<String> lore, String s1){
 		addLoreText( lore, s1, null);
 	}
 	
 	public static ItemMeta addLoreText(ItemMeta meta, String s1, String s2){
 		if ( meta != null && !containsLoreText(meta, s1)){
-			ArrayList<String> lore = (ArrayList<String>)meta.getLore();
+			List<String> lore = (List<String>)meta.getLore();
 			addLoreText( lore, s1, s2);
 			meta.setLore(lore);
 		}
@@ -126,4 +177,68 @@ public class Plugin extends JavaPlugin {
 		addLoreText( item, s1, null );
 	}
 	
+	public static void clearLore( ItemStack item ){
+		if ( item != null && !item.getType().equals(Material.AIR) ) { 
+			ItemMeta meta = item.getItemMeta();
+			if ( meta != null ){
+				List<String> lore = new ArrayList<String>();
+				lore.add("");
+				meta.setLore(lore);
+				item.setItemMeta(meta);
+			}
+		}
+	}
+	
+	public static void loadConfig(){
+		COST_BUY_GEAR = Settings.getDouble("Command-Settings.cost-for-gear");
+		COST_BUY_GEM = Settings.getDouble("Command-Settings.cost-for-gem");
+		COST_BUY_LORE = Settings.getDouble("Command-Settings.cost-for-lore");
+		COST_BUY_NAME = Settings.getDouble("Command-Settings.cost-for-name");
+		COST_BUY_TOME = Settings.getDouble("Command-Settings.cost-for-tome");
+		COST_DISENCHANT = Settings.getDouble("Command-Settings.cost-to-disenchant");
+		COST_ENCHANT_LVL_1 = Settings.getDouble("Command-Settings.cost-to-enchant-1");
+		COST_ENCHANT_LVL_2 = Settings.getDouble("Command-Settings.cost-to-enchant-2");
+		COST_ENCHANT_LVL_3 = Settings.getDouble("Command-Settings.cost-to-enchant-3");
+		COST_ENCHANT_LVL_4 = Settings.getDouble("Command-Settings.cost-to-enchant-4");
+		COST_ENCHANT_LVL_5 = Settings.getDouble("Command-Settings.cost-to-enchant-5");
+		COST_ENCHANT_LVL_6 = Settings.getDouble("Command-Settings.cost-to-enchant-6");
+		COST_ENCHANT_LVL_7 = Settings.getDouble("Command-Settings.cost-to-enchant-7");
+		COST_ENCHANT_LVL_8 = Settings.getDouble("Command-Settings.cost-to-enchant-8");
+		COST_ENCHANT_LVL_9 = Settings.getDouble("Command-Settings.cost-to-enchant-9");
+		COST_ENCHANT_LVL_10= Settings.getDouble("Command-Settings.cost-to-enchant-10");
+		COST_REMOVE_GEM = Settings.getDouble("Command-Settings.cost-to-degem");
+		COST_REMOVE_SOCKET = Settings.getDouble("Command-Settings.cost-to-desocket");
+		COST_REPAIR = Settings.getDouble("Command-Settings.cost-to-repair");
+		COST_SALVAGE = Settings.getDouble("Command-Settings.cost-to-salvage");
+		COST_SOCKET_1 = Settings.getDouble("Command-Settings.cost-to-socket-1");
+		COST_SOCKET_2 = Settings.getDouble("Command-Settings.cost-to-socket-2");
+		COST_SOCKET_3 = Settings.getDouble("Command-Settings.cost-to-socket-3");
+		DEBUG =  Settings.getBoolean("Plugin.debug");
+		EXP_DISENCHANT = Settings.getDouble("Command-Settings.disenchant-exp");
+		VERSION = Settings.getString("Plugin.version");
+	}
+	
+	public static void debugConsole(String s){
+		if ( DEBUG ){
+			System.out.println(s);
+		}
+	}
+	
+	public static void debugLog(String s ){
+		if ( DEBUG ){
+			// put debug logging here
+		}
+	}
+	
+	public static void debugPlayerMsg(CommandSender player, String msg){
+		if ( DEBUG ) {
+			player.sendMessage(msg);
+		}
+	}
+	
+	public static void debugPlayerMsg(Player player, String msg){
+		if ( DEBUG ) {
+			player.sendMessage(msg);
+		}
+	}
 }
