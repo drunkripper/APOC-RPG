@@ -76,7 +76,7 @@ public class EffectAPI {
 		System.out.println("Null");
 		return null;
 	}
-	
+	//Is this a scaffold?
 	public static Effect getEffectFromGem(ItemStack Gem) {
 		System.out.println("First line of lore is " + Gem.getItemMeta().getLore().get(1) + ".");
 		if (Gem.getItemMeta().getLore().get(1).equals("Gem")) {

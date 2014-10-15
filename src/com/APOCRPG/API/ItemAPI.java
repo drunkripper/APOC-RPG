@@ -214,48 +214,9 @@ public class ItemAPI {
 	}
 	
 	public static ItemStack createSocket() {
-		//Effects with -ing are targeted on the enemy. Otherwise targeted on the holder/wearer.
-		ItemStack socket = new ItemStack(Material.EMERALD);
-		String[] Effects = { "Speed",
-						"Slowing",
-						"Haste",
-						"Fatiguing",
-						"Strength",
-						"Sanctifying",
-						"Desecrating",
-						"Jumpfulness",
-						"Nauseating",
-						"Regeneration",
-						"Resistance",
-						"Fire Resistance",
-						"Scuba",
-						"Invisibility",
-						"Blinding",
-						"Night Vision",
-						"Hungering",
-						"Weakening",
-						"Poisoning",
-						"Withering",
-						"Health",
-						"Absorption",
-						"Saturation"}; //All these effects are helpful for the user.
-										//Unpleasant effects can be added as well.
-		ItemMeta Meta = socket.getItemMeta();
-
-		String Effect = Effects[Plugin.Random.nextInt(Effects.length)];
-		int effectLevel = Plugin.Random.nextInt(3) + 1;
-		int minDur = Plugin.Random.nextInt(2);
-		int secDur = Plugin.Random.nextInt(50)+10;
-		List<String> Lore = new ArrayList<String>();
-		Lore.add("Socket");
-		Lore.add("------");
-		Lore.add(Effect);
-		Lore.add("Level "+ effectLevel);
-		Lore.add(minDur + ":" + secDur);
-		Meta.setLore(Lore);
-		socket.setItemMeta(Meta);
-		return socket;
-		//return GemAPI.createGem();
+		//Redundant. Using GemAPI now.
+		//return socket;
+		return GemAPI.createGem();
 	}
 
 	public static void fillChest(Block block) {
