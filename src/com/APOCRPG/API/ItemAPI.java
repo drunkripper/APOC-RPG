@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.items.IdentifyTome;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -36,16 +37,9 @@ public class ItemAPI {
 	}
 	
 	public static ItemStack createTome(){
-		Material mat = Material.ENCHANTED_BOOK;
-		ItemStack item = new ItemStack(mat);
-		ItemMeta meta = item.getItemMeta();
-		ArrayList<String> lore = (ArrayList<String>)meta.getLore();
-		if ( lore == null ) { lore = new ArrayList<String>(); }
-		lore.add(Plugin.LORE_TOME);
-		meta.setLore(lore);
-		meta.setDisplayName(Plugin.DISPLAY_NAME_TOME);
-		item.setItemMeta(meta);
-		return item;
+		IdentifyTome tome = new IdentifyTome();
+		Plugin.addLoreText(tome, Plugin.LORE_TOME);
+		return tome;
 	}
 	
 	/**
@@ -158,7 +152,7 @@ public class ItemAPI {
 			
 			if(Plugin.Random.nextGaussian()<0.1)
 			{
-				lore.add("(Socket)");
+				lore.add(Plugin.LORE_ITEM_SOCKET);
 				meta.setLore(lore);
 			}
 		}

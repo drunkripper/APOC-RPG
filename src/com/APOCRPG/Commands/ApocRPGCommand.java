@@ -128,7 +128,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								ItemStack item = ItemAPI.createItem();
 								if ( item.getItemMeta().hasEnchants() ) {
 									Map<Enchantment, Integer> enchants = item.getEnchantments();
-									Iterator it = enchants.keySet().iterator();
+									Iterator<Enchantment> it = (Iterator<Enchantment>)enchants.keySet().iterator();
 									while (it.hasNext()){
 										Enchantment _ench = (Enchantment)it.next();
 										item.removeEnchantment(_ench);
@@ -186,9 +186,9 @@ public class ApocRPGCommand implements CommandExecutor {
 						Economy.removeMoney(_player, cost);
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
-							Map enchantments = item.getEnchantments();
+							Map<Enchantment, Integer> enchantments = item.getEnchantments();
 							if ( enchantments != null && ! enchantments.isEmpty()){
-								Iterator it = enchantments.keySet().iterator();
+								Iterator<Enchantment> it = (Iterator<Enchantment>)enchantments.keySet().iterator();
 								while (it.hasNext()){
 									Enchantment ench = (Enchantment)it.next();
 									int levels = ((Integer)enchantments.get(ench)).intValue();
@@ -210,8 +210,6 @@ public class ApocRPGCommand implements CommandExecutor {
 				} else if (arg1.equalsIgnoreCase("repair")) {
 					double cost = 0;
 					ItemStack item = null;
-					boolean _repaired = false;
-					boolean _bound = false;
 					
 					List<ItemStack> items = new ArrayList<ItemStack>();
 						
@@ -248,8 +246,19 @@ public class ApocRPGCommand implements CommandExecutor {
 						for ( int j = 0; j < items.size(); j++){
 							item = items.get(j);
 							item.setDurability(Short.parseShort("0"));
+							
+							Plugin.debugPlayerMsg(_player, "Adding lore to item.getItemMeta().getDisplayName(): "+item.getItemMeta().getDisplayName());
+							Plugin.debugPlayerMsg(_player, "Adding lore to item.getTypeId(): "+item.getTypeId());
+							Plugin.debugPlayerMsg(_player, "Adding lore to item.getData().getItemType().ordinal(): "+item.getData().getItemType().ordinal());
+							Plugin.debugPlayerMsg(_player, "Adding lore to item.getType().toString(): "+item.getType().toString());
+							Plugin.debugPlayerMsg(_player, "Adding lore to item.getType().name()(): "+item.getType().name());
 							Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
 							Plugin.addLoreText(item, Plugin.LORE_REPAIRED );
+							
+							ArrayList<String> lore = (ArrayList<String>)item.getItemMeta().getLore();
+							for ( int i = 0; lore != null && !lore.isEmpty() && i < lore.size(); i++){
+								Plugin.debugPlayerMsg(_player,"lore["+i+"] : "+lore.get(i));
+							}
 						}
 						_player.sendMessage("You have repaired your item"+(items.size() > 1 ? "s" : "")+" for " + Economy.format(cost) + " economy.");
 							

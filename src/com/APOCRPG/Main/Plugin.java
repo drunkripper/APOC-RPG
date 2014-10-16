@@ -13,9 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.server.v1_7_R3.Material;
-
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -38,9 +37,11 @@ public class Plugin extends JavaPlugin {
 	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR+"You have nothing in your hand!";
 	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR+"You do not have permission for that command!";
 	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR+"Not enough money!";
-	public static String DISPLAY_NAME_TOME = "Identify Tome";
+	public static String APOCRPG_ERROR_SOCKET = APOCRPG_ERROR+"You can not socket that gem to this item!";
+	public static String DISPLAY_NAME_TOME = ChatColor.MAGIC+"Identify Tome";
 	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = "Unidentified Item";
-	public static String LORE_ITEM_SOCKET = "(Socket)";
+	public static String LORE_GEM_OF = ChatColor.LIGHT_PURPLE+"Gem of ";
+	public static String LORE_ITEM_SOCKET = ChatColor.LIGHT_PURPLE+"(Socket)";
 	public static String LORE_PLAYER_BOUND = ChatColor.WHITE+"Player Bound:";
 	public static String LORE_REPAIRED = ChatColor.DARK_GRAY+"Repaired";
 	public static String LORE_TOME = "Identify the Unknown";
@@ -105,15 +106,22 @@ public class Plugin extends JavaPlugin {
 		
 	}
 	
-	public static boolean containsLoreText(ItemMeta meta, String s) {
+	public static boolean containsLoreText(List<String> lore, String s) {
 		boolean retval = false;
-		if ( meta != null && meta.hasLore() && !meta.getLore().isEmpty()){
-			List<String> lore = (List<String>)meta.getLore();
+		if ( lore != null && !lore.isEmpty()){
 			for (String l:lore){
 				if ( l.startsWith(s) ) {
 					return true;
 				}
 			}
+		}
+		return retval;
+	}
+	
+	public static boolean containsLoreText(ItemMeta meta, String s) {
+		boolean retval = false;
+		if ( meta != null && meta.hasLore() && !meta.getLore().isEmpty()){
+			containsLoreText( meta.getLore(), s);
 		}
 		return retval;
 	}
@@ -141,25 +149,29 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 	
-	public static void addLoreText(List<String> lore, String s1, String s2 ){
-		if ( s1 == null ) { return; } //{ return lore; }
+	public static List<String> addLoreText(List<String> lore, String s1, String s2 ){
+		if ( s1 == null ) { 
+			return lore;
+		} 
 		
 		if ( lore == null || lore.isEmpty() ){ lore = new ArrayList<String>(); }
 		
 		lore.add((s1 == null ? "" : s1.trim() ) + (s2 != null && !s2.trim().equals("")? (" "+s2.trim()) : "" ));
-		//return lore;
+		debugConsole("lore added: "+s1+" "+s2);
+		return lore;
 	}
 	
-	public static void addLoreText(List<String> lore, String s1){
-		addLoreText( lore, s1, null);
+	public static List<String> addLoreText(List<String> lore, String s1){
+		return addLoreText( lore, s1, null);
 	}
 	
 	public static ItemMeta addLoreText(ItemMeta meta, String s1, String s2){
 		if ( meta != null && !containsLoreText(meta, s1)){
 			List<String> lore = (List<String>)meta.getLore();
-			addLoreText( lore, s1, s2);
-			meta.setLore(lore);
-		}
+			meta.setLore(addLoreText( lore, s1, s2));
+		} else {
+			debugConsole("addLoreText: ItemMeta is null OR equals AIR");
+		} 
 		return meta;
 	}
 	
@@ -170,6 +182,8 @@ public class Plugin extends JavaPlugin {
 	public static void addLoreText(ItemStack item, String s1, String s2){
 		if ( item != null && !item.getType().equals(Material.AIR) ) { 
 			item.setItemMeta(addLoreText( item.getItemMeta(), s1, s2 ));
+		} else {
+			debugConsole("addLoreText: ItemStack is null OR equals AIR");
 		}
 	}
 	
@@ -241,4 +255,39 @@ public class Plugin extends JavaPlugin {
 			player.sendMessage(msg);
 		}
 	}
+	
+	public static int romanToInt ( String roman )  {
+		int retval = -1;
+		switch ( roman ){
+			case "I" : retval = 1; break;
+			case "II" : retval = 2; break;
+			case "III" : retval = 3; break;
+			case "IV" : retval = 4; break;
+			case "V" : retval = 5; break;
+			case "VI" : retval = 6; break;
+			case "VII" : retval = 7; break;
+			case "VIII" : retval = 8; break;
+			case "IX" : retval = 9; break;
+			case "X" : retval = 10; break;
+		}
+		return retval;
+	}
+	
+	public static String intToRoman ( int nbr )  {
+		String retval = "";
+		switch ( nbr ){
+			case 1: retval = "I"; break;
+			case 2: retval = "II"; break;
+			case 3: retval = "III"; break;
+			case 4: retval = "IV"; break;
+			case 5: retval = "V"; break;
+			case 6: retval = "VI"; break;
+			case 7: retval = "VII"; break;
+			case 8: retval = "VIII"; break;
+			case 9: retval = "IX"; break;
+			case 10: retval = "X"; break;
+		}
+		return retval;
+	}
+	
 }

@@ -63,15 +63,15 @@ public class EffectAPI {
 		System.out.println(Type);
 		switch(Type) {
 			case "Armor":
-				return new Effect(ArmorEffects[Plugin.Random.nextInt(ArmorEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
+				return new Effect(ArmorEffects[Plugin.Random.nextInt(ArmorEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case "PassiveWeapon":
-				return new Effect(PassiveWeaponEffects[Plugin.Random.nextInt(PassiveWeaponEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
+				return new Effect(PassiveWeaponEffects[Plugin.Random.nextInt(PassiveWeaponEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case "Weapon":
-				return new Effect(HitWeaponEffects[Plugin.Random.nextInt(HitWeaponEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
+				return new Effect(HitWeaponEffects[Plugin.Random.nextInt(HitWeaponEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case "Bow":
-				return new Effect(BowEffects[Plugin.Random.nextInt(BowEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
+				return new Effect(BowEffects[Plugin.Random.nextInt(BowEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case "Tool":
-				return new Effect(ToolEffects[Plugin.Random.nextInt(ToolEffects.length)], Type, Plugin.Random.nextInt(3), "0:15");
+				return new Effect(ToolEffects[Plugin.Random.nextInt(ToolEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
 		}
 		System.out.println("Null");
 		return null;

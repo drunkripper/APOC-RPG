@@ -8,14 +8,17 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.items.IdentifyTome;
 
 public class SocketEvents implements Listener {
 	
@@ -35,12 +38,22 @@ public class SocketEvents implements Listener {
 		}, 1200l, 1200l);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerRightClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
-		if ((event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-			ItemStack item = player.getItemInHand();
-			if ( item.getType().equals(Material.ENCHANTED_BOOK) && Plugin.containsLoreText(item, Plugin.LORE_TOME)) {
+		ItemStack item = player.getItemInHand();
+		ItemMeta itemMeta = (item != null && item.hasItemMeta()) ? item.getItemMeta() :  Plugin.Plugin.getServer().getItemFactory().getItemMeta(item.getType());
+		List<String> itemLore = (itemMeta != null && itemMeta.hasLore())? item.getItemMeta().getLore() : new ArrayList<String>() ;
+		
+		if ( item != null && !item.getData().equals(Material.AIR) 
+		&& (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) 
+		{
+			if ( item.getType().equals(Material.WRITTEN_BOOK) && Plugin.containsLoreText(itemLore, Plugin.LORE_TOME)) {
+				BookMeta bm = (BookMeta)item.getItemMeta();
+				if ( bm == null || !bm.hasAuthor() || !bm.hasTitle() && bm.getTitle().contains("Identify Tome"))
+					{ return; }
+				
 				Inventory inv = player.getInventory();
 				ItemStack invItem = null;
 				ItemStack unidItem = null;
@@ -60,11 +73,15 @@ public class SocketEvents implements Listener {
 					if ( ( unidMeta != null && unidMeta.getDisplayName() != null) 
 					&& (unidMeta.getDisplayName().equals(Plugin.LORE_UNKNOWN_ITEM) && unidMeta.getLore()==null))
 					{
+						inv.remove(unidItem);
 						ItemStack clone = ItemAPI.diablofy(unidItem.clone());
 						clone.setDurability(invItem.getDurability());
 						Plugin.addLoreText(clone, Plugin.LORE_PLAYER_BOUND, player.getName());
-						inv.remove(unidItem);
 						player.setItemInHand(clone);
+						event.setUseItemInHand(Result.DENY);
+						event.setCancelled(true);
+						player.updateInventory();
+						player.closeInventory();
 						return ;
 					}
 				} else {
@@ -74,43 +91,96 @@ public class SocketEvents implements Listener {
 				// check worn armor
 				
 			}
-			/*
-			if ( item != null && item.hasItemMeta() ) {
-				List<String> lore1 = item.getItemMeta().getLore();
-				if ( lore1 != null && lore1.get(0) != null && lore1.get(0).equals("Socket")) {
+			else {
+				if ( item.getType().equals(Material.EMERALD) && Plugin.containsLoreText(itemLore, Plugin.LORE_GEM_OF)) {
 					SelectedSocket.put(player, event.getPlayer().getItemInHand());
 					SelectedSlot.put(player, event.getPlayer().getInventory().getHeldItemSlot());
 					event.getPlayer().sendMessage("Select the item with an empty Socket and right click.");
-				} else if (lore1 != null && lore1.get(0) != null && lore1.get(0).equals("(Socket)")) {
+				} else if (itemLore != null && ( Plugin.containsLoreText(itemLore, Plugin.LORE_ITEM_SOCKET) || Plugin.containsLoreText(itemLore, Plugin.LORE_GEM_OF))) {
+					Plugin.debugPlayerMsg(player, "Player has selected item for socket");
+					boolean socketFound = false;
+					
 					if (SelectedSocket.containsKey(event.getPlayer())) {
-						ItemMeta Meta = SelectedSocket.get(player).getItemMeta();
-						ItemStack Used = new ItemStack(Material.COAL);
-						ItemMeta itemMeta = Used.getItemMeta();
-						List<String> lore = new ArrayList<String>();
-						lore.add("Used socket");
-						itemMeta.setLore(lore);
-						Used.setItemMeta(itemMeta);
-						event.getPlayer().getInventory().setItem(SelectedSlot.get(player), Used);
-						SelectedSocket.put(player, null);
-						if (Meta != null) {
-							List<String> Lore = Meta.getLore();
-							String Name = Lore.get(2);
-							//int Level = Integer.parseInt(Lore.get(3).substring(7));
-							//long Duration = Long.parseLong(Lore.get(4).split(":")[0])*20 + Long.parseLong(Lore.get(4).split(":")[1]) * 60 * 20;
-							ItemMeta ItemMeta = item.getItemMeta();
-							List<String> SelectedLore = ItemMeta.getLore();
-							SelectedLore.set(0, Name);
-							SelectedLore.add(Lore.get(3));
-							SelectedLore.add(Lore.get(4));
-							ItemMeta.setLore(SelectedLore);
-							ItemMeta.setItemMeta(ItemMeta);
+						Plugin.debugPlayerMsg(player, "Player has selected socket");
+						// get gem lore information for effect, type, and level
+						String gemEffect = null;
+						String gemType = null;
+						String gemStrLvl = null;
+						int gemIntLvl = 0;
+						String itemStrLvl = null;
+						int itemIntLvl = 0;
+						int newLevel = 0;
+						
+						ItemMeta gemMeta = (SelectedSocket.get(player)).getItemMeta();
+						List<String> gemLore = (gemMeta != null && gemMeta.hasLore()) ? gemMeta.getLore() : new ArrayList<String>();
+						for ( String s : gemLore) {
+							if ( s.startsWith(Plugin.LORE_GEM_OF) ) {
+								Plugin.debugPlayerMsg(player, s);
+								gemEffect = s.substring(0, s.lastIndexOf(" ")).replaceAll(Plugin.LORE_GEM_OF, "");
+								gemStrLvl = s.substring(s.lastIndexOf(" ")+1);
+								gemIntLvl = Plugin.romanToInt(gemStrLvl);
+								Plugin.debugPlayerMsg(player, "Gem: "+gemEffect+"; Level: "+gemStrLvl);
+							} else if ( s.endsWith("Type")) {
+								gemType = s;
+							}
 						}
+						
+						//List<String> newLore = new ArrayList<String>();
+
+						for ( int i = 0; i < itemLore.size() && !socketFound; i++ ) {
+							String s = itemLore.get(i);
+							// check to see if the item already has the same gem socketed
+							if ( s.startsWith(Plugin.LORE_GEM_OF + gemEffect )) {
+								Plugin.debugPlayerMsg(player, "Item: "+s);
+								itemStrLvl = s.substring(s.lastIndexOf(" ")+1);
+								itemIntLvl = Plugin.romanToInt(itemStrLvl);
+								
+								if ( gemIntLvl > 0 && itemIntLvl > 0 ) {
+									newLevel = gemIntLvl + itemIntLvl;
+								}
+								// if there is a match, make sure the gem wouldn't push the item over the max level
+								if ( newLevel > 0 && newLevel <= 10 ) {
+									itemLore.remove(i);
+									itemLore.add(i, Plugin.LORE_GEM_OF + gemEffect + " " + Plugin.intToRoman( newLevel ));
+									socketFound = true;
+								}
+							} else if ( s.equals(Plugin.LORE_ITEM_SOCKET)) {
+								itemLore.remove(i);
+								itemLore.add(i, Plugin.LORE_GEM_OF + gemEffect + " " + gemStrLvl );
+								socketFound = true;
+							}
+						}
+						if ( socketFound ) {
+							itemMeta.setLore(itemLore);
+							item.setItemMeta(itemMeta);
+							Plugin.debugPlayerMsg(player, "Socket found. Removing gem. ");
+							player.getInventory().remove(SelectedSocket.get(player));
+							SelectedSocket.remove(player);
+							player.updateInventory();
+							player.closeInventory();
+						} else {
+							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
+						}
+						
+						/*
+						ItemStack coal = new ItemStack(Material.COAL);
+						ItemMeta coalMeta = coal.getItemMeta();
+						List<String> coalLore = new ArrayList<String>();
+						coalLore.add("Used socket");
+						coalMeta.setLore(coalLore);
+						coal.setItemMeta(coalMeta);
+						event.getPlayer().getInventory().setItem(SelectedSlot.get(player), coal);
+						*/
 					} else {
 						event.getPlayer().sendMessage("No socket selected!");
 					}
+				} else if ( itemLore == null ) {
+					Plugin.debugPlayerMsg(player, "Selected Item has no lore!");
 				}
 			}
-			*/
+		} else {
+			Plugin.debugPlayerMsg(player, "event.getEventName() = "+event.getEventName());
+			Plugin.debugPlayerMsg(player, "event.getAction().name = "+event.getAction().name());
 		}
 	}
 	

@@ -18,7 +18,7 @@ Plugin:
     #Permission: apocrpg.mcmmo
     mcmmo-support: enabled
     #Turn this on to enable debug logs. All debugging logs will be stored in /Logs/Type.yml
-    debug: false
+    debug: true
  
 Dungeons:
     #Set this to false, everything below is ignored.
