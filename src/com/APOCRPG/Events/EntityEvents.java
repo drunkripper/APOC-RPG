@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.APOCRPG.API.ItemAPI;
@@ -79,6 +80,24 @@ public class EntityEvents implements Listener {
 			ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
 			for ( ItemStack item:is){
 				((Player) entity).sendMessage("Dropping: "+item.getItemMeta().getDisplayName());
+			}
+		}
+	}
+	@EventHandler
+	public void onPlayerPickupItem(PlayerPickupItemEvent event ){
+		ItemStack item = event.getItem().getItemStack();
+		Player player = (Player)event.getPlayer();
+		String playerName = player.getName();
+		String loreString = Plugin.LORE_PLAYER_BOUND + " " + playerName;
+		Plugin.debugPlayerMsg(player, "Player name: "+playerName);
+		Plugin.debugPlayerMsg(player, loreString);
+		ArrayList<String> lore = (ArrayList)item.getItemMeta().getLore();
+		for ( String s : lore ) {
+			Plugin.debugPlayerMsg(player, s);
+			if ( s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString))  
+			{
+				Plugin.debugPlayerMsg(player, "This "+item.getType().name()+" does not belong to you!");
+				event.setCancelled(true);
 			}
 		}
 	}

@@ -30,6 +30,7 @@ public class ApocRPGCommand implements CommandExecutor {
 		String arg1 = new String();
 		String arg2 = new String();
 		String arg3 = new String();
+		String arg4 = new String();
 		
 		Player _player = (Player) Sender;
 		
@@ -56,6 +57,8 @@ public class ApocRPGCommand implements CommandExecutor {
 						arg2 = ((String)args[i]).toLowerCase();
 					else if ( i == 2 )
 						arg3 = args[i];
+					else if ( i == 3 )
+						arg4 = args[i];
 				}
 				
 				if (arg1.equalsIgnoreCase("version")) {
@@ -64,10 +67,10 @@ public class ApocRPGCommand implements CommandExecutor {
 					_player.sendMessage(CommandColor + "http://apocgaming.org");
 					_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
 				}
-				else if ( !_player.hasPermission("apocrpg."+arg1+((arg2 != null && !arg2.trim().equals(""))?"."+arg2:""))){
-					_player.sendMessage(Plugin.APOCRPG_ERROR_NO_PERMISSION);
-					return true;
-				}
+//				else if ( !_player.hasPermission("apocrpg."+arg1+((arg2 != null && !arg2.trim().equals(""))?"."+arg2:""))){
+//					_player.sendMessage(Plugin.APOCRPG_ERROR_NO_PERMISSION);
+//					return true;
+//				}
 				else if (arg1.equalsIgnoreCase("buy")) {
 					Inventory Inventory = _player.getInventory();
 					if (args.length > 1) {
@@ -85,8 +88,11 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equalsIgnoreCase("gem")) {
 							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEM)) {
 								Economy.removeMoney(_player, Plugin.COST_BUY_GEM);
-								//Inventory.addItem(ItemAPI.createSocket());
-								Inventory.addItem(GemAPI.createGem());
+								if ( !arg3.isEmpty() && !arg4.isEmpty()) {
+									Inventory.addItem(GemAPI.createGem(arg3, arg4));
+								} else {
+									Inventory.addItem(GemAPI.createGem());
+								}
 							} else {
 								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY);
 							}
@@ -94,7 +100,7 @@ public class ApocRPGCommand implements CommandExecutor {
 							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
 								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
 								ItemStack item = ItemAPI.createItem();
-								Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
+								Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, "not "+_player.getName());
 								Inventory.addItem(item);
 							}
 						} else if (arg2.equalsIgnoreCase("name")) {

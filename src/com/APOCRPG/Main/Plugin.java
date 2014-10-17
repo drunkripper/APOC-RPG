@@ -38,6 +38,7 @@ public class Plugin extends JavaPlugin {
 	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR+"You do not have permission for that command!";
 	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR+"Not enough money!";
 	public static String APOCRPG_ERROR_SOCKET = APOCRPG_ERROR+"You can not socket that gem to this item!";
+	public static String DISPLAY_NAME_GEM = ChatColor.GREEN+"Socket Gem";
 	public static String DISPLAY_NAME_TOME = ChatColor.MAGIC+"Identify Tome";
 	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = "Unidentified Item";
 	public static String LORE_GEM_OF = ChatColor.LIGHT_PURPLE+"Gem of ";

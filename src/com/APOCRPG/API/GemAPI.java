@@ -10,32 +10,28 @@ import com.APOCRPG.Main.Plugin;
 
 public class GemAPI {
 	
-	public static ItemStack createGem() {
-		ItemStack Gem = new ItemStack(Material.EMERALD);
-		ItemMeta Meta = Gem.getItemMeta();
+	public static ItemStack createGem( String name, String type, String level){
+		ItemStack gem = new ItemStack(Material.EMERALD);
+		ItemMeta meta = gem.getItemMeta();
+		ArrayList<String> lore = new ArrayList<String>();
+		lore.add(Plugin.LORE_GEM_OF + name + " " + level);
+		lore.add(type + " type");
+		meta.setDisplayName(Plugin.DISPLAY_NAME_GEM);
+		meta.setLore(lore);
+		gem.setItemMeta(meta);
 		
-		ArrayList<String> Lore = new ArrayList<String>();
-		Effect effect = EffectAPI.getRandomEffect();
-		int level = effect.getLevel();
-		String strLvl = null;
-		switch (level) {
-			case 1: strLvl = "I"; break;
-			case 2: strLvl = "II"; break;
-			case 3: strLvl = "III"; break;
-			case 4: strLvl = "IV"; break;
-			case 5: strLvl = "V"; break;
-			case 6: strLvl = "VI"; break;
-			case 7: strLvl = "VII"; break;
-			case 8: strLvl = "VIII"; break;
-			case 9: strLvl = "IX"; break;
-			case 10: strLvl = "X"; break;
-		}
-		Lore.add(Plugin.LORE_GEM_OF + effect.getEffectName() + " " + strLvl);
-		Lore.add(effect.getType() + " type");
-		Meta.setLore(Lore);
-		Gem.setItemMeta(Meta);
-		
-		return Gem;
+		return gem;
 	}
 	
+	public static ItemStack createGem() {
+		Effect effect = EffectAPI.getRandomEffect();
+		int level = effect.getLevel();
+		String strLvl = Plugin.intToRoman(level);
+		
+		return createGem( effect.getEffectName(), effect.getType(), strLvl);
+	}
+	
+	public static ItemStack createGem( String name, String level ) {
+		return createGem( name, "Generic", level );
+	}
 }
