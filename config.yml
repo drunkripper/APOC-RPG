@@ -26,6 +26,7 @@ Permissions:
     buy-gem: true
     buy-item: true
     buy-name: true
+    buy-socket: true
     buy-tome: true
     buy-unknown: false
     disenchant: true
@@ -35,6 +36,8 @@ Permissions:
     remove-socket: true
     repair: true
     repair-all: true
+    salvage: true
+    salvage-all: true
     sell: true
     sell-all: true
     version: true
@@ -89,41 +92,41 @@ Dungeons:
      - example
   
 
-Monsters:
+Mobs:
     #Set this to false, everything below is ignored.
     enabled: true
     #Choose what tiers of items spawn for mobs.
-    monster-spawn-common: true
-    monster-spawn-uncommon: true
-    monster-spawn-rare: true
-    monster-spawn-unique: true
-    monster-spawn-set: true
-    monster-spawn-legendary: true
-    socket-gems: true
-    identity-books: true
+    spawn-common: true
+    spawn-uncommon: true
+    spawn-rare: true
+    spawn-unique: true
+    spawn-set: true
+    spawn-legendary: true
+    spawn-gems: true
+    spawn-tomes: true
     #If you are using a forge server and wish to use mod items enable this.
-    forge-gear: false
+    spawn-forge: false
     #Should we give the mobs fancy weapons?
-    weapon-gear: true
+    spawn-weapon: true
     #Should the items held by mobs drop?
-    drop-on-death: true
+    item-drop-death: true
     #What percent chance should item(s) drop when killed?
-    drop-chance: 10
+    item-drop-chance: 10
     #How many item(s) can the mob have and how many have a chance to drop?
-    max-item: 4
-    max-item-drop: 2
+    item-held-max: 4
+    item-drop-max: 2
     #Should the items held by mobs be enchanted?
-    enchant-gear: true
+    spawn-enchanted: true
     #Whats the max level of enchantments for the mobs gear? MAX=10
-    max-enchant: 10
+    spawn-max-enchant-level: 10
     #Should we crank the difficulty up a notch?
     #Increases the base HP by a percentage. If a mob has 10 HP and you increased it by 100% it now has 20 HP.
-    bonus-mob-hp: 100
+    bonus-hp-pct: 100
     #Type in all world names you do not want customized mob gear spawned on mobs into here.
-    disable-mob-gear-on-world:
+    disable-mob-spawn-gear-on-world:
      - example
     #Type in all world names you do not want customized mob gear to drop from mobs into here.
-    disable-mob-gear-drops-on-world:
+    disable-mob-drop-gear-on-world:
      - example
 
 Gear:
@@ -175,6 +178,7 @@ Gear:
     sockets-max-rare: 2
     sockets-max-unique: 3
     sockets-max-legendary: 3
+    sockets-max-buy: 3
     #What tier of gear should we allow prefix/suffix naming on?
     tier-naming-common: false
     tier-naming-uncommon: true

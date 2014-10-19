@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+import com.APOCRPG.Main.Plugin;
+
 
 /**
  * @author whiteknave / deathmarine
@@ -20,7 +22,8 @@ public class IdentifyTome extends ItemStack {
 	public IdentifyTome() {
 		super(Material.WRITTEN_BOOK);
 		BookMeta meta = (BookMeta) this.getItemMeta();
-		meta.setTitle(ChatColor.DARK_AQUA + "Tome of Identify ");
+		meta.setTitle(Plugin.DISPLAY_NAME_TOME);
+		meta.setDisplayName(Plugin.DISPLAY_NAME_TOME);
 		String author = UUID.randomUUID().toString();
 		if (author.length() > 16)
 			author = author.substring(0, 15);

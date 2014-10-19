@@ -40,7 +40,7 @@ public class Plugin extends JavaPlugin {
 	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR+"Not enough money!";
 	public static String APOCRPG_ERROR_SOCKET = APOCRPG_ERROR+"You can not socket that gem to this item!";
 	public static String DISPLAY_NAME_GEM = ChatColor.GREEN+"Socket Gem";
-	public static String DISPLAY_NAME_TOME = ChatColor.MAGIC+"Identify Tome";
+	public static String DISPLAY_NAME_TOME = ChatColor.GREEN+"Tome of Identify";
 	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = "Unidentified Item";
 	public static String LORE_GEM_OF = ChatColor.LIGHT_PURPLE+"Gem of ";
 	public static String LORE_ITEM_SOCKET = ChatColor.LIGHT_PURPLE+"(Socket)";
@@ -75,11 +75,24 @@ public class Plugin extends JavaPlugin {
 	public static Boolean DEBUG = false;
 	public static double EXP_DISENCHANT = 5;
 	public static String VERSION = "";
+	
+	public static double  GEAR_CHAIN_RATE = 0;
+	public static double  GEAR_GOLD_RATE = 0;
+	public static double  GEAR_IRON_RATE = 0;
+	public static double  GEAR_DIAMOND_RATE = 0;
+	public static double  GEAR_FORGE_RATE = 0;
+	public static double  GEAR_LEATHER_RATE = 0;
+	public static boolean GEAR_NO_SALE_ON_REPAIR = true;
+	public static int     GEAR_SOCKETS_MAX_BUY = 3;
+	public static double  GEAR_STONE_RATE = 0;
+	public static double  GEAR_WOOD_RATE = 0;
+	
 	public static boolean PERMISSION_BUY = false;
 	public static boolean PERMISSION_BUY_ENCHANT = false;
 	public static boolean PERMISSION_BUY_GEM = false;
 	public static boolean PERMISSION_BUY_ITEM = false;
 	public static boolean PERMISSION_BUY_NAME = false;
+	public static boolean PERMISSION_BUY_SOCKET = false;
 	public static boolean PERMISSION_BUY_TOME = false;
 	public static boolean PERMISSION_BUY_UNKNOWN = false;
 	public static boolean PERMISSION_DISENCHANT = false;
@@ -90,9 +103,31 @@ public class Plugin extends JavaPlugin {
 	public static boolean PERMISSION_REMOVE_SOCKET = false;
 	public static boolean PERMISSION_REPAIR = false;
 	public static boolean PERMISSION_REPAIR_ALL = false;
+	public static boolean PERMISSION_SALVAGE = false;
+	public static boolean PERMISSION_SALVAGE_ALL = false;
 	public static boolean PERMISSION_SELL = false;
 	public static boolean PERMISSION_SELL_ALL = false;
 	public static boolean PERMISSION_VERSION = false;
+	
+	public static boolean 	MOBS_ENABLED = true;
+	public static boolean 	MOBS_SPAWN_COMMON = true;
+	public static boolean 	MOBS_SPAWN_UNCOMMON = true;
+	public static boolean 	MOBS_SPAWN_RARE = true;
+	public static boolean 	MOBS_SPAWN_UNIQUE = true;
+	public static boolean 	MOBS_SPAWN_SET = true;
+	public static boolean 	MOBS_SPAWN_LEGENDARY = true;
+	public static boolean 	MOBS_SPAWN_GEMS = true;
+	public static boolean 	MOBS_SPAWN_TOMES = true;
+	public static boolean 	MOBS_SPAWN_FORGE = true;
+	public static boolean 	MOBS_SPAWN_WEAPON = true;
+	public static boolean 	MOBS_ITEM_DROP_DEATH = true;
+	public static int 		MOBS_ITEM_DROP_CHANCE = 10;
+	public static int 		MOBS_ITEM_HELD_MAX = 4;
+	public static int 		MOBS_ITEM_DROP_MAX = 2;
+	public static boolean 	MOBS_SPAWN_ENCHANTED = true;
+	public static int 		MOBS_SPAWN_MAX_ENCHANT_LEVEL = 10;
+	public static double	MOBS_BONUS_HP_PCT = 100;
+			
 
 	
 	public void onEnable() {
@@ -144,7 +179,6 @@ public class Plugin extends JavaPlugin {
 		if ( lore == null || lore.isEmpty() ){ lore = new ArrayList<String>(); }
 		
 		lore.add((s1 == null ? "" : s1.trim() ) + (s2 != null && !s2.trim().equals("")? (" "+s2.trim()) : "" ));
-		debugConsole("lore added: "+s1+" "+s2);
 		return lore;
 	}
 	
@@ -171,8 +205,6 @@ public class Plugin extends JavaPlugin {
 		if ( meta != null && !containsLoreText(meta, s1)){
 			List<String> lore = (List<String>)meta.getLore();
 			meta.setLore(addLoreText( lore, s1, s2));
-		} else {
-			debugConsole("addLoreText: ItemMeta is null OR equals AIR");
 		} 
 		return meta;
 	}
@@ -199,8 +231,6 @@ public class Plugin extends JavaPlugin {
 	public static void addLoreText(ItemStack item, String s1, String s2){
 		if ( item != null && !item.getType().equals(Material.AIR) ) { 
 			item.setItemMeta(addLoreText( item.getItemMeta(), s1, s2 ));
-		} else {
-			debugConsole("addLoreText: ItemStack is null OR equals AIR");
 		}
 	}
 	
@@ -389,28 +419,28 @@ public class Plugin extends JavaPlugin {
 		
 		String command = arg1.toLowerCase() + ( arg2 == null ? "" : "-" + arg2.toLowerCase());
 		String permission = "apocrpg."+command;
-		debugConsole("Seeking permission: "+permission+" for player: "+player.getName()+" = "+player.hasPermission(permission));
 		switch ( command ) {
-		case "buy" : retval = ( PERMISSION_BUY || player.hasPermission(permission) ); break;
-		case "buy-enchant" : retval = ( PERMISSION_BUY_ENCHANT || player.hasPermission(permission) ); break;
-		case "buy-gem" : retval = ( PERMISSION_BUY_GEM || player.hasPermission(permission) ); break;
-		case "buy-item" : retval = ( PERMISSION_BUY_ITEM || player.hasPermission(permission) ); break;
-		case "buy-name" : retval = ( PERMISSION_BUY_NAME || player.hasPermission(permission) ); break;
-		case "buy-tome" : retval = ( PERMISSION_BUY_TOME || player.hasPermission(permission) ); break;
-		case "buy-unknown" : retval = ( PERMISSION_BUY_UNKNOWN || player.hasPermission(permission) ); break;
-		case "disenchant" : retval = ( PERMISSION_DISENCHANT || player.hasPermission(permission) ); break;
-		case "disenchant-all" : retval = ( PERMISSION_DISENCHANT_ALL || player.hasPermission(permission) ); break;
-		case "reload" : retval = ( PERMISSION_RELOAD || player.hasPermission(permission) ); break;
-		case "remove-gem" : retval = ( PERMISSION_REMOVE_GEM || player.hasPermission(permission) ); break;
-		case "remove-socket" : retval = ( PERMISSION_REMOVE_SOCKET || player.hasPermission(permission) ); break;
-		case "repair" : retval = ( PERMISSION_REPAIR || player.hasPermission(permission) ); break;
-		case "repair-all" : retval = ( PERMISSION_REPAIR_ALL || player.hasPermission(permission) ); break;
-		case "sell" : retval = ( PERMISSION_SELL || player.hasPermission(permission) ); break;
-		case "sell-all" : retval = ( PERMISSION_SELL_ALL || player.hasPermission(permission) ); break;
-		case "version" : retval = ( PERMISSION_VERSION || player.hasPermission(permission) ); break;
+			case "buy" : retval = ( PERMISSION_BUY || player.hasPermission(permission) ); break;
+			case "buy-enchant" : retval = ( PERMISSION_BUY_ENCHANT || player.hasPermission(permission) ); break;
+			case "buy-gem" : retval = ( PERMISSION_BUY_GEM || player.hasPermission(permission) ); break;
+			case "buy-item" : retval = ( PERMISSION_BUY_ITEM || player.hasPermission(permission) ); break;
+			case "buy-name" : retval = ( PERMISSION_BUY_NAME || player.hasPermission(permission) ); break;
+			case "buy-socket" : retval = ( PERMISSION_BUY_SOCKET || player.hasPermission(permission) ); break;
+			case "buy-tome" : retval = ( PERMISSION_BUY_TOME || player.hasPermission(permission) ); break;
+			case "buy-unknown" : retval = ( PERMISSION_BUY_UNKNOWN || player.hasPermission(permission) ); break;
+			case "disenchant" : retval = ( PERMISSION_DISENCHANT || player.hasPermission(permission) ); break;
+			case "disenchant-all" : retval = ( PERMISSION_DISENCHANT_ALL || player.hasPermission(permission) ); break;
+			case "reload" : retval = ( PERMISSION_RELOAD || player.hasPermission(permission) ); break;
+			case "remove-gem" : retval = ( PERMISSION_REMOVE_GEM || player.hasPermission(permission) ); break;
+			case "remove-socket" : retval = ( PERMISSION_REMOVE_SOCKET || player.hasPermission(permission) ); break;
+			case "repair" : retval = ( PERMISSION_REPAIR || player.hasPermission(permission) ); break;
+			case "repair-all" : retval = ( PERMISSION_REPAIR_ALL || player.hasPermission(permission) ); break;
+			case "sell" : retval = ( PERMISSION_SELL || player.hasPermission(permission) ); break;
+			case "sell-all" : retval = ( PERMISSION_SELL_ALL || player.hasPermission(permission) ); break;
+			case "salvage" : retval = ( PERMISSION_SALVAGE || player.hasPermission(permission) ); break;
+			case "salvage-all" : retval = ( PERMISSION_SALVAGE_ALL || player.hasPermission(permission) ); break;
+			case "version" : retval = ( PERMISSION_VERSION || player.hasPermission(permission) ); break;
 		}
-		
-		debugConsole("hasPermission: " + retval);
 		return retval;
 	}
 	/**
@@ -440,13 +470,28 @@ public class Plugin extends JavaPlugin {
 		COST_SOCKET_1 = Settings.getDouble("Command-Settings.cost-to-socket-1");
 		COST_SOCKET_2 = Settings.getDouble("Command-Settings.cost-to-socket-2");
 		COST_SOCKET_3 = Settings.getDouble("Command-Settings.cost-to-socket-3");
+		
 		DEBUG =  Settings.getBoolean("Plugin.debug");
+		
 		EXP_DISENCHANT = Settings.getDouble("Command-Settings.disenchant-exp");
+		
+		GEAR_SOCKETS_MAX_BUY = Settings.getInt("Gear.sockets-max-buy");
+		GEAR_NO_SALE_ON_REPAIR = Settings.getBoolean("Gear.no-sell-on-repair");
+		GEAR_LEATHER_RATE = Settings.getDouble("Command-Settings.leather-rate");
+		GEAR_WOOD_RATE = Settings.getDouble("Command-Settings.wood-rate");
+		GEAR_STONE_RATE = Settings.getDouble("Command-Settings.stone-rate");
+		GEAR_GOLD_RATE = Settings.getDouble("Command-Settings.gold-rate");
+		GEAR_CHAIN_RATE = Settings.getDouble("Command-Settings.chain-rate");
+		GEAR_IRON_RATE = Settings.getDouble("Command-Settings.iron-rate");
+		GEAR_DIAMOND_RATE = Settings.getDouble("Command-Settings.diamond-rate");
+		GEAR_FORGE_RATE = Settings.getDouble("Command-Settings.forge-rate");
+				
 		PERMISSION_BUY = Settings.getBoolean("Permissions.buy");
 		PERMISSION_BUY_ENCHANT = Settings.getBoolean("Permissions.buy-enchant");
 		PERMISSION_BUY_GEM = Settings.getBoolean("Permissions.buy-gem");
 		PERMISSION_BUY_ITEM = Settings.getBoolean("Permissions.buy-item");
 		PERMISSION_BUY_NAME = Settings.getBoolean("Permissions.buy-name");
+		PERMISSION_BUY_SOCKET = Settings.getBoolean("Permissions.buy-socket");
 		PERMISSION_BUY_TOME = Settings.getBoolean("Permissions.buy-tome");
 		PERMISSION_BUY_UNKNOWN = Settings.getBoolean("Permissions.buy-unknown");
 		PERMISSION_DISENCHANT = Settings.getBoolean("Permissions.disenchant");
@@ -457,10 +502,31 @@ public class Plugin extends JavaPlugin {
 		PERMISSION_RELOAD = Settings.getBoolean("Permissions.reload");
 		PERMISSION_REPAIR = Settings.getBoolean("Permissions.repair");
 		PERMISSION_REPAIR_ALL = Settings.getBoolean("Permissions.repair-all");
+		PERMISSION_SALVAGE = Settings.getBoolean("Permissions.salvage");
+		PERMISSION_SALVAGE_ALL = Settings.getBoolean("Permissions.salvage-all");
 		PERMISSION_SELL = Settings.getBoolean("Permissions.sell");
 		PERMISSION_SELL_ALL = Settings.getBoolean("Permissions.sell-all");
 		PERMISSION_VERSION = Settings.getBoolean("Permissions.version");
 		VERSION = Settings.getString("Plugin.version");
+		
+		MOBS_ENABLED = Settings.getBoolean("Mobs.enabled");
+		MOBS_SPAWN_COMMON = Settings.getBoolean("Mobs.spawn-common");
+		MOBS_SPAWN_UNCOMMON = Settings.getBoolean("Mobs.spawn-uncommond");
+		MOBS_SPAWN_RARE = Settings.getBoolean("Mobs.spawn-rare");
+		MOBS_SPAWN_UNIQUE = Settings.getBoolean("Mobs.spawn-unique");
+		MOBS_SPAWN_SET = Settings.getBoolean("Mobs.spawn-set");
+		MOBS_SPAWN_LEGENDARY = Settings.getBoolean("Mobs.spawn-legendary");
+		MOBS_SPAWN_GEMS = Settings.getBoolean("Mobs.spawn-gems");
+		MOBS_SPAWN_TOMES = Settings.getBoolean("Mobs.spawn-tomes");
+		MOBS_SPAWN_FORGE = Settings.getBoolean("Mobs.spawn-forge");
+		MOBS_SPAWN_WEAPON = Settings.getBoolean("Mobs.spawn-weapon");
+		MOBS_ITEM_DROP_DEATH = Settings.getBoolean("Mobs.item-drop-death");
+		MOBS_ITEM_DROP_CHANCE = Settings.getInt("Mobs.item-drop-chance");
+		MOBS_ITEM_HELD_MAX = Settings.getInt("Mobs.item-held-max");
+		MOBS_ITEM_DROP_MAX = Settings.getInt("Mobs.item-drop-max");
+		MOBS_SPAWN_ENCHANTED = Settings.getBoolean("Mobs.spawn-enchanted");
+		MOBS_SPAWN_MAX_ENCHANT_LEVEL = Settings.getInt("Mobs.spawn-max-enchant-level");
+		MOBS_BONUS_HP_PCT = Settings.getDouble("Mobs.bonus-hp-pct");
 	}
 	
 	/**
