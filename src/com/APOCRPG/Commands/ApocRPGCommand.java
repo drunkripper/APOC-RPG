@@ -45,7 +45,7 @@ public class ApocRPGCommand implements CommandExecutor {
 				_player.sendMessage(CommandColor + "/apocrpg buy " + DescColor + "             | Buy an enchanted _item.");
 				_player.sendMessage(CommandColor + "/apocrpg buy enchant " + DescColor + "  | Buy an enchantment.");
 				_player.sendMessage(CommandColor + "/apocrpg buy gem" + DescColor + "        | Buy a socket gem.");
-				_player.sendMessage(CommandColor + "/apocrpg buy _item " + DescColor + "       | Buy a random RPG _item.");
+				_player.sendMessage(CommandColor + "/apocrpg buy item " + DescColor + "       | Buy a random RPG _item.");
 				_player.sendMessage(CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your _item.");
 				_player.sendMessage(CommandColor + "/apocrpg buy tome " + DescColor + "      | Buy an identity tome.");
 				_player.sendMessage(CommandColor + "/apocrpg disenchant" + DescColor + "     | Disenchant an _item.");
