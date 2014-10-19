@@ -7,7 +7,7 @@ Plugin:
     #Do not edit this!
     version: 1.0
     #Should operators bypass all permissions?
-    op-bypass-permissions: true
+    op-bypass-permissions: false
     #Use servers economy for fancy stuff?
     economy-support: enabled
     #Enable purchasing of names, enchantments, identity tomes, armor/tools/weapons, etc.
@@ -19,7 +19,26 @@ Plugin:
     mcmmo-support: enabled
     #Turn this on to enable debug logs. All debugging logs will be stored in /Logs/Type.yml
     debug: true
- 
+
+Permissions:
+    buy: true
+    buy-enchant: true
+    buy-gem: true
+    buy-item: true
+    buy-name: true
+    buy-tome: true
+    buy-unknown: false
+    disenchant: true
+    disenchant-all: true
+    reload: false
+    remove-gem: true
+    remove-socket: true
+    repair: true
+    repair-all: true
+    sell: true
+    sell-all: true
+    version: true
+    
 Dungeons:
     #Set this to false, everything below is ignored.
     enabled: true

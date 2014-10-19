@@ -9,11 +9,18 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
+
+/**
+ * @author whiteknave / deathmarine
+ */
 public class IdentifyTome extends ItemStack {
+	/**
+	 * This creates a Tome of Identify
+	 */
 	public IdentifyTome() {
 		super(Material.WRITTEN_BOOK);
 		BookMeta meta = (BookMeta) this.getItemMeta();
-		meta.setTitle(ChatColor.DARK_AQUA + "Identity Tome");
+		meta.setTitle(ChatColor.DARK_AQUA + "Tome of Identify ");
 		String author = UUID.randomUUID().toString();
 		if (author.length() > 16)
 			author = author.substring(0, 15);

@@ -1,5 +1,6 @@
 package com.APOCRPG.Events;
 
+import java.awt.List;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -59,18 +60,41 @@ public class EntityEvents implements Listener {
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 		//Bukkit.getServer().broadcastMessage(devent.getMessage());
 	}
+	
+	/**
+	 * This method is used to prevent a player from taking inventory items owned by another player
+	 * @param event
+	 */
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
+		// get player who did the action
 		Player po= (Player) event.getWhoClicked();
+		// get polling event
 		EffectPollingEvent devent = new EffectPollingEvent(po);
+		// get item
+		ItemStack item = event.getCurrentItem();
+		// get lore containing "Player bound:"
+		ArrayList<String> boundPlayers = (ArrayList<String>) Plugin.getLoreContaining(item, Plugin.LORE_PLAYER_BOUND);
+		// iterate through lore to make sure that the item belongs to the player
+		for ( String bp : boundPlayers ) {
+			if ( !bp.replace(Plugin.LORE_PLAYER_BOUND+" ", "").equals(po.getName()))  {
+				// item belongs to another player
+				po.sendMessage( Plugin.APOCRPG_ERROR + "This item does not belong to you!");
+				event.setCancelled(true);
+				return;
+			}
+		}
+		// if still here, item is not owned or owned by player
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 	}
+	
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
 		Player po = (Player)event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 	}
+	
 	@EventHandler
 	public void onEnitityDeath(EntityDeathEvent event){
 		EntityType et = event.getEntityType();
@@ -83,21 +107,34 @@ public class EntityEvents implements Listener {
 			}
 		}
 	}
+	
+	/**
+	 * This method is used to prevent the player from picking up items bound to another player
+	 * @param event
+	 */
 	@EventHandler
 	public void onPlayerPickupItem(PlayerPickupItemEvent event ){
+		//get item
 		ItemStack item = event.getItem().getItemStack();
-		Player player = (Player)event.getPlayer();
-		String playerName = player.getName();
-		String loreString = Plugin.LORE_PLAYER_BOUND + " " + playerName;
-		Plugin.debugPlayerMsg(player, "Player name: "+playerName);
-		Plugin.debugPlayerMsg(player, loreString);
-		ArrayList<String> lore = (ArrayList)item.getItemMeta().getLore();
-		for ( String s : lore ) {
-			Plugin.debugPlayerMsg(player, s);
-			if ( s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString))  
-			{
-				Plugin.debugPlayerMsg(player, "This "+item.getType().name()+" does not belong to you!");
-				event.setCancelled(true);
+		// check item for lore
+		if ( Plugin.hasLore(item) ){
+			//get player
+			Player player = (Player)event.getPlayer();
+			//get player name
+			String playerName = player.getName();
+			// create lore string as it would be if the player owns the item
+			String loreString = Plugin.LORE_PLAYER_BOUND + " " + playerName;
+			// default lore array list
+			ArrayList<String> lore = (ArrayList<String>)item.getItemMeta().getLore();
+			// iterate through lore 
+			for ( String s : lore ) {
+				// if lore starts with "Player bound" but does not equal player's
+				// lore string, this item is owned by another player.
+				if ( s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString))  
+				{
+					// cancel event as item is owned by another player
+					event.setCancelled(true);
+				}
 			}
 		}
 	}
