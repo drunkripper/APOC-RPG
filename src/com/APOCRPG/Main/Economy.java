@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 public class Economy {
 	
-	private static net.milkbowl.vault.economy.Economy Economy = Plugin.Plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class).getProvider();
+	private static net.milkbowl.vault.economy.Economy Economy = Plugin.instance.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class).getProvider();
 	
 	public static void addMoney(Player Player, double amount) {
 		addMoney(Player.getName(), amount);

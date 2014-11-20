@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -42,7 +45,7 @@ public class ApocRPGCommand implements CommandExecutor {
 		Inventory _inventory = _player.getInventory();
 		ItemStack _handItem = _player.getItemInHand();
 		boolean   _emptyHand = ( _handItem == null || _handItem.getType().equals(Material.AIR));
-		ItemMeta  _handMeta = (!_emptyHand && _handItem.hasItemMeta()) ? _handItem.getItemMeta() : Plugin.Plugin.getServer().getItemFactory().getItemMeta(_handItem.getType());
+		ItemMeta  _handMeta = (!_emptyHand && _handItem.hasItemMeta()) ? _handItem.getItemMeta() : Plugin.instance.getServer().getItemFactory().getItemMeta(_handItem.getType());
 		ArrayList<String> _handLore = (_handMeta != null && _handMeta.hasLore()) ? (ArrayList<String>)_handMeta.getLore() : new ArrayList<String>() ;
 		
 		if (Command.getLabel().equalsIgnoreCase("apocrpg")) {
@@ -140,6 +143,7 @@ public class ApocRPGCommand implements CommandExecutor {
 										ench = enchList.get( enchNbr - 1 );
 									} catch ( Exception e ) {
 										// just need to catch the exception.
+										Plugin.debug("DEBUG: "+e.getLocalizedMessage());
 									}
 									
 									// if ench is null, try to match arg3 to names of enchantments
@@ -317,20 +321,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equalsIgnoreCase("unknown")) {
 							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
 								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
-								ItemStack item = ItemAPI.createItem();
-								if ( item.getItemMeta().hasEnchants() ) {
-									Map<Enchantment, Integer> enchants = item.getEnchantments();
-									Iterator<Enchantment> it = (Iterator<Enchantment>)enchants.keySet().iterator();
-									while (it.hasNext()){
-										Enchantment _ench = (Enchantment)it.next();
-										item.removeEnchantment(_ench);
-									}
-								}
-								Plugin.clearLore(item);
-								ItemMeta meta = item.getItemMeta();
-								meta.setDisplayName("Unidentified Item");
-								meta.setLore(null);
-								item.setItemMeta(meta);
+								ItemStack item = ItemAPI.createUnidentified();
 								_inventory.addItem(item);
 							} else {
 								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY+"You need $"+Economy.format(Plugin.COST_BUY_GEAR)+"!");
@@ -531,7 +522,8 @@ public class ApocRPGCommand implements CommandExecutor {
 							_player.sendMessage(Plugin.APOCRPG_ERROR+"You cannot sell repaired items!");
 							return true;
 						} else if ( _handItem.getType().getMaxDurability() < 1 ){
-							_player.sendMessage(Plugin.APOCRPG_ERROR+"You cannot sell that item!");
+							_player.sendMessage(Plugin.APOCRPG_ERROR+"You cannot sell that item! No durability");
+							Plugin.debugConsole("Item: "+_handItem.getTypeId()+", type: "+_handItem.getType().toString()+"");
 							return true;
 						} else {
 							sold.add(_handItem);
@@ -591,6 +583,22 @@ public class ApocRPGCommand implements CommandExecutor {
 					} else {
 						_player.sendMessage(Plugin.APOCRPG_ERROR+"You have nothing worth selling!");
 					}
+				} else if (arg1.equalsIgnoreCase("spawn")) {
+					if (arg2.equalsIgnoreCase("chest")) {
+						ItemStack chest = new ItemStack(Material.CHEST);
+						_inventory.addItem(chest);
+					} else if (arg2.equalsIgnoreCase("item")) {
+						int tier = Plugin.Random.nextInt(6);
+						if ( arg3 != null && !arg3.isEmpty() && ( arg3.equals("0") || arg3.equals("1") || arg3.equals("2") ||arg3.equals("3") || arg3.equals("4") || arg3.equals("5"))) {
+							tier = Integer.parseInt(arg3);
+						}
+						ItemStack item = ItemAPI.createItem(tier);
+						Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
+						_inventory.addItem(item);
+					} else {
+						System.out.println(Plugin.APOCRPG_ERROR+"Unknown command sent.");
+						return false;
+					}
 				}
 			}
 			return true;
@@ -627,7 +635,7 @@ public class ApocRPGCommand implements CommandExecutor {
 	private ItemStack addItemSocket ( ItemStack item ) {
 		// make sure item has lore
 		if ( item != null && !item.getType().equals(Material.AIR) ){ 
-			ItemMeta meta = (item != null && item.hasItemMeta()) ? item.getItemMeta() :  Plugin.Plugin.getServer().getItemFactory().getItemMeta(item.getType());
+			ItemMeta meta = (item != null && item.hasItemMeta()) ? item.getItemMeta() :  Plugin.instance.getServer().getItemFactory().getItemMeta(item.getType());
 			//get item meta and lore
 			ArrayList<String> lore = (meta.hasLore() ? (ArrayList<String>)meta.getLore() : new ArrayList<String>());
 			ArrayList<String> newLore = new ArrayList<String>();

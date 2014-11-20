@@ -12,6 +12,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Plugin extends JavaPlugin {
 	
 	public static Random Random = new Random();
-	public static Plugin Plugin = null;
+	public static Plugin instance = null;
 	public static Settings Settings = null;
 	public static File LandRuins = null;
 	public static PollingEventListener PollListener = new PollingEventListener();
@@ -41,13 +44,30 @@ public class Plugin extends JavaPlugin {
 	public static String APOCRPG_ERROR_SOCKET = APOCRPG_ERROR+"You can not socket that gem to this item!";
 	public static String DISPLAY_NAME_GEM = ChatColor.GREEN+"Socket Gem";
 	public static String DISPLAY_NAME_TOME = ChatColor.GREEN+"Tome of Identify";
-	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = "Unidentified Item";
+	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = ChatColor.WHITE+"Unidentified Item";
 	public static String LORE_GEM_OF = ChatColor.LIGHT_PURPLE+"Gem of ";
 	public static String LORE_ITEM_SOCKET = ChatColor.LIGHT_PURPLE+"(Socket)";
 	public static String LORE_PLAYER_BOUND = ChatColor.WHITE+"Player Bound:";
 	public static String LORE_REPAIRED = ChatColor.DARK_GRAY+"Repaired";
 	public static String LORE_TOME = "Identify the Unknown";
 	public static String LORE_UNKNOWN_ITEM = "Unidentified Item";
+	// global constants - dungeon chests
+	public static boolean CHEST_FILL_RPG = true;
+	public static boolean CHEST_LOCKABLE = true;
+	public static int CHEST_MAX_RANDOM = 100;
+	public static int CHEST_MIN_ITEMS = 1;
+	public static int CHEST_MAX_ITEMS = 5;
+	public static int CHEST_MAX_CHANCE_GEM = 10;
+	public static int CHEST_MAX_CHANCE_TOME = 20;
+	public static int CHEST_MAX_CHANCE_UNKNOWN = 35;
+	public static int CHEST_MAX_CHANCE_TIER_LEGENDARY = 40;
+	public static int CHEST_MAX_CHANCE_TIER_SET = 45;
+	public static int CHEST_MAX_CHANCE_TIER_UNIQUE = 55;
+	public static int CHEST_MAX_CHANCE_TIER_RARE = 70;
+	public static int CHEST_MAX_CHANCE_TIER_UNCOMMON = 85;
+	public static int CHEST_MAX_CHANCE_TIER_COMMON = 100;
+	public static SortedMap<Integer, String> chestItems = new TreeMap<Integer, String>();
+	
 	// global constants - config settings
 	public static double COST_BUY_GEAR = 750;
 	public static double COST_BUY_GEM = 500;
@@ -86,6 +106,87 @@ public class Plugin extends JavaPlugin {
 	public static int     GEAR_SOCKETS_MAX_BUY = 3;
 	public static double  GEAR_STONE_RATE = 0;
 	public static double  GEAR_WOOD_RATE = 0;
+	
+	public static int	  TIER_COMMON = 0;
+	public static boolean TIER_COMMON_ENCHANTS_ALLOW = false;
+	public static int     TIER_COMMON_ENCHANTS_MIN   = 0;
+	public static int     TIER_COMMON_ENCHANTS_MAX   = 0;
+	public static int     TIER_COMMON_ENCHANTS_MAX_LVL = 3;
+	public static int     TIER_COMMON_MAX_CHANCE = 100;
+	public static String  TIER_COMMON_NAMES_COLOR   = "WHITE";
+	public static boolean TIER_COMMON_NAMING   = false;
+	public static boolean TIER_COMMON_SOCKETS_ALLOW  = false;
+	public static int     TIER_COMMON_SOCKETS_MAX    = 1;
+	
+	public static int	  TIER_UNCOMMON = 1;
+	public static boolean TIER_UNCOMMON_ENCHANTS_ALLOW = false;
+	public static int     TIER_UNCOMMON_ENCHANTS_MIN   = 0;
+	public static int     TIER_UNCOMMON_ENCHANTS_MAX   = 0;
+	public static int     TIER_UNCOMMON_ENCHANTS_MAX_LVL = 5;
+	public static int     TIER_UNCOMMON_MAX_CHANCE = 50;
+	public static boolean TIER_UNCOMMON_SOCKETS_ALLOW  = false;
+	public static int     TIER_UNCOMMON_SOCKETS_MAX    = 1;
+	public static boolean TIER_UNCOMMON_NAMING   = false;
+	public static String  TIER_UNCOMMON_NAMES_COLOR   = "BLUE";
+	
+	public static int	  TIER_RARE = 2;
+	public static boolean TIER_RARE_ENCHANTS_ALLOW = false;
+	public static int     TIER_RARE_ENCHANTS_MIN   = 0;
+	public static int     TIER_RARE_ENCHANTS_MAX   = 0;
+	public static int     TIER_RARE_ENCHANTS_MAX_LVL = 6;
+	public static int     TIER_RARE_MAX_CHANCE = 25;
+	public static boolean TIER_RARE_SOCKETS_ALLOW  = false;
+	public static int     TIER_RARE_SOCKETS_MAX    = 1;
+	public static boolean TIER_RARE_NAMING   = false;
+	public static String  TIER_RARE_NAMES_COLOR   = "YELLOW";
+	
+	public static int	  TIER_UNIQUE = 3;
+	public static boolean TIER_UNIQUE_ENCHANTS_ALLOW = false;
+	public static int     TIER_UNIQUE_ENCHANTS_MIN   = 0;
+	public static int     TIER_UNIQUE_ENCHANTS_MAX   = 0;
+	public static int     TIER_UNIQUE_ENCHANTS_MAX_LVL = 7;
+	public static int     TIER_UNIQUE_MAX_CHANCE = 15;
+	public static boolean TIER_UNIQUE_SOCKETS_ALLOW  = false;
+	public static int     TIER_UNIQUE_SOCKETS_MAX    = 1;
+	public static boolean TIER_UNIQUE_NAMING   = false;
+	public static String  TIER_UNIQUE_NAMES_COLOR = "GOLD";
+	
+	public static int	  TIER_SET = 4;
+	public static boolean TIER_SET_ENCHANTS_ALLOW = false;
+	public static int     TIER_SET_ENCHANTS_MIN   = 0;
+	public static int     TIER_SET_ENCHANTS_MAX   = 0;
+	public static int     TIER_SET_ENCHANTS_MAX_LVL = 7;
+	public static int     TIER_SET_MAX_CHANCE = 10;
+	public static boolean TIER_SET_SOCKETS_ALLOW  = false;
+	public static int     TIER_SET_SOCKETS_MAX    = 1;
+	public static boolean TIER_SET_NAMING   = false;
+	public static String  TIER_SET_NAMES_COLOR   = "GREEN";
+	
+	public static int	  TIER_LEGENDARY = 5;
+	public static boolean TIER_LEGENDARY_ENCHANTS_ALLOW = false;
+	public static int     TIER_LEGENDARY_ENCHANTS_MIN   = 0;
+	public static int     TIER_LEGENDARY_ENCHANTS_MAX   = 0;
+	public static int     TIER_LEGENDARY_ENCHANTS_MAX_LVL = 10;
+	public static int     TIER_LEGENDARY_MAX_CHANCE = 5;
+	public static boolean TIER_LEGENDARY_SOCKETS_ALLOW  = false;
+	public static int     TIER_LEGENDARY_SOCKETS_MAX    = 1;
+	public static boolean TIER_LEGENDARY_NAMING   = false;
+	public static String  TIER_LEGENDARY_NAMES_COLOR   = "DARK_RED";
+	
+	public static Logger logger = null;
+
+	
+/*
+	boolean allowEnchant = false;
+	int maxEnchants = 0;
+	int minEnchants = 0;
+	boolean allowSocket = false;
+	int maxSockets  = 0;
+	int minSockets  = 0;
+	boolean usePrefix = false;
+	boolean useSuffix = false;
+	ChatColor nameColor = ChatColor.WHITE;
+*/	
 	
 	public static boolean PERMISSION_BUY = false;
 	public static boolean PERMISSION_BUY_ENCHANT = false;
@@ -131,14 +232,17 @@ public class Plugin extends JavaPlugin {
 
 	
 	public void onEnable() {
-		Plugin = this;
+		instance = this;
+		logger = getLogger();
+		debug("Starting APOC-RPG Plugin.onEnable()");
+		
 		SocketListener = new SocketEvents();
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){
 			public void run(){
-				Player[] ps = Plugin.getServer().getOnlinePlayers();
+				Player[] ps = instance.getServer().getOnlinePlayers();
 				for(Player p: ps) {
 					EffectPollingEvent event = new EffectPollingEvent(p);
-					Plugin.getServer().getPluginManager().callEvent(event);
+					instance.getServer().getPluginManager().callEvent(event);
 					//Plugin.getServer().broadcastMessage(event.getMessage());
 				}}}, 0l, 600l);
 			
@@ -156,6 +260,7 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getServer().getPluginManager().registerEvents(PollListener, this);
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
+		debug("Completing APOC-RPG Plugin.onEnable()");
 	}
 
 	public void onDisable() {
@@ -321,9 +426,10 @@ public class Plugin extends JavaPlugin {
 	 * Send a message to the plugin log if debugging is allowed
 	 * @param s - String message to be sent to the log
 	 */
-	public static void debugLog(String s ){
+	public static void debug(String s ){
 		if ( DEBUG ){
-			// put debug logging here
+			logger.info("[DEBUG] "+s);
+		} else {
 		}
 	}
 	
@@ -407,7 +513,6 @@ public class Plugin extends JavaPlugin {
 	 */
 	public static boolean hasPermission( Player player, String[] args){
 		boolean retval = false;
-		boolean isOp = player.hasPermission("op");
 		/*
 		if ( PERMISSION_OP_BYPASS && isOp ){
 			debugConsole("op bypassing permissions");
@@ -439,6 +544,9 @@ public class Plugin extends JavaPlugin {
 			case "sell-all" : retval = ( PERMISSION_SELL_ALL || player.hasPermission(permission) ); break;
 			case "salvage" : retval = ( PERMISSION_SALVAGE || player.hasPermission(permission) ); break;
 			case "salvage-all" : retval = ( PERMISSION_SALVAGE_ALL || player.hasPermission(permission) ); break;
+			case "spawn" : retval = player.hasPermission(permission); break;
+			case "spawn-item" : retval = player.hasPermission(permission); break;
+			case "spawn-chest" : retval = player.hasPermission(permission); break;
 			case "version" : retval = ( PERMISSION_VERSION || player.hasPermission(permission) ); break;
 		}
 		return retval;
@@ -447,6 +555,33 @@ public class Plugin extends JavaPlugin {
 	 * This method will set internal variables to stored configuration values.
 	 */
 	public static void loadConfig(){
+		
+		CHEST_FILL_RPG = Settings.getBoolean("Dungeons.chest-fill-rpg");
+		CHEST_LOCKABLE = Settings.getBoolean("Dungeons.chest-lockable");
+		CHEST_MAX_RANDOM = Settings.getInt("Dungeons.chest-max-random");
+		CHEST_MIN_ITEMS = Settings.getInt("Dungeons.chest-min-items");
+		CHEST_MAX_ITEMS = Settings.getInt("Dungeons.chest-max-items");
+		CHEST_MAX_CHANCE_GEM = Settings.getInt("Dungeons.chest-max-chance-gem");
+		CHEST_MAX_CHANCE_TOME = Settings.getInt("Dungeons.chest-max-chance-tome");
+		CHEST_MAX_CHANCE_UNKNOWN = Settings.getInt("Dungeons.chest-max-chance-unknown");
+		CHEST_MAX_CHANCE_TIER_LEGENDARY = Settings.getInt("Dungeons.chest-max-chance-tier-legendary");
+		CHEST_MAX_CHANCE_TIER_SET = Settings.getInt("Dungeons.chest-max-chance-tier-set");
+		CHEST_MAX_CHANCE_TIER_UNIQUE = Settings.getInt("Dungeons.chest-max-chance-tier-unique");
+		CHEST_MAX_CHANCE_TIER_RARE = Settings.getInt("Dungeons.chest-max-chance-tier-rare");
+		CHEST_MAX_CHANCE_TIER_UNCOMMON = Settings.getInt("Dungeons.chest-max-chance-tier-uncommon");
+		CHEST_MAX_CHANCE_TIER_COMMON = Settings.getInt("Dungeons.chest-max-chance-tier-common");
+		
+		chestItems = new TreeMap<Integer, String>();
+		if ( CHEST_MAX_CHANCE_GEM > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_GEM), "GEM"); }
+		if ( CHEST_MAX_CHANCE_TOME > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TOME), "TOME"); }
+		if ( CHEST_MAX_CHANCE_UNKNOWN > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_UNKNOWN), "UNKNOWN"); }
+		if ( CHEST_MAX_CHANCE_TIER_COMMON > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_COMMON), "COMMON"); }
+		if ( CHEST_MAX_CHANCE_TIER_UNCOMMON > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_UNCOMMON), "UNCOMMON"); }
+		if ( CHEST_MAX_CHANCE_TIER_RARE > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_RARE), "RARE"); }
+		if ( CHEST_MAX_CHANCE_TIER_UNIQUE > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_UNIQUE), "UNIQUE"); }
+		if ( CHEST_MAX_CHANCE_TIER_SET > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_SET), "SET"); }
+		if ( CHEST_MAX_CHANCE_TIER_LEGENDARY > 0 ) { chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_LEGENDARY), "LEGENDARY"); }
+		
 		COST_BUY_GEAR = Settings.getDouble("Command-Settings.cost-for-gear");
 		COST_BUY_GEM = Settings.getDouble("Command-Settings.cost-for-gem");
 		COST_BUY_LORE = Settings.getDouble("Command-Settings.cost-for-lore");
@@ -475,8 +610,8 @@ public class Plugin extends JavaPlugin {
 		
 		EXP_DISENCHANT = Settings.getDouble("Command-Settings.disenchant-exp");
 		
-		GEAR_SOCKETS_MAX_BUY = Settings.getInt("Gear.sockets-max-buy");
-		GEAR_NO_SALE_ON_REPAIR = Settings.getBoolean("Gear.no-sell-on-repair");
+		GEAR_SOCKETS_MAX_BUY = Settings.getInt("Tiers.sockets-max-buy");
+		GEAR_NO_SALE_ON_REPAIR = Settings.getBoolean("Tiers.no-sell-on-repair");
 		GEAR_LEATHER_RATE = Settings.getDouble("Command-Settings.leather-rate");
 		GEAR_WOOD_RATE = Settings.getDouble("Command-Settings.wood-rate");
 		GEAR_STONE_RATE = Settings.getDouble("Command-Settings.stone-rate");
@@ -485,7 +620,70 @@ public class Plugin extends JavaPlugin {
 		GEAR_IRON_RATE = Settings.getDouble("Command-Settings.iron-rate");
 		GEAR_DIAMOND_RATE = Settings.getDouble("Command-Settings.diamond-rate");
 		GEAR_FORGE_RATE = Settings.getDouble("Command-Settings.forge-rate");
-				
+		
+		
+		
+		
+		TIER_COMMON_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-common");
+		TIER_COMMON_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-common");
+		TIER_COMMON_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-common");
+		TIER_COMMON_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-common");
+		TIER_COMMON_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-common");
+		TIER_COMMON_MAX_CHANCE = Settings.getInt("Tiers.max-chance-common");
+		TIER_COMMON_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-common");
+		TIER_COMMON_NAMING   = Settings.getBoolean("Tiers.name-random-common");
+		TIER_COMMON_NAMES_COLOR   = Settings.getString("Tiers.name-color-common");
+		
+		TIER_UNCOMMON_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-uncommon");
+		TIER_UNCOMMON_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-uncommon");
+		TIER_UNCOMMON_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-uncommon");
+		TIER_UNCOMMON_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-uncommon");
+		TIER_UNCOMMON_MAX_CHANCE = Settings.getInt("Tiers.max-chance-uncommon");
+		TIER_UNCOMMON_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-uncommon");
+		TIER_UNCOMMON_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-uncommon");
+		TIER_UNCOMMON_NAMING   = Settings.getBoolean("Tiers.name-random-uncommon");
+		TIER_UNCOMMON_NAMES_COLOR   = Settings.getString("Tiers.name-color-uncommon");
+		
+		TIER_RARE_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-rare");
+		TIER_RARE_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-rare");
+		TIER_RARE_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-rare");
+		TIER_RARE_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-rare");
+		TIER_RARE_MAX_CHANCE = Settings.getInt("Tiers.max-chance-rare");
+		TIER_RARE_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-rare");
+		TIER_RARE_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-rare");
+		TIER_RARE_NAMING   = Settings.getBoolean("Tiers.name-random-rare");
+		TIER_RARE_NAMES_COLOR   = Settings.getString("Tiers.name-color-rare");
+		
+		TIER_UNIQUE_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-unique");
+		TIER_UNIQUE_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-unique");
+		TIER_UNIQUE_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-unique");
+		TIER_UNIQUE_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-unique");
+		TIER_UNIQUE_MAX_CHANCE = Settings.getInt("Tiers.max-chance-unique");
+		TIER_UNIQUE_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-unique");
+		TIER_UNIQUE_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-unique");
+		TIER_UNIQUE_NAMING   = Settings.getBoolean("Tiers.name-random-unique");
+		TIER_UNIQUE_NAMES_COLOR   = Settings.getString("Tiers.name-color-unique");
+		
+		TIER_SET_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-set");
+		TIER_SET_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-set");
+		TIER_SET_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-set");
+		TIER_SET_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-set");
+		TIER_SET_MAX_CHANCE = Settings.getInt("Tiers.max-chance-set");
+		TIER_SET_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-set");
+		TIER_SET_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-set");
+		TIER_SET_NAMING   = Settings.getBoolean("Tiers.name-random-set");
+		TIER_SET_NAMES_COLOR   = Settings.getString("Tiers.name-color-set");
+		
+		TIER_LEGENDARY_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-legendary");
+		TIER_LEGENDARY_ENCHANTS_MIN   = Settings.getInt("Tiers.enchant-min-legendary");
+		TIER_LEGENDARY_ENCHANTS_MAX   = Settings.getInt("Tiers.enchant-max-legendary");
+		TIER_LEGENDARY_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-legendary");
+		TIER_LEGENDARY_MAX_CHANCE = Settings.getInt("Tiers.max-chance-legendary");
+		TIER_LEGENDARY_SOCKETS_ALLOW  = Settings.getBoolean("Tiers.allow-sockets-legendary");
+		TIER_LEGENDARY_SOCKETS_MAX    = Settings.getInt("Tiers.sockets-max-legendary");
+		TIER_LEGENDARY_NAMING   = Settings.getBoolean("Tiers.name-random-legendary");
+		TIER_LEGENDARY_NAMES_COLOR   = Settings.getString("Tiers.name-color-legendary");
+		
 		PERMISSION_BUY = Settings.getBoolean("Permissions.buy");
 		PERMISSION_BUY_ENCHANT = Settings.getBoolean("Permissions.buy-enchant");
 		PERMISSION_BUY_GEM = Settings.getBoolean("Permissions.buy-gem");

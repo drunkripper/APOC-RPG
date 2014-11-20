@@ -46,7 +46,7 @@ Dungeons:
     #Set this to false, everything below is ignored.
     enabled: true
     #Do not tinker with this unless you are running a quantum computer for a server...
-    dungeon-spawn-chance: 30
+    dungeon-spawn-chance: 1
     #How many chunks apart should the dungeons be? Setting this below 3 will cause dungeonception...
     dungeon-spacing: 5
     #What type of dungeons do we want to spawn?
@@ -55,21 +55,21 @@ Dungeons:
     nether-dungeon: true
     end-dungeon: true
     #Enable chest filling? This will fill the chests within the schematic with random enchanted items.
-    dungeon-chests: true
-    #Enable socket gems to spawn in dungeon chests?
-    dungeon-rpg-gems: true
+    chest-fill-rpg: true
     #Set the min and max amount of items to be spawned into dungeon chests. This includes RPG gear and items.
-    minimum-chest-items: 1
-    maximum-chest-items: 5
-    #What tiers of items should we spawn in the chests?
-    dungeon-spawn-common: true
-    dungeon-spawn-uncommon: true
-    dungeon-spawn-rare: true
-    dungeon-spawn-unique: true
-    dungeon-spawn-set: true
-    dungeon-spawn-legendary: true
-    socket-gems: true
-    identity-books: true
+    chest-min-items: 2
+    chest-max-items: 8
+    #Set the max chance for items to spawn. 
+    # If you want something disabled, set max-chance to 0
+    chest-max-chance-gem: 10
+    chest-max-chance-tome: 20
+    chest-max-chance-unknown: 35
+    chest-max-chance-tier-legendary: 40
+    chest-max-chance-tier-set: 45
+    chest-max-chance-tier-unique: 55
+    chest-max-chance-tier-rare: 70
+    chest-max-chance-tier-uncommon: 85
+    chest-max-chance-tier-common: 100
     #If you are using a forge server and wish to spawn mod items enable this.
     forge-gear: false
     #If spawning RPG gear wasn't enough throw in your own spice of items! ID:DATA:AMOUNT 1 item per line.
@@ -82,7 +82,7 @@ Dungeons:
     #Locking chests protects them which means they cannot be destroyed by anyone or anything.
     #Locked chests and players who have accessed that chest is stored in the dungeonchest.db sqlite file.
     #Setting this to false disables dungeon chest refilling.
-    lock-chests: true
+    chest-lockable: true
     #Should we lockdown the dungeons too? This stops griefing of dungeons and allows new and old players to continue to explore the dungeons.
     protect-dungeons: true
     #Should we protect the environment surrounding the dungeon as well? Amount in chunks.
@@ -144,6 +144,15 @@ Gear:
     no-sell-on-repair: true
     #This does the same as above, just with materials.
     no-salvage-on-repair: true
+
+Tiers:
+    #What is maximum chance that an item would be of the tier (1-100%)?
+    max-chance-common: 100
+    max-chance-uncommon: 50
+    max-chance-rare: 25
+    max-chance-unique: 15
+    max-chance-set: 10
+    max-chance-legendary: 5
     #What tier of gear should we allow enchantments on? (Random generation)
     enchant-allow-common: true
     enchant-allow-uncommon: true
@@ -165,33 +174,42 @@ Gear:
     enchant-max-unique: 6
     enchant-max-set: 6
     enchant-max-legendary: 10
+    #What is the maximum level of enchantments for each tier?
+    enchant-max-level-common: 3
+    enchant-max-level-uncommon: 5
+    enchant-max-level-rare: 6
+    enchant-max-level-unique: 7
+    enchant-max-level-set: 7
+    enchant-max-level-legendary: 10
     #What tier of gear should we allow sockets on?
-    tier-sockets-common: true
-    tier-sockets-uncommon: true
-    tier-sockets-rare: true
-    tier-sockets-unique: true
-    tier-sockets-set: true
-    tier-sockets-legendary: true
+    allow-sockets-common: false
+    allow-sockets-uncommon: true
+    allow-sockets-rare: true
+    allow-sockets-unique: true
+    allow-sockets-set: true
+    allow-sockets-legendary: true
     #What is the maximum amount of sockets for each tier? MAX = 3
     sockets-max-common: 0
     sockets-max-uncommon: 1
     sockets-max-rare: 2
     sockets-max-unique: 3
+    sockets-max-set: 3
     sockets-max-legendary: 3
     sockets-max-buy: 3
     #What tier of gear should we allow prefix/suffix naming on?
-    tier-naming-common: false
-    tier-naming-uncommon: true
-    tier-naming-rare: true
-    tier-naming-unique: true
-    tier-naming-legendary: true
+    name-random-common: false
+    name-random-uncommon: true
+    name-random-rare: true
+    name-random-unique: true
+    name-random-set: true
+    name-random-legendary: true
     #What color should the tiers names be? Based off of BUKKIT http://jd.bukkit.org/rb/apidocs/org/bukkit/ChatColor.html
-    tier-color-common: WHITE
-    tier-color-uncommon: BLUE
-    tier-color-rare: YELLOW
-    tier-color-unique: GOLD
-    tier-color-set: GREEN
-    tier-color-legendary: DARK_RED
+    name-color-common: "WHITE"
+    name-color-uncommon: "BLUE"
+    name-color-rare: "YELLOW"
+    name-color-unique: "GOLD"
+    name-color-set: "GREEN"
+    name-color-legendary: "DARK_RED"
 
 Command-Settings:
     #How much will it cost per level of enchantment?

@@ -4,6 +4,9 @@ import java.awt.List;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -13,11 +16,16 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 //import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
@@ -98,7 +106,6 @@ public class EntityEvents implements Listener {
 	@EventHandler
 	public void onEnitityDeath(EntityDeathEvent event){
 		EntityType et = event.getEntityType();
-		System.out.println("Dead: "+et.name().toString()+" by: "+event.getEventName());
 		LivingEntity entity = event.getEntity();
 		if ( entity instanceof Player ){
 			ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
@@ -108,6 +115,73 @@ public class EntityEvents implements Listener {
 		}
 	}
 	
+	
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event){
+		Player player = event.getPlayer();
+		Block block = event.getClickedBlock();
+		boolean isEmpty = true;
+		if ( block != null && block.getType().equals(Material.CHEST)){
+			if ( Plugin.CHEST_LOCKABLE ) {
+				if ( !block.getMetadata("locked").isEmpty()) {
+					ArrayList<MetadataValue> meta = new ArrayList<MetadataValue>(block.getMetadata("locked"));
+					for ( int i = 0; meta != null && i < meta.size(); i++ ){
+						MetadataValue metaValue = (MetadataValue)meta.get(i);
+						boolean nameFound = false;
+						try {
+							@SuppressWarnings("unchecked")
+							ArrayList<String> names = (ArrayList<String>)metaValue.value();
+							for ( int j = 0; names != null && j < names.size(); j++) {
+								String name = (String) names.get(j);
+								Plugin.debugConsole(name);
+								if ( player.getName().equals(name) ) {
+									nameFound = true;
+									if ( !player.hasPermission("op") ) {
+										player.sendMessage(Plugin.APOCRPG_ERROR + "This chest is locked to you!");
+										event.setCancelled(true);
+									}
+								}
+							}
+							if ( !nameFound ) {
+								names.add(player.getName());
+								FixedMetadataValue fmv = new FixedMetadataValue(Plugin.instance, names);
+								block.setMetadata("locked", fmv);
+							}
+						} catch (Exception e){
+							// do nothing
+						}
+					}
+				} else {
+					ArrayList<String> names = new ArrayList<String>();
+					names.add(player.getName());
+					FixedMetadataValue fmv = new FixedMetadataValue(Plugin.instance, names);
+					block.setMetadata("locked", fmv);
+				}
+			}
+			if ( player.hasPermission("op") && player.getItemInHand() != null) {
+				ItemStack hand = player.getItemInHand();
+				ItemMeta meta = hand.getItemMeta();
+				if ( meta != null && meta.getDisplayName() != null 
+				&& meta.getDisplayName().equals(Plugin.DISPLAY_NAME_UNIDENTIFIED_ITEM)) 
+				{
+					Chest chest = (Chest)block.getState();
+					Inventory chestInv = chest.getInventory();
+					ItemStack[] contents = chestInv.getContents();
+					for ( int i = 0; i < contents.length && isEmpty; i++ ){
+						ItemStack item = (ItemStack)contents[i];
+						if ( item != null ) {
+							isEmpty = false;
+						}
+					}
+					if ( isEmpty){
+						ItemAPI.fillChest(block);
+						FixedMetadataValue fmv = new FixedMetadataValue(Plugin.instance, "true");
+						block.setMetadata("lockable", fmv);
+					}
+				}
+			}
+		}
+	}
 	/**
 	 * This method is used to prevent the player from picking up items bound to another player
 	 * @param event

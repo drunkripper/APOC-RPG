@@ -27,9 +27,9 @@ public class SocketEvents implements Listener {
 	private HashMap<Player, Integer> SelectedSlot = new HashMap<Player, Integer>();
 	
 	public SocketEvents() {
-		Plugin.Plugin.getServer().getScheduler().scheduleSyncRepeatingTask(Plugin.Plugin, new Runnable(){
+		Plugin.instance.getServer().getScheduler().scheduleSyncRepeatingTask(Plugin.instance, new Runnable(){
 			public void run() {
-				for (Player player : Plugin.Plugin.getServer().getOnlinePlayers()) {
+				for (Player player : Plugin.instance.getServer().getOnlinePlayers()) {
 					if (SelectedSocket.containsKey(player) && SelectedSocket.get(player) != null) {
 						SelectedSocket.put(player, null);
 						player.sendMessage("Socket unselected!");
@@ -108,7 +108,7 @@ public class SocketEvents implements Listener {
 	public void onPlayerRightClick(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		ItemStack item = player.getItemInHand();
-		ItemMeta itemMeta = (item != null && item.hasItemMeta()) ? item.getItemMeta() :  Plugin.Plugin.getServer().getItemFactory().getItemMeta(item.getType());
+		ItemMeta itemMeta = (item != null && item.hasItemMeta()) ? item.getItemMeta() :  Plugin.instance.getServer().getItemFactory().getItemMeta(item.getType());
 		List<String> itemLore = (itemMeta != null && itemMeta.hasLore())? item.getItemMeta().getLore() : new ArrayList<String>() ;
 		Inventory inv = player.getInventory();
 		
@@ -139,7 +139,7 @@ public class SocketEvents implements Listener {
 					&& (unidMeta.getDisplayName().equals(Plugin.LORE_UNKNOWN_ITEM) && unidMeta.getLore()==null))
 					{
 						inv.remove(unidItem);
-						ItemStack clone = ItemAPI.diablofy(unidItem.clone());
+						ItemStack clone = ItemAPI.diablofy(unidItem.clone(), Plugin.Random.nextInt(5));
 						clone.setDurability(invItem.getDurability());
 						Plugin.addLoreText(clone, Plugin.LORE_PLAYER_BOUND, player.getName());
 						player.setItemInHand(clone);

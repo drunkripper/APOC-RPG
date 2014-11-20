@@ -1,11 +1,14 @@
 package com.APOCRPG.API;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.SortedMap;
 
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.items.IdentifyTome;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -33,7 +36,7 @@ public class ItemAPI {
 	public static ItemStack createArmor(int type) {
 		Material Material = Armor[type][Plugin.Random.nextInt(Armor[type].length)];
 		ItemStack Item = new ItemStack(Material);
-		return diablofy(Item);
+		return diablofy(Item, Plugin.Random.nextInt(5));
 	}
 	
 	public static ItemStack createTome(){
@@ -47,8 +50,8 @@ public class ItemAPI {
 	* <p>
 	* this will diablofy the item that is passed to it in the classic way. This is a wrapper to preserve method signature.
 	*/
-	public static ItemStack diablofy(ItemStack Item) {
-		return diablofy(Item, 0);
+	public static ItemStack diablofy(ItemStack Item, int tier) {
+		return diablofy(Item, 0, tier);
 	}
 	/**
 	 * Diablofy
@@ -58,113 +61,143 @@ public class ItemAPI {
 	 * @param type  an Int that determines how to diablofy- 0=ignored (Normal) 1=armor (Useful) 2=weapon (Useful) 3=tool (Useful) 4=bow (useful)
 	 * @return Funky Item
 	 */
-	public static ItemStack diablofy(ItemStack item, int type) {
-		short dur = 0;
-		item.setDurability(dur);
-		ItemMeta meta = item.getItemMeta();
-		meta.setDisplayName(Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
-		List<String> lore = meta.getLore();
-		if ( lore == null ) { lore = new ArrayList<String>();}
-		////////////////Set max enchants to this value///////////////
-		int maxEnchants = 6;
-		int minEnchants = 1;
-		/////////////////
-		Enchantment[] enchantsTable = {
-				 Enchantment.PROTECTION_ENVIRONMENTAL
-				,Enchantment.PROTECTION_FIRE
-				,Enchantment.PROTECTION_FALL
-				,Enchantment.PROTECTION_EXPLOSIONS
-				,Enchantment.PROTECTION_PROJECTILE
-				,Enchantment.OXYGEN
-				,Enchantment.WATER_WORKER
-				,Enchantment.THORNS
-				,Enchantment.DAMAGE_ALL
-				,Enchantment.DAMAGE_UNDEAD
-				,Enchantment.DAMAGE_ARTHROPODS
-				,Enchantment.KNOCKBACK
-				,Enchantment.FIRE_ASPECT
-				,Enchantment.LOOT_BONUS_MOBS
-				,Enchantment.DIG_SPEED
-				,Enchantment.SILK_TOUCH
-				,Enchantment.DURABILITY
-				,Enchantment.LOOT_BONUS_BLOCKS
-				,Enchantment.ARROW_DAMAGE
-				,Enchantment.ARROW_KNOCKBACK
-				,Enchantment.ARROW_FIRE
-				,Enchantment.ARROW_INFINITE
-				};
+	public static ItemStack diablofy(ItemStack item, int type, int tier) {
+		boolean allowEnchant = false;
+		int maxEnchants = 0;
+		int minEnchants = 0;
+		int maxEnchLvl  = 1;
+		int nbrEnchants = 0;
+		int maxSockets  = 0;
+		boolean tierNaming = false;
+		ChatColor nameColor = ChatColor.WHITE;
 		
-		// 9
-		Enchantment[] armorTable = {
-				 Enchantment.PROTECTION_ENVIRONMENTAL
-				,Enchantment.PROTECTION_FIRE
-				,Enchantment.PROTECTION_FALL
-				,Enchantment.PROTECTION_EXPLOSIONS
-				,Enchantment.PROTECTION_PROJECTILE
-				,Enchantment.OXYGEN
-				,Enchantment.WATER_WORKER
-				,Enchantment.THORNS
-				,Enchantment.DURABILITY
-		};
-		//4
-		Enchantment[] toolTable = {
-				 Enchantment.DIG_SPEED
-				,Enchantment.SILK_TOUCH
-				,Enchantment.DURABILITY
-				,Enchantment.LOOT_BONUS_BLOCKS
-		};
-		
-		//7
-		Enchantment[] weaponTable = {
-				 Enchantment.DAMAGE_ALL
-				,Enchantment.DAMAGE_UNDEAD
-				,Enchantment.DAMAGE_ARTHROPODS
-				,Enchantment.KNOCKBACK
-				,Enchantment.FIRE_ASPECT
-				,Enchantment.LOOT_BONUS_MOBS
-				,Enchantment.DURABILITY
-		};
-		
-		//4
-		Enchantment[] bowTable = {
-				 Enchantment.ARROW_DAMAGE
-				,Enchantment.ARROW_KNOCKBACK
-				,Enchantment.ARROW_FIRE
-				,Enchantment.ARROW_INFINITE
-		};
-		
-		int hasEnchants = Plugin.Random.nextInt(maxEnchants-minEnchants)+minEnchants;
-		for(int i = 0; i<hasEnchants;i++)
-		{
-			if(type==0)	meta.addEnchant(enchantsTable[Plugin.Random.nextInt(22)], Plugin.Random.nextInt(10)+1,true);
-			else if(type==1)
-				//Armor
-				meta.addEnchant(armorTable[Plugin.Random.nextInt(9)], Plugin.Random.nextInt(10)+1,true);
-			else if(type==2)
-				//Weapon
-				meta.addEnchant(weaponTable[Plugin.Random.nextInt(7)], Plugin.Random.nextInt(10)+1,true);
-			else if(type==3)
-				//Tool
-				meta.addEnchant(toolTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
-			else if(type==4)
-				//Bow
-				meta.addEnchant(bowTable[Plugin.Random.nextInt(4)], Plugin.Random.nextInt(10)+1,true);
+		// local variables based upon tier value
+		if ( tier == Plugin.TIER_COMMON ) {
+			allowEnchant = Plugin.TIER_COMMON_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_COMMON_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_COMMON_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_COMMON_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_COMMON_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_COMMON_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_COMMON_NAMES_COLOR);
 			
-			if(Plugin.Random.nextGaussian()<0.1)
-			{
-				lore.add(Plugin.LORE_ITEM_SOCKET);
-				meta.setLore(lore);
+		} else if ( tier == Plugin.TIER_UNCOMMON ) {
+			allowEnchant = Plugin.TIER_UNCOMMON_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_UNCOMMON_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_UNCOMMON_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_UNCOMMON_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_UNCOMMON_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_UNCOMMON_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_UNCOMMON_NAMES_COLOR);
+		} else if ( tier == Plugin.TIER_RARE ) {
+			allowEnchant = Plugin.TIER_RARE_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_RARE_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_RARE_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_RARE_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_RARE_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_RARE_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_RARE_NAMES_COLOR);
+		} else if ( tier == Plugin.TIER_UNIQUE ) {
+			allowEnchant = Plugin.TIER_UNIQUE_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_UNIQUE_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_UNIQUE_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_UNIQUE_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_UNIQUE_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_UNIQUE_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_UNIQUE_NAMES_COLOR);
+		} else if ( tier == Plugin.TIER_SET ) {
+			allowEnchant = Plugin.TIER_SET_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_SET_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_SET_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_SET_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_SET_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_SET_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_SET_NAMES_COLOR);
+		} else if ( tier == Plugin.TIER_LEGENDARY ) {
+			allowEnchant = Plugin.TIER_LEGENDARY_ENCHANTS_ALLOW;
+			maxEnchants = Plugin.TIER_LEGENDARY_ENCHANTS_MAX;
+			minEnchants = Plugin.TIER_LEGENDARY_ENCHANTS_MIN;
+			maxEnchLvl = Plugin.TIER_LEGENDARY_ENCHANTS_MAX_LVL;
+			maxSockets = Plugin.TIER_LEGENDARY_SOCKETS_MAX;
+			tierNaming = Plugin.TIER_LEGENDARY_NAMING;
+			nameColor = ChatColor.valueOf(Plugin.TIER_LEGENDARY_NAMES_COLOR);
+		}
+		if ( allowEnchant && maxEnchants > 0 ) {
+			// nbrEnchants = minEnchants + random difference between Max and Min values
+			nbrEnchants = minEnchants + Plugin.Random.nextInt( maxEnchants - minEnchants );
+			
+			// get available enchantments for item.
+			ArrayList<Enchantment> enchList = (ArrayList<Enchantment>)Plugin.getEnchantmentsFor(item);
+			if ( enchList != null && !enchList.isEmpty()) {
+				int enchApplied = 0;
+				// add enchants
+				for ( int i = 0; i < nbrEnchants && enchApplied < enchList.size(); i++) {
+					Enchantment ench = null;
+					do {
+						ench = enchList.get(Plugin.Random.nextInt(enchList.size()));
+					} while (item.getItemMeta().hasEnchant(ench));
+					// add echantment with a random power level determined by the tier's max enchant level
+					item.addUnsafeEnchantment(ench, Plugin.Random.nextInt(maxEnchLvl)+1);
+					enchApplied++;
+				}
 			}
 		}
+		ItemMeta meta = item.getItemMeta();
+		List<String> lore = meta.getLore();
+		if ( lore == null ) { lore = new ArrayList<String>();}
+		
+		// add sockets
+		if ( maxSockets > 0 ){
+			int nbrSockets = Plugin.Random.nextInt(maxSockets) + 1;
+			for ( int s = 0; s < nbrSockets; s++ ){
+				lore.add(Plugin.LORE_ITEM_SOCKET);
+			}
+			meta.setLore(lore);
+		}
+		
+		if ( tierNaming ){
+			// if ( tier == set ) set name + prefix + suffix else prefix + suffix 
+			meta.setDisplayName(nameColor+ ( tier == Plugin.TIER_SET ? Plugin.Settings.getRandomSet() + " " : "" ) + Plugin.Settings.getRandomPrefix() + " " + Plugin.Settings.getRandomSuffix());
+		}
 		item.setItemMeta(meta);
-
+		
 		return item;
 	}
 	
 	public static ItemStack createItem() {
+		int tier = 0;
+		int tierChance = Plugin.Random.nextInt(100) + 1;
+		if ( tierChance <= Plugin.TIER_LEGENDARY_MAX_CHANCE ) {
+			tier = Plugin.TIER_LEGENDARY;
+		} else if ( tierChance <= Plugin.TIER_SET_MAX_CHANCE ) {
+			tier = Plugin.TIER_SET;
+		} else if ( tierChance <= Plugin.TIER_UNIQUE_MAX_CHANCE ) {
+			tier = Plugin.TIER_UNIQUE;
+		} else if ( tierChance <= Plugin.TIER_RARE_MAX_CHANCE ) {
+			tier = Plugin.TIER_RARE;
+		} else if ( tierChance <= Plugin.TIER_UNCOMMON_MAX_CHANCE ) {
+			tier = Plugin.TIER_UNCOMMON;
+		} else {
+			tier = Plugin.TIER_COMMON;
+		}
+		return createItem( tier);
+	}
+	
+	public static ItemStack createItem( int tier ) {
 		Material Material = Materials[Plugin.Random.nextInt(Materials.length)];
 		ItemStack Item = new ItemStack(Material);
-		return diablofy(Item);
+		return diablofy(Item, tier);
+	}
+	
+	public static ItemStack createUnidentified() {
+		Material material = Materials[Plugin.Random.nextInt(Materials.length)];
+		ItemStack item = new ItemStack(material);
+		Plugin.clearLore(item);
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(Plugin.DISPLAY_NAME_UNIDENTIFIED_ITEM);
+		meta.setLore(null);
+		item.setItemMeta(meta);
+		return item;
 	}
 	
 	public static ItemStack generateUsefulItem(){
@@ -182,27 +215,27 @@ public class ItemAPI {
 			//armor
 			Material Material = Materials[26+Plugin.Random.nextInt(20)];
 			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
+			return diablofy(Item, variety, Plugin.Random.nextInt(5));
 				
 		}
 		else if (variety ==2) {
 			//weapon
 			Material Material = Materials[weapMaterials[Plugin.Random.nextInt(weapMaterials.length)]];
 			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
+			return diablofy(Item, variety, Plugin.Random.nextInt(5));
 					
 		}
 		else if(variety ==3) {
 			//tool
 			Material Material = Materials[toolMaterials[Plugin.Random.nextInt(toolMaterials.length)]];
 			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
+			return diablofy(Item, variety, Plugin.Random.nextInt(5));
 		}
 		else if(variety ==4){
 			//bow
 			Material Material = Materials[0];
 			ItemStack Item = new ItemStack(Material);
-			return diablofy(Item, variety);
+			return diablofy(Item, variety, Plugin.Random.nextInt(5));
 		}
 		else return generateUsefulItem();
 	}
@@ -215,15 +248,50 @@ public class ItemAPI {
 
 	public static void fillChest(Block block) {
 		if (block.getType() == Material.CHEST) {
-			Chest Chest = (Chest)block.getState();
-
-			Chest.getInventory().clear();
-			int Amount = Plugin.Random.nextInt(6) + 2;
-			for (int i = 0; i < Amount; i++) {
-				if (Plugin.Random.nextInt(100) <= 10) {
-					Chest.getInventory().addItem(createSocket());
-				} else {
-					Chest.getInventory().addItem(createItem());
+			int minItems = Plugin.CHEST_MIN_ITEMS;
+			int maxItems = Plugin.CHEST_MAX_ITEMS;
+			if ( maxItems > 0 ) {
+				Chest Chest = (Chest)block.getState();
+				Chest.getInventory().clear();
+				int nbrItems = Plugin.Random.nextInt(maxItems-minItems)+1+minItems;
+				SortedMap<Integer, String> items = Plugin.chestItems;
+				// create items
+				for (int i = 0; i < nbrItems; i++) {
+					// if Plugin.CHEST_FILL_RPG != TRUE or chestItems is empty create common items
+					if ( !Plugin.CHEST_FILL_RPG || items.size() == 0 ) {
+						Chest.getInventory().addItem(createItem(0));
+					} else {
+						int maxRandom = ((Integer)Plugin.chestItems.lastKey()).intValue();
+						int random = Plugin.Random.nextInt(maxRandom) + 1;
+						String type = null;
+						Iterator<Integer> it = (Iterator<Integer>)items.keySet().iterator();
+						// find what type was randomly selected
+						while (it.hasNext() && type == null){
+							Integer key = (Integer)it.next();
+							if ( random < key.intValue() ) {
+								type = items.get(key);
+							}
+						}
+						
+						if ( type.equalsIgnoreCase("GEM") ) {
+							Chest.getInventory().addItem(GemAPI.createGem());
+						} else if ( type.equalsIgnoreCase("TOME") ) {
+							Chest.getInventory().addItem(createTome());
+						} else if ( type.equalsIgnoreCase("UNKNOWN") ) {
+							Chest.getInventory().addItem(createUnidentified());
+						} else {
+							int tier = 0;
+							switch ( type.toUpperCase() ) {
+								case "COMMON" : tier = 0; break;
+								case "UNCOMMON" : tier = 1; break;
+								case "RARE" : tier = 2; break;
+								case "UNIQUE" : tier = 3; break;
+								case "SET" : tier = 4; break;
+								case "LEGENDARY" : tier = 0; break;
+							}
+							Chest.getInventory().addItem(createItem(tier));
+						}
+					}
 				}
 			}
 		}
