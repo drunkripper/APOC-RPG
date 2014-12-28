@@ -1,5 +1,8 @@
 package com.APOCRPG.API;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import org.bukkit.inventory.ItemStack;
 
 import com.APOCRPG.Main.Plugin;
@@ -11,40 +14,57 @@ public class EffectAPI {
 	private static final String TYPE_WEAPON = "Weapon";
 	private static final String TYPE_WEAPON_PASSIVE = "PassiveWeapon";
 	
-	private static String[] ArmorEffects = {
-		"Warding",
-		"Velocity",
-		"Vaulting",
-		"Staggering",
-		"Demons",
-		"Healing",
-		"Damage",
-		"Resistance",
-		"Speed",
-		"Taunting"
+	private static ArrayList<String> ArmorEffects = new ArrayList<String>();
+	{
+		ArmorEffects.add("Warding");
+		ArmorEffects.add("Velocity");
+		ArmorEffects.add("Vaulting");
+		ArmorEffects.add("Staggering");
+		ArmorEffects.add("Demons");
+		ArmorEffects.add("Healing");
+		ArmorEffects.add("Damage");
+		ArmorEffects.add("Resistance");
+		ArmorEffects.add("Speed");
+		ArmorEffects.add("Taunting");
 	};
-	private static String[] PassiveWeaponEffects = {
-		"Ravaging",
-		"Decapitation"
+	private static ArrayList<String> PassiveWeaponEffects = new ArrayList<String>();
+	{
+		PassiveWeaponEffects.add("Ravaging");
+		PassiveWeaponEffects.add("Decapitation");
 	};
-	private static String[] HitWeaponEffects = {
-		"Debilitation",
-		"Crippling",
-		"Bloodthirst",
-		"Blinding",
-		"Sacrifice",
-		"Slashing",
-		"Cleaving",
+	private static ArrayList<String> HitWeaponEffects = new ArrayList<String>();
+	{
+		HitWeaponEffects.add("Debilitation");
+		HitWeaponEffects.add("Crippling");
+		HitWeaponEffects.add("Bloodthirst");
+		HitWeaponEffects.add("Blinding");
+		HitWeaponEffects.add("Sacrifice");
+		HitWeaponEffects.add("Slashing");
+		HitWeaponEffects.add("Cleaving");
 	};
-	private static String[] BowEffects = {
-		"Hell",
-		"Multishot",
-		"Blast"
+	private static ArrayList<String> BowEffects = new ArrayList<String>();
+	{
+		BowEffects.add("Hell");
+		BowEffects.add("Multishot");
+		BowEffects.add("Blast");
 	};
-	private static String[] ToolEffects = {
-		"Fortune"
+	private static ArrayList<String> ToolEffects = new ArrayList<String>();
+	{
+		ToolEffects.add("Fortune");
 	};
-	
+	private static HashMap<String, String> TypeLookup = new HashMap<String, String>();
+	{
+		for(String ef:ArmorEffects)
+			TypeLookup.put(ef, TYPE_ARMOR);
+		for(String ef:PassiveWeaponEffects)
+			TypeLookup.put(ef, TYPE_WEAPON_PASSIVE);
+		for(String ef:HitWeaponEffects)
+			TypeLookup.put(ef, TYPE_WEAPON);
+		for(String ef:BowEffects)
+			TypeLookup.put(ef, TYPE_BOW);
+		for(String ef:ToolEffects)
+			TypeLookup.put(ef, TYPE_TOOL);
+	};
 	public static Effect getRandomEffect() {
 		int Random = Plugin.Random.nextInt(5);
 		switch (Random) {
@@ -68,15 +88,15 @@ public class EffectAPI {
 		System.out.println(Type);
 		switch(Type) {
 			case TYPE_ARMOR:
-				return new Effect(ArmorEffects[Plugin.Random.nextInt(ArmorEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
+				return new Effect(ArmorEffects.get(Plugin.Random.nextInt(ArmorEffects.size())), Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case TYPE_WEAPON_PASSIVE:
-				return new Effect(PassiveWeaponEffects[Plugin.Random.nextInt(PassiveWeaponEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
+				return new Effect(PassiveWeaponEffects.get(Plugin.Random.nextInt(PassiveWeaponEffects.size())), Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case TYPE_WEAPON:
-				return new Effect(HitWeaponEffects[Plugin.Random.nextInt(HitWeaponEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
+				return new Effect(HitWeaponEffects.get(Plugin.Random.nextInt(HitWeaponEffects.size())), Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case TYPE_BOW:
-				return new Effect(BowEffects[Plugin.Random.nextInt(BowEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
+				return new Effect(BowEffects.get(Plugin.Random.nextInt(BowEffects.size())), Type, Plugin.Random.nextInt(3) + 1, "0:15");
 			case TYPE_TOOL:
-				return new Effect(ToolEffects[Plugin.Random.nextInt(ToolEffects.length)], Type, Plugin.Random.nextInt(3) + 1, "0:15");
+				return new Effect(ToolEffects.get(Plugin.Random.nextInt(ToolEffects.size())), Type, Plugin.Random.nextInt(3) + 1, "0:15");
 		}
 		System.out.println("Null");
 		return null;
@@ -94,36 +114,9 @@ public class EffectAPI {
 	public static String getEffectTypeFromName ( String name ) {
 		String retval = null;
 		// check armor effects
-		for ( int i = 0; i < ArmorEffects.length && retval == null; i++){
-			String effect = ArmorEffects[i];
-			if ( name.equals(effect) ){
-				retval = TYPE_ARMOR;
-			}
-		}
-		for ( int i = 0; i < HitWeaponEffects.length && retval == null; i++){
-			String effect = HitWeaponEffects[i];
-			if ( name.equals(effect) ){
-				retval = TYPE_WEAPON;
-			}
-		}
-		for ( int i = 0; i < PassiveWeaponEffects.length && retval == null; i++){
-			String effect = PassiveWeaponEffects[i];
-			if ( name.equals(effect) ){
-				retval = TYPE_WEAPON_PASSIVE;
-			}
-		}
-		for ( int i = 0; i < BowEffects.length && retval == null; i++){
-			String effect = BowEffects[i];
-			if ( name.equals(effect) ){
-				retval = TYPE_BOW;
-			}
-		}
-		for ( int i = 0; i < ToolEffects.length && retval == null; i++){
-			String effect = ToolEffects[i];
-			if ( name.equals(effect) ){
-				retval = TYPE_TOOL;
-			}
-		}
+		//LookupTable
+		if(TypeLookup.containsKey(name))
+			retval = TypeLookup.get(name);
 		return retval;
 	}
 }
