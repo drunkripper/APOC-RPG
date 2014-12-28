@@ -8,14 +8,14 @@ import org.bukkit.inventory.ItemStack;
 import com.APOCRPG.Main.Plugin;
 
 public class EffectAPI {
-	private static final String TYPE_ARMOR = "Armor";
-	private static final String TYPE_BOW = "Bow";
-	private static final String TYPE_TOOL = "Tool";
-	private static final String TYPE_WEAPON = "Weapon";
-	private static final String TYPE_WEAPON_PASSIVE = "PassiveWeapon";
+	public static final String TYPE_ARMOR = "Armor";
+	public static final String TYPE_BOW = "Bow";
+	public static final String TYPE_TOOL = "Tool";
+	public static final String TYPE_WEAPON = "Weapon";
+	public static final String TYPE_WEAPON_PASSIVE = "PassiveWeapon";
 	
 	private static ArrayList<String> ArmorEffects = new ArrayList<String>();
-	{
+	static {
 		ArmorEffects.add("Warding");
 		ArmorEffects.add("Velocity");
 		ArmorEffects.add("Vaulting");
@@ -26,14 +26,14 @@ public class EffectAPI {
 		ArmorEffects.add("Resistance");
 		ArmorEffects.add("Speed");
 		ArmorEffects.add("Taunting");
-	};
+	}
 	private static ArrayList<String> PassiveWeaponEffects = new ArrayList<String>();
-	{
+	static {
 		PassiveWeaponEffects.add("Ravaging");
 		PassiveWeaponEffects.add("Decapitation");
-	};
+	}
 	private static ArrayList<String> HitWeaponEffects = new ArrayList<String>();
-	{
+	static {
 		HitWeaponEffects.add("Debilitation");
 		HitWeaponEffects.add("Crippling");
 		HitWeaponEffects.add("Bloodthirst");
@@ -41,19 +41,19 @@ public class EffectAPI {
 		HitWeaponEffects.add("Sacrifice");
 		HitWeaponEffects.add("Slashing");
 		HitWeaponEffects.add("Cleaving");
-	};
+	}
 	private static ArrayList<String> BowEffects = new ArrayList<String>();
-	{
+	static {
 		BowEffects.add("Hell");
 		BowEffects.add("Multishot");
 		BowEffects.add("Blast");
-	};
+	}
 	private static ArrayList<String> ToolEffects = new ArrayList<String>();
-	{
+	static {
 		ToolEffects.add("Fortune");
-	};
+	}
 	private static HashMap<String, String> TypeLookup = new HashMap<String, String>();
-	{
+	static {
 		for(String ef:ArmorEffects)
 			TypeLookup.put(ef, TYPE_ARMOR);
 		for(String ef:PassiveWeaponEffects)
@@ -64,7 +64,7 @@ public class EffectAPI {
 			TypeLookup.put(ef, TYPE_BOW);
 		for(String ef:ToolEffects)
 			TypeLookup.put(ef, TYPE_TOOL);
-	};
+	}
 	public static Effect getRandomEffect() {
 		int Random = Plugin.Random.nextInt(5);
 		switch (Random) {
@@ -113,7 +113,6 @@ public class EffectAPI {
 	
 	public static String getEffectTypeFromName ( String name ) {
 		String retval = null;
-		// check armor effects
 		//LookupTable
 		if(TypeLookup.containsKey(name))
 			retval = TypeLookup.get(name);

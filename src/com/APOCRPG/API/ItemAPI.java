@@ -1,6 +1,7 @@
 package com.APOCRPG.API;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.SortedMap;
@@ -25,6 +26,21 @@ public class ItemAPI {
 										,{Material.LEATHER_BOOTS, Material.IRON_BOOTS, Material.GOLD_BOOTS, Material.DIAMOND_BOOTS,Material.CHAINMAIL_BOOTS}
 										,{Material.BOW, Material.WOOD_AXE, Material.WOOD_HOE, Material.WOOD_PICKAXE, Material.WOOD_SPADE, Material.WOOD_SWORD, Material.STONE_AXE, Material.STONE_HOE, Material.STONE_PICKAXE, Material.STONE_SPADE, Material.STONE_SWORD, Material.IRON_AXE, Material.IRON_HOE, Material.IRON_PICKAXE, Material.IRON_SPADE, Material.IRON_SWORD, Material.DIAMOND_AXE, Material.DIAMOND_HOE, Material.DIAMOND_PICKAXE, Material.DIAMOND_SPADE, Material.DIAMOND_SWORD, Material.GOLD_AXE, Material.GOLD_HOE, Material.GOLD_PICKAXE, Material.GOLD_SPADE, Material.GOLD_SWORD}
 										};
+	public static HashMap<Material, String> GemLookupTable = new HashMap<Material, String>();
+	static {
+		GemLookupTable.put(Material.BOW, EffectAPI.TYPE_BOW);
+		GemLookupTable.put(Material.WOOD_AXE,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.WOOD_SWORD,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.STONE_AXE,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.STONE_SWORD,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.IRON_AXE,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.IRON_SWORD,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.GOLD_AXE,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.GOLD_SWORD,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.DIAMOND_AXE,EffectAPI.TYPE_WEAPON);
+		GemLookupTable.put(Material.DIAMOND_SWORD,EffectAPI.TYPE_WEAPON);
+	}
+	
 	/**
 	 * Create Armor                         
 	 * <p>

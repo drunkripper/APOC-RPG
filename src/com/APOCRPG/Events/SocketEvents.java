@@ -16,13 +16,17 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.API.GemAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.items.IdentifyTome;
 
 public class SocketEvents implements Listener {
-	
+	//Why is this a hashmap?
+	//This doesn't seem to need to ever hold more than one item and player ever.
+	//Weird.
+	//Considering that the handler runs once per event call.
 	private HashMap<Player, ItemStack> SelectedSocket = new HashMap<Player, ItemStack>();
 	private HashMap<Player, Integer> SelectedSlot = new HashMap<Player, Integer>();
 	
@@ -233,7 +237,7 @@ public class SocketEvents implements Listener {
 						String itemStrLvl = null;
 						int itemIntLvl = 0;
 						int newLevel = 0;
-						
+						//There are no universal Gems
 						ItemMeta gemMeta = (SelectedSocket.get(player)).getItemMeta();
 						List<String> gemLore = (gemMeta != null && gemMeta.hasLore()) ? gemMeta.getLore() : new ArrayList<String>();
 						for ( String s : gemLore) {
@@ -241,13 +245,53 @@ public class SocketEvents implements Listener {
 								gemEffect = s.substring(0, s.lastIndexOf(" ")).replaceAll(Plugin.LORE_GEM_OF, "");
 								gemStrLvl = s.substring(s.lastIndexOf(" ")+1);
 								gemIntLvl = Plugin.romanToInt(gemStrLvl);
+								gemType = EffectAPI.getEffectTypeFromName(gemEffect);
 							} else if ( s.endsWith("Type")) {
 								gemType = s;
 							}
 						}
 						
 						//List<String> newLore = new ArrayList<String>();
-
+						//Type Checking
+						//Item Type Hierarchy= Bow<-Weapon<-Tool // Armor
+						boolean typeFailure = false;
+						switch(ItemAPI.GemLookupTable.get(item.getType()))
+						{
+						case EffectAPI.TYPE_ARMOR:
+							if(!gemType.equals(EffectAPI.TYPE_ARMOR))
+								typeFailure = true;
+							else
+								typeFailure = false;
+							break;
+						case EffectAPI.TYPE_BOW: //Case Fallthrough is deliberate
+							if(gemType.equals(EffectAPI.TYPE_BOW))
+							{	
+								typeFailure = false;
+								break;
+							}
+						case EffectAPI.TYPE_WEAPON:
+							if(gemType.equals(EffectAPI.TYPE_WEAPON))
+							{
+								typeFailure = false;
+								break;
+							}
+						case EffectAPI.TYPE_TOOL:
+							if(gemType.equals(EffectAPI.TYPE_TOOL))
+							{
+								typeFailure = false;
+								break;
+							}
+						default:
+							typeFailure = true;
+							break;
+						}
+						if(typeFailure)
+						{
+							//Type Failure -- Break Event
+							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
+							event.setCancelled(true);
+							return;
+						}
 						for ( int i = 0; i < itemLore.size() && !socketFound; i++ ) {
 							String s = itemLore.get(i);
 							// check to see if the item already has the same gem socketed
@@ -284,6 +328,8 @@ public class SocketEvents implements Listener {
 							} else {
 								inv.setItem(SelectedSlot.get(player), null);
 							}
+							//TODO: Handle Gem Effects Here
+							//item.getType();
 						} else {
 							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
 							event.setCancelled(true);
