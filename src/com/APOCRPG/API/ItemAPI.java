@@ -28,6 +28,22 @@ public class ItemAPI {
 										};
 	public static HashMap<Material, String> GemLookupTable = new HashMap<Material, String>();
 	static {
+		GemLookupTable.put(Material.WOOD_HOE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.STONE_HOE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.IRON_HOE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.GOLD_HOE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.DIAMOND_HOE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.WOOD_SPADE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.STONE_SPADE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.IRON_SPADE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.GOLD_SPADE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.DIAMOND_SPADE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.WOOD_PICKAXE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.STONE_PICKAXE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.IRON_PICKAXE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.GOLD_PICKAXE, EffectAPI.TYPE_TOOL);
+		GemLookupTable.put(Material.DIAMOND_PICKAXE, EffectAPI.TYPE_TOOL);
+		
 		GemLookupTable.put(Material.BOW, EffectAPI.TYPE_BOW);
 		GemLookupTable.put(Material.WOOD_AXE,EffectAPI.TYPE_WEAPON);
 		GemLookupTable.put(Material.WOOD_SWORD,EffectAPI.TYPE_WEAPON);
@@ -39,6 +55,22 @@ public class ItemAPI {
 		GemLookupTable.put(Material.GOLD_SWORD,EffectAPI.TYPE_WEAPON);
 		GemLookupTable.put(Material.DIAMOND_AXE,EffectAPI.TYPE_WEAPON);
 		GemLookupTable.put(Material.DIAMOND_SWORD,EffectAPI.TYPE_WEAPON);
+		for(Material m:Armor[0])
+		{
+			GemLookupTable.put(m, EffectAPI.TYPE_ARMOR);
+		}
+		for(Material m:Armor[1])
+		{
+			GemLookupTable.put(m, EffectAPI.TYPE_ARMOR);
+		}
+		for(Material m:Armor[2])
+		{
+			GemLookupTable.put(m, EffectAPI.TYPE_ARMOR);
+		}
+		for(Material m:Armor[3])
+		{
+			GemLookupTable.put(m, EffectAPI.TYPE_ARMOR);
+		}	
 	}
 	
 	/**

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import net.minecraft.server.v1_7_R3.Enchantment;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -328,8 +330,19 @@ public class SocketEvents implements Listener {
 							} else {
 								inv.setItem(SelectedSlot.get(player), null);
 							}
-							//TODO: Handle Gem Effects Here
-							//item.getType();
+							//TODO: Handle Gem Effects Here -- 
+							/**
+							 * All Other Effects - Event Handlers must address
+							 * Warding- Direct modification
+							 * Ravaging- Direct modification
+							 * 
+							 */
+							if(gemEffect.equals("Ravaging"))
+								//Add some damage
+								System.out.println();
+							else if(gemEffect.equals("Warding"))
+								//Add some defense
+								System.out.println();
 						} else {
 							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
 							event.setCancelled(true);
