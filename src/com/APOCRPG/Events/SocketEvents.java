@@ -270,7 +270,7 @@ public class SocketEvents implements Listener {
 								break;
 							}
 						case EffectAPI.TYPE_WEAPON:
-							if(gemType.equals(EffectAPI.TYPE_WEAPON))
+							if(gemType.equals(EffectAPI.TYPE_WEAPON)||gemType.equals(EffectAPI.TYPE_WEAPON_PASSIVE))
 							{
 								typeFailure = false;
 								break;
