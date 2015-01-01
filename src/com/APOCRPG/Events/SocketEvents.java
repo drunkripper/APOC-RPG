@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.server.v1_7_R3.Enchantment;
-
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,6 +22,7 @@ import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.items.IdentifyTome;
 
+@SuppressWarnings("unused")
 public class SocketEvents implements Listener {
 	//Why is this a hashmap?
 	//This doesn't seem to need to ever hold more than one item and player ever.
@@ -338,7 +337,7 @@ public class SocketEvents implements Listener {
 							 * 
 							 */
 							if(gemEffect.equals("Ravaging"))
-								//Add some damage
+								//Add some damage	
 								System.out.println();
 							else if(gemEffect.equals("Warding"))
 								//Add some defense

@@ -9,6 +9,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.APOCRPG.Main.Plugin;
 
 public class EffectAPI {
+	
 	public static final String TYPE_ARMOR = "Armor";
 	public static final String TYPE_BOW = "Bow";
 	public static final String TYPE_TOOL = "Tool";

@@ -1,13 +1,14 @@
 package com.APOCRPG.Events;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+
+import com.APOCRPG.API.EffectAPI;
 public final class PollingEventListener implements Listener{
 	@EventHandler
 	public void poll(EffectPollingEvent event) {
@@ -18,7 +19,6 @@ public final class PollingEventListener implements Listener{
 		//for(ItemStack i:Armors)
 				//System.out.println(i.toString());
 		ArrayList<ItemStack> stuff = new ArrayList<>(); 
-		ArrayList<ItemMeta> metas = new ArrayList<>();
 		
 		if(Hand!=null) {
 			stuff.add(Hand);
@@ -33,90 +33,25 @@ public final class PollingEventListener implements Listener{
 		{
 			for(ItemStack a:stuff) 
 			{
-				if(a.getItemMeta()!=null 
-				&&a.getItemMeta().getLore()!=null
-				&&(!a.getItemMeta().getLore().get(0).equals("Socket"))
-				&&a.getItemMeta().getLore().size()>1
-				&&a.getItemMeta().getLore().get(1)!=null
-				)
+				//TODO Constant Effects go here
+				HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(a);
+				for(Entry<String, Integer> effect : effects.entrySet())
 				{
-					//System.out.println(a.toString());
-					if(a.getItemMeta()!=null)
-						metas.add(a.getItemMeta());//All Metas now live here
-					//System.out.println(metas.get(0));
-				}
-			}
-			try 
-			{
-				
-				for(ItemMeta Meta:metas)
-				{
-					String Effect = Meta.getLore().get(0);
-					int level = 0;
-					if ( Meta.getLore().size() > 1 )
+					switch(effect.getKey()) 
 					{
-						try {
-							level = Integer.parseInt(Meta.getLore().get(1).substring(6));
-						} catch (Exception e){
-							;
-						}
-						if ( Effect != null && !Effect.trim().equals("") && level > 0 ){
-							//System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
-							
-								switch(Effect) {
-								case "Speed":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 800, level));
-									break;
-								case "Haste":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 800, level));
-									break;
-								case "Strength":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 800, level));
-									break;
-								case "Jumpfulness":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 800, level));
-									break;
-								case "Regeneration":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 800, level));
-									break;
-								case "Resistance":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 800, level));
-									break;
-								case "Fire Resistance":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 800, level));
-									break;
-								case "Scuba":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 800, level));
-									break;
-								case "Invisibility":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 800, level));
-									break;
-								case "Night Vision":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 800, level));
-									break;
-								case "Health":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, 800, level));
-									break;
-								case "Absorption":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 800, level));
-									break;
-								case "Saturation":
-									p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 800, level));
-									break;
-								
-							}
-						}
+					case "Fortune":
+						break;
 					}
 				}
+			}
+		}
 				/*if (p.getInventory().getItem(event.getPreviousSlot()).getItemMeta().getLore().get(1).equals("Strength")) {
 					System.out.println("Removing effect");
 					
 					p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
 				}*/
 			
-			} catch (ArrayIndexOutOfBoundsException | NullPointerException e) {
-				System.out.println("Item has no Effect");
-			}
-		}
-	}
+	} 
 }
+	
+

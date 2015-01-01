@@ -29,6 +29,7 @@ import com.APOCRPG.Main.Plugin;
  * @author ???, whiteknave
  *
  */
+@SuppressWarnings("unused")
 public class ApocRPGCommand implements CommandExecutor {
 	
 	@Override

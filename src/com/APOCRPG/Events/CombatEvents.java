@@ -5,14 +5,12 @@ import java.util.Map.Entry;
 
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -21,78 +19,91 @@ import com.APOCRPG.Main.Plugin;
 
 public class CombatEvents implements Listener {
 	HashMap<String, PotionEffectType> effects = new HashMap<String,PotionEffectType>();
-	public CombatEvents()
-	{
-		effects.put("Slowing", PotionEffectType.SLOW);
-		effects.put("Fatiguing", PotionEffectType.SLOW_DIGGING);
-		effects.put("Sanctifying", PotionEffectType.HEAL);
-		//effects.put("Desecrating", PotionEffectType.HARM);
-		effects.put("Nauseating", PotionEffectType.CONFUSION);
-		effects.put("Blinding", PotionEffectType.BLINDNESS);
-		effects.put("Hungering", PotionEffectType.HUNGER);
-		effects.put("Weakening", PotionEffectType.WEAKNESS);
-		effects.put("Poisoning", PotionEffectType.POISON);
-		effects.put("Withering", PotionEffectType.WITHER);
-
-	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
 		//TODO: Add combat effects
-		//System.out.println("EntityDamageByEntity event fired!");
 		if(event.getDamager().getType().equals(EntityType.PLAYER)&&event.getEntityType().isAlive())
 		{		
-			Player p = (Player)event.getDamager();
-			LivingEntity e = (LivingEntity)event.getEntity();
-
-			// System.out.println("Player " + p.getDisplayName() +" is swinging at livingEntity" + e.getType());
-			if(p.getItemInHand() !=null)
-			{//	System.out.println("has "+ p.getItemInHand().toString() +" in hand");
-				ItemStack i = p.getItemInHand();
+			Player playa = (Player)event.getDamager();
+			LivingEntity hitMe = (LivingEntity)event.getEntity();
+			if(playa.getItemInHand() !=null)
+			{
+				ItemStack i = playa.getItemInHand();
 				if(i.hasItemMeta())
 				{
 					//System.out.println("has Meta:" +i.getItemMeta().toString());
-					if ( Plugin.containsLoreText(i, "Gem of")) {
-						ItemMeta im = i.getItemMeta();
-						if(im.getLore()!=null&&im.getLore().size()>2)
-						{	
-							// System.out.println("has Lore(1):" + im.getLore().get(1));
-							String name = im.getLore().get(0);
-							Integer level = Integer.parseInt(im.getLore().get(1).substring(6))-1;
-							Integer duration = Integer.parseInt(im.getLore().get(2).split(":")[0])*20 + Integer.parseInt(im.getLore().get(2).split(":")[1]) * 60 * 20;
-					
-							if(name!=null)
+					HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(i);
+					for(Entry<String, Integer> e: effects.entrySet())
+					{
+						switch(e.getKey()) {
+						case "Debilitation":
+							break;
+						case "Crippling":
+							break;
+						case "Bloodthirst":
+							break;
+						case "Blinding":
+							if(5>=Plugin.Random.nextInt(100))
 							{
-								e.addPotionEffect(new PotionEffect(effects.get(name),duration,level-1));
+								hitMe.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20+ (e.getValue() -1)*5, 0));
 							}
+							break;
+						case "Sacrifice":
+							if((2.5+ (e.getValue()-1)*1.5)>=Plugin.Random.nextInt(100))
+							{	
+								event.setDamage(event.getDamage()*2);
+								playa.damage(5.0);
+							}
+							break;
 						}
 					}
 				}
+				else return;
 			}
-			else return;
-		}	
+		}
 		/**
 		 * This has been commented out because we currently have no effects dealing specifically with 
 		 * 
 		 */
-/*		else if(event.getDamager().getType().equals(EntityType.ARROW))
+		else if(event.getDamager().getType().equals(EntityType.ARROW)&&event.getEntityType().isAlive())
 		{
 			//TODO: Effects Dealing with arrows hitting entities. None at present.
 			Arrow arrow = (Arrow)event.getDamager();
 			if(arrow.getShooter() != null&&arrow.getShooter().getType() == EntityType.PLAYER)
 			{
+				LivingEntity shotMe = (LivingEntity) event.getEntity();
 				Player player = (Player) arrow.getShooter();
 				ItemStack itemInHand = player.getItemInHand();
 				HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(itemInHand);
 				for(Entry<String, Integer> e: effects.entrySet())
 				{
-//					switch(e.getKey()) {
-	//				}
+				switch(e.getKey()) {
+				case "Debilitation":
+					break;
+				case "Crippling":
+					break;
+				case "Bloodthirst":
+					break;
+				case "Blinding":
+					if(5>=Plugin.Random.nextInt(100))
+					{
+						shotMe.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20+ (e.getValue() -1)*5, 0));
+					}
+					break;
+				case "Sacrifice":
+					if((2.5+ (e.getValue()-1)*1.5)>=Plugin.Random.nextInt(100))
+					{	
+						event.setDamage(event.getDamage()*2);
+						player.damage(5.0);
+					}
+					break;
+				}
 					
 						
 				}
 			}
-		} */
+		} 
 	}
 
 }

@@ -1,6 +1,5 @@
 package com.APOCRPG.Events;
 
-import java.awt.List;
 import java.util.ArrayList;
 
 import org.bukkit.Bukkit;
@@ -105,7 +104,7 @@ public class EntityEvents implements Listener {
 	
 	@EventHandler
 	public void onEnitityDeath(EntityDeathEvent event){
-		EntityType et = event.getEntityType();
+		//EntityType et = event.getEntityType();
 		LivingEntity entity = event.getEntity();
 		if ( entity instanceof Player ){
 			ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
