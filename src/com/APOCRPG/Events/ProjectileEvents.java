@@ -26,7 +26,7 @@ public class ProjectileEvents implements Listener {
 					event.setProjectile(event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(),EntityType.FIREBALL));
 					break;
 				case "Multishot":
-					event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.ARROW);
+					event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.ARROW).setVelocity(event.getProjectile().getVelocity());
 					break;
 				case "Blast": //Cone-based area of effect
 					for(Entity n :event.getEntity().getNearbyEntities(10, 3, 10)) 
