@@ -61,13 +61,8 @@ public final class PollingEventListener implements Listener{
 							;
 						}
 						if ( Effect != null && !Effect.trim().equals("") && level > 0 ){
-							System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
-							if(Effect.endsWith("ing"))
-							{
-								//Unimplemented...
-							}
-							else
-							{
+							//System.out.println(Meta.getDisplayName() + "'s Effect is " + Effect);
+							
 								switch(Effect) {
 								case "Speed":
 									p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 800, level));
@@ -108,7 +103,7 @@ public final class PollingEventListener implements Listener{
 								case "Saturation":
 									p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 800, level));
 									break;
-								}
+								
 							}
 						}
 					}

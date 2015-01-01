@@ -1,8 +1,11 @@
 package com.APOCRPG.Events;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +16,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.Main.Plugin;
 
 public class CombatEvents implements Listener {
@@ -31,8 +35,10 @@ public class CombatEvents implements Listener {
 		effects.put("Withering", PotionEffectType.WITHER);
 
 	}
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
+		//TODO: Add combat effects
 		//System.out.println("EntityDamageByEntity event fired!");
 		if(event.getDamager().getType().equals(EntityType.PLAYER)&&event.getEntityType().isAlive())
 		{		
@@ -65,7 +71,28 @@ public class CombatEvents implements Listener {
 			}
 			else return;
 		}	
-		else return;			
+		/**
+		 * This has been commented out because we currently have no effects dealing specifically with 
+		 * 
+		 */
+/*		else if(event.getDamager().getType().equals(EntityType.ARROW))
+		{
+			//TODO: Effects Dealing with arrows hitting entities. None at present.
+			Arrow arrow = (Arrow)event.getDamager();
+			if(arrow.getShooter() != null&&arrow.getShooter().getType() == EntityType.PLAYER)
+			{
+				Player player = (Player) arrow.getShooter();
+				ItemStack itemInHand = player.getItemInHand();
+				HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(itemInHand);
+				for(Entry<String, Integer> e: effects.entrySet())
+				{
+//					switch(e.getKey()) {
+	//				}
+					
+						
+				}
+			}
+		} */
 	}
 
 }

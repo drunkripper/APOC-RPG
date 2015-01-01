@@ -6,6 +6,7 @@ import com.APOCRPG.Events.CombatEvents;
 import com.APOCRPG.Events.EffectPollingEvent;
 import com.APOCRPG.Events.EntityEvents;
 import com.APOCRPG.Events.PollingEventListener;
+import com.APOCRPG.Events.ProjectileEvents;
 import com.APOCRPG.Events.SocketEvents;
 
 import java.io.File;
@@ -35,6 +36,7 @@ public class Plugin extends JavaPlugin {
 	public static ChunkEvents ChunkListener = new ChunkEvents();
 	public static EntityEvents EntityListener = new EntityEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
+	public static ProjectileEvents ProjectileListener = new ProjectileEvents();
 	public static SocketEvents SocketListener = null;
 	// global constants - general
 	public static String APOCRPG_ERROR = ChatColor.RED+"[APOC-RPG] ";
@@ -259,6 +261,7 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(CombatListener, this);
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getServer().getPluginManager().registerEvents(PollListener, this);
+		getServer().getPluginManager().registerEvents(ProjectileListener, this);
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
 	}

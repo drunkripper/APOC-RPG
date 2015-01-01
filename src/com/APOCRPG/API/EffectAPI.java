@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.APOCRPG.Main.Plugin;
 
@@ -64,6 +65,40 @@ public class EffectAPI {
 			TypeLookup.put(ef, TYPE_BOW);
 		for(String ef:ToolEffects)
 			TypeLookup.put(ef, TYPE_TOOL);
+	}
+	public static HashMap<String, Integer> getEffectsFromItem(ItemStack a) { 
+		ArrayList<ItemMeta> metas = new ArrayList<ItemMeta>();
+		HashMap<String, Integer> effectsAndLevels = new HashMap<String, Integer>();
+		if(a.getItemMeta()!=null 
+		&&a.getItemMeta().getLore()!=null
+		&&(!a.getItemMeta().getLore().get(0).equals("Socket"))
+		&&a.getItemMeta().getLore().size()>1
+		&&a.getItemMeta().getLore().get(1)!=null
+		)
+		{
+			//System.out.println(a.toString());
+			if(a.getItemMeta()!=null)
+				metas.add(a.getItemMeta());//All Metas now live here
+			//System.out.println(metas.get(0));
+		}
+		if(metas.size()>0)
+		{ 
+			for(ItemMeta Meta:metas)
+			{
+				for(String lore:Meta.getLore())
+				{
+					if(!lore.startsWith(Plugin.LORE_GEM_OF))
+						continue;
+					String Effect = lore.split(" ")[2];
+					String levelString = lore.split(" ")[3];
+					int level = Plugin.romanToInt(levelString);
+					effectsAndLevels.put(Effect, level);
+				}
+			}
+			return effectsAndLevels;
+		}
+		else 
+			return null;
 	}
 	public static Effect getRandomEffect() {
 		int Random = Plugin.Random.nextInt(5);
