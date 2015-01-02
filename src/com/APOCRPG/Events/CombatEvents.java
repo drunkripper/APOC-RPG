@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,16 +26,23 @@ public class CombatEvents implements Listener {
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
 		
-		//TODO: Add combat effects
 		if(event.getDamager().getType().equals(EntityType.PLAYER)&&event.getEntityType().isAlive())
 		{		
 			Player playa = (Player)event.getDamager();
 			LivingEntity hitMe = (LivingEntity)event.getEntity();
 			HashMap<String, Integer> hershmerp;
 			for(ItemStack item:hitMe.getEquipment().getArmorContents())
-			{	hershmerp = EffectAPI.getEffectsFromItem(item);
+			{	//TODO: Effects that happen when a player is hit go here.
+				hershmerp = EffectAPI.getEffectsFromItem(item);
 				if(hershmerp.containsKey("Staggering"))
 					playa.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20+5*hershmerp.get("Staggering"),0 ));
+				if(hershmerp.containsKey("Demons")
+						&&(event.getCause().equals(DamageCause.FIRE)
+							||event.getCause().equals(DamageCause.FIRE_TICK)
+							||event.getCause().equals(DamageCause.LAVA)
+						)&&((hershmerp.get("Demons")-1)*2.5 + 10)<Plugin.Random.nextInt(100)){
+					event.setCancelled(true);
+				}						
 			}
 			if(playa.getItemInHand() !=null)
 			{
