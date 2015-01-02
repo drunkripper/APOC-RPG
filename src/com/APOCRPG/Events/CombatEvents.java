@@ -24,11 +24,18 @@ public class CombatEvents implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
+		
 		//TODO: Add combat effects
 		if(event.getDamager().getType().equals(EntityType.PLAYER)&&event.getEntityType().isAlive())
 		{		
 			Player playa = (Player)event.getDamager();
 			LivingEntity hitMe = (LivingEntity)event.getEntity();
+			HashMap<String, Integer> hershmerp;
+			for(ItemStack item:hitMe.getEquipment().getArmorContents())
+			{	hershmerp = EffectAPI.getEffectsFromItem(item);
+				if(hershmerp.containsKey("Staggering"))
+					playa.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20+5*hershmerp.get("Staggering"),0 ));
+			}
 			if(playa.getItemInHand() !=null)
 			{
 				ItemStack i = playa.getItemInHand();
