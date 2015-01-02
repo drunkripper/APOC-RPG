@@ -3,7 +3,9 @@ package com.APOCRPG.Events;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Damageable;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -56,7 +58,18 @@ public class CombatEvents implements Listener {
 								playa.damage(5.0);
 							}
 							break;
+						case "Ravaging":
+							event.setDamage(event.getDamage()* (1.1+.025*e.getValue()));
+							break;
+						case "Decapitation":
+							if(event.getDamage()>((Damageable)hitMe).getHealth())
+							{
+								hitMe.getEquipment().setItemInHand(new ItemStack(Material.SKULL));
+								hitMe.getEquipment().setItemInHandDropChance(0.1f);
+							}
+							
 						}
+						
 					}
 				}
 				else return;
