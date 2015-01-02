@@ -42,6 +42,8 @@ public class CombatEvents implements Listener {
 							||event.getCause().equals(DamageCause.LAVA)
 						)&&((hershmerp.get("Demons")-1)*2.5 + 10)<Plugin.Random.nextInt(100)){
 					event.setCancelled(true);
+				if(hershmerp.containsKey("Warding")&&!event.isCancelled())
+					event.setDamage(event.getDamage()*(0.9 - 0.025*(hershmerp.get("Warding")-1)));
 				}						
 			}
 			if(playa.getItemInHand() !=null)

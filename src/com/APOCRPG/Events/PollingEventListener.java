@@ -13,16 +13,12 @@ public final class PollingEventListener implements Listener{
 	@EventHandler
 	public void poll(EffectPollingEvent event) {
 		Player p = event.getPlayer();
-	   	ItemStack Hand = p.getItemInHand();
 		//System.out.println(Hand.toString());
 		ItemStack[] Armors = p.getEquipment().getArmorContents();
 		//for(ItemStack i:Armors)
 				//System.out.println(i.toString());
 		ArrayList<ItemStack> stuff = new ArrayList<>(); 
 		
-		if(Hand!=null) {
-			stuff.add(Hand);
-		}
 		for(ItemStack a:Armors) {
 			if(a!=null&&a.getItemMeta()!=null) {
 				stuff.add(a);//Keep only the non null armor objects
@@ -39,7 +35,19 @@ public final class PollingEventListener implements Listener{
 				{
 					switch(effect.getKey()) 
 					{
-					case "Fortune":
+					case "Velocity":
+						break;
+					case "Vaulting":
+						break;
+					case "Healing":
+						break;
+					case "Damage":
+						break;
+					case "Resistance":
+						break;
+					case "Speed":
+						break;
+					case "Taunting":
 						break;
 					}
 				}
