@@ -40,10 +40,20 @@ public class CombatEvents implements Listener {
 					{
 						switch(e.getKey()) {
 						case "Debilitation":
+							//Proposed Handling method:
+							// Create a potion effect that has no type (Does nothing)
+							// On combat events that matter, check for this effect
+							// modify damage as necessary.
 							break;
 						case "Crippling":
+							//Proposed Handling method:
+							// Null potion effect, 
+							// Listener to handle setSpeed
 							break;
 						case "Bloodthirst":
+							//Proposed handling:
+							// Null potion effects: 
+							// Bloody 1, 2, 3, 4, etc. 
 							break;
 						case "Blinding":
 							if(5>=Plugin.Random.nextInt(100))
