@@ -27,7 +27,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Plugin extends JavaPlugin {
-	
 	public static Random Random = new Random();
 	public static Plugin instance = null;
 	public static Settings Settings = null;
@@ -973,5 +972,7 @@ public class Plugin extends JavaPlugin {
 		}
 		return retval;
 	}
+
+	
 	
 }
