@@ -30,7 +30,6 @@ import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 
 public class EntityEvents implements Listener {
-	
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
 		EntityType Type = Event.getEntityType();

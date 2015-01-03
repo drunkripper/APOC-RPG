@@ -7,6 +7,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import com.APOCRPG.API.EffectAPI;
 public final class PollingEventListener implements Listener{
@@ -36,8 +38,10 @@ public final class PollingEventListener implements Listener{
 					switch(effect.getKey()) 
 					{
 					case "Velocity":
+						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 666, effect.getValue()));
 						break;
 					case "Vaulting":
+						p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 666, effect.getValue()));
 						break;
 					case "Healing":
 						break;
