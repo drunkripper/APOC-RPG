@@ -246,18 +246,7 @@ public class Plugin extends JavaPlugin {
 					instance.getServer().getPluginManager().callEvent(event);
 					//Plugin.getServer().broadcastMessage(event.getMessage());
 				}}}, 0l, 600l);
-/*		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable(){
-			public void run(){
-				for(World w: instance.getServer().getWorlds()) 
-				{
-					for(LivingEntity le:w.getLivingEntities())
-					{
-					if(le.hasMetadata("Bleed"))
-						
-					}
-				}
-			}
-		}, 0l, 20l);*/
+		
 			
 		saveDefaultConfig();
 		Settings = new Settings(getConfig());

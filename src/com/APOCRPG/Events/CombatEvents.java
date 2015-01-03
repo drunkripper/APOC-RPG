@@ -70,6 +70,11 @@ public class CombatEvents implements Listener {
 										((LivingEntity)en).damage(event.getDamage());
 							}
 							break;
+						case "Slashing":
+							if((5+1.5*e.getValue())>=Plugin.Random.nextInt(100))
+							{
+								hitMe.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 60, 0));
+							}
 						case "Debilitation":
 							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 666, e.getValue()));
 							break;
