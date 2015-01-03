@@ -11,6 +11,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,11 +26,26 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.metadata.MetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 
 public class EntityEvents implements Listener {
+	@EventHandler
+	public void onBlockBreak(BlockDamageEvent eve) {
+		if(EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune"))
+		{
+			eve.getPlayer().addPotionEffect(
+					new PotionEffect(
+							PotionEffectType.FAST_DIGGING,
+							EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand())
+							.get("Fortune"), 20));
+		}
+		
+	}
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
 		EntityType Type = Event.getEntityType();
