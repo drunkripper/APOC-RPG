@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.APOCRPG.API.EffectAPI;
 public final class PollingEventListener implements Listener{
+	
 	@EventHandler
 	public void poll(EffectPollingEvent event) {
 		Player p = event.getPlayer();
@@ -44,6 +45,7 @@ public final class PollingEventListener implements Listener{
 						p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 666, effect.getValue()));
 						break;
 					case "Healing":
+						
 						break;
 					case "Damage":
 						break;
@@ -63,7 +65,9 @@ public final class PollingEventListener implements Listener{
 					p.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
 				}*/
 			
-	} 
+	}
+
+	
 }
 	
 
