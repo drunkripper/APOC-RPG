@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Damageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -61,6 +62,14 @@ public class CombatEvents implements Listener {
 					for(Entry<String, Integer> e: effects.entrySet())
 					{
 						switch(e.getKey()) {
+						case "Cleaving":
+							if((5+1.5*e.getValue())>=Plugin.Random.nextInt(100))
+							{
+								for(Entity en:hitMe.getNearbyEntities(1.5, 1.5, 1.5))
+									if(en.getType().isAlive())
+										((LivingEntity)en).damage(event.getDamage());
+							}
+							break;
 						case "Debilitation":
 							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 666, e.getValue()));
 							break;
