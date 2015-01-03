@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,7 +22,11 @@ import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.Main.Plugin;
 
 public class CombatEvents implements Listener {
-	HashMap<String, PotionEffectType> effects = new HashMap<String,PotionEffectType>();
+	public static HashMap<LivingEntity,Integer> bloodyNoses = new HashMap<LivingEntity,Integer>();
+	public void onDie(EntityDeathEvent event){
+		if(bloodyNoses.containsKey(event.getEntity()))
+			bloodyNoses.remove(event.getEntity());
+	}
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
@@ -57,20 +62,17 @@ public class CombatEvents implements Listener {
 					{
 						switch(e.getKey()) {
 						case "Debilitation":
-							//Proposed Handling method:
-							// Create a potion effect that has no type (Does nothing)
-							// On combat events that matter, check for this effect
-							// modify damage as necessary.
+							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 666, e.getValue()));
 							break;
 						case "Crippling":
-							//Proposed Handling method:
-							// Null potion effect, 
-							// Listener to handle setSpeed
+							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 666, e.getValue()));
 							break;
 						case "Bloodthirst":
-							//Proposed handling:
-							// Null potion effects: 
-							// Bloody 1, 2, 3, 4, etc. 
+							if(bloodyNoses.containsKey(hitMe))
+								bloodyNoses.put(hitMe,bloodyNoses.get(hitMe)+1);											
+							else
+								bloodyNoses.put(hitMe,1);
+							hitMe.damage(0.5+0.3*(e.getValue())*(bloodyNoses.get(hitMe)));
 							break;
 						case "Blinding":
 							if(5>=Plugin.Random.nextInt(100))
@@ -120,10 +122,18 @@ public class CombatEvents implements Listener {
 				{
 				switch(e.getKey()) {
 				case "Debilitation":
+					shotMe.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 666, e.getValue()));
 					break;
 				case "Crippling":
+					shotMe.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 666, e.getValue()));
 					break;
 				case "Bloodthirst":
+					if(bloodyNoses.containsKey(shotMe))
+						bloodyNoses.put(shotMe,bloodyNoses.get(shotMe)+1);											
+					else
+						bloodyNoses.put(shotMe,1);
+					shotMe.damage(0.5+0.3*(e.getValue())*(bloodyNoses.get(shotMe)));
+					
 					break;
 				case "Blinding":
 					if(5>=Plugin.Random.nextInt(100))
