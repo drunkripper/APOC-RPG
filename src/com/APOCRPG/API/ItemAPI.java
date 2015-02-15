@@ -321,23 +321,25 @@ public class ItemAPI {
 							}
 						}
 						
-						if ( type.equalsIgnoreCase("GEM") ) {
-							Chest.getInventory().addItem(GemAPI.createGem());
-						} else if ( type.equalsIgnoreCase("TOME") ) {
-							Chest.getInventory().addItem(createTome());
-						} else if ( type.equalsIgnoreCase("UNKNOWN") ) {
-							Chest.getInventory().addItem(createUnidentified());
-						} else {
-							int tier = 0;
-							switch ( type.toUpperCase() ) {
-								case "COMMON" : tier = 0; break;
-								case "UNCOMMON" : tier = 1; break;
-								case "RARE" : tier = 2; break;
-								case "UNIQUE" : tier = 3; break;
-								case "SET" : tier = 4; break;
-								case "LEGENDARY" : tier = 0; break;
+						if (type != null) {
+							if ( type.equalsIgnoreCase("GEM") ) {
+								Chest.getInventory().addItem(GemAPI.createGem());
+							} else if ( type.equalsIgnoreCase("TOME") ) {
+								Chest.getInventory().addItem(createTome());
+							} else if ( type.equalsIgnoreCase("UNKNOWN") ) {
+								Chest.getInventory().addItem(createUnidentified());
+							} else {
+								int tier = 0;
+								switch ( type.toUpperCase() ) {
+									case "COMMON" : tier = 0; break;
+									case "UNCOMMON" : tier = 1; break;
+									case "RARE" : tier = 2; break;
+									case "UNIQUE" : tier = 3; break;
+									case "SET" : tier = 4; break;
+									case "LEGENDARY" : tier = 0; break;
+								}
+								Chest.getInventory().addItem(createItem(tier));
 							}
-							Chest.getInventory().addItem(createItem(tier));
 						}
 					}
 				}

@@ -28,7 +28,7 @@ public class CombatEvents implements Listener {
 		if(bloodyNoses.containsKey(event.getEntity()))
 			bloodyNoses.remove(event.getEntity());
 	}
-	@SuppressWarnings("deprecation")
+	
 	@EventHandler
 	public void onHit(EntityDamageByEntityEvent event) {
 		
