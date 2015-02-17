@@ -96,10 +96,8 @@ public class EffectAPI {
 					effectsAndLevels.put(Effect, level);
 				}
 			}
-			return effectsAndLevels;
 		}
-		else 
-			return null;
+		return effectsAndLevels;
 	}
 	public static Effect getRandomEffect() {
 		int Random = Plugin.Random.nextInt(5);
