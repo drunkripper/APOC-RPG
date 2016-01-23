@@ -11,7 +11,6 @@ import org.bukkit.inventory.meta.BookMeta;
 
 import com.APOCRPG.Main.Plugin;
 
-
 /**
  * @author whiteknave / deathmarine
  */

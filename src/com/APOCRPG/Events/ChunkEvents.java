@@ -17,68 +17,71 @@ import com.APOCRPG.Generation.Schematic;
 import com.APOCRPG.Main.Plugin;
 
 public class ChunkEvents implements Listener {
-	//method for checking world against valid pasting rules
+	// method for checking world against valid pasting rules
 	private boolean isBlockValid(World world, int x, int i, int z) {
-		//Add a config element for size of spawn flat
-		
+		// Add a config element for size of spawn flat
+
 		int m = 5; // Step size. Diameter is 4n.
-		
-		//Valid materials are set here.
-		
+
+		// Valid materials are set here.
+
 		ArrayList<Material> valid = new ArrayList<Material>();
 		valid.add(Material.DIRT);
 		valid.add(Material.SAND);
 		valid.add(Material.GRASS);
 		valid.add(Material.STONE);
-		
-		// the pattern of the below logic checks these blocks where -- is of length m, skipped. 
-//9-------5-------2
-//---17--11--14----
-//6--12--1---10---4
-//---15--13--16----
-//3-------7-------8
 
-// this order is to encourage false-early checking so that only 4-5 checks are necessary before it discovers invalidity. 
+		// the pattern of the below logic checks these blocks where -- is of
+		// length m, skipped.
+		// 9-------5-------2
+		// ---17--11--14----
+		// 6--12--1---10---4
+		// ---15--13--16----
+		// 3-------7-------8
 
-//Logic below. Don't change this unless you want to break things.
+		// this order is to encourage false-early checking so that only 4-5
+		// checks are necessary before it discovers invalidity.
+
+		// Logic below. Don't change this unless you want to break things.
 		return valid.contains(world.getBlockAt(x, i, z).getType())
 
-				&&valid.contains(world.getBlockAt(x+2*m, i, z+2*m).getType())
-				&&valid.contains(world.getBlockAt(x-2*m, i, z-2*m).getType())
-				&&valid.contains(world.getBlockAt(x+2*m, i, z).getType())
-				&&valid.contains(world.getBlockAt(x, i, z+2*m).getType())
-				&&valid.contains(world.getBlockAt(x-2*m, i, z).getType())
-				&&valid.contains(world.getBlockAt(x, i, z-2*m).getType())
-				&&valid.contains(world.getBlockAt(x+2*m, i, z-2*m).getType())
-				&&valid.contains(world.getBlockAt(x-2*m, i, z+2*m).getType())
-				&&valid.contains(world.getBlockAt(x+m, i, z).getType())
-				&&valid.contains(world.getBlockAt(x, i, z+m).getType())
-				&&valid.contains(world.getBlockAt(x-m, i, z).getType())
-				&&valid.contains(world.getBlockAt(x, i, z-m).getType())
-				&&valid.contains(world.getBlockAt(x+m, i, z+m).getType())
-				&&valid.contains(world.getBlockAt(x-m, i, z-m).getType())
-				&&valid.contains(world.getBlockAt(x+m, i, z-m).getType())
-				&&valid.contains(world.getBlockAt(x-m, i, z+m).getType());
-		
+				&& valid.contains(world.getBlockAt(x + 2 * m, i, z + 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x - 2 * m, i, z - 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x + 2 * m, i, z).getType())
+				&& valid.contains(world.getBlockAt(x, i, z + 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x - 2 * m, i, z).getType())
+				&& valid.contains(world.getBlockAt(x, i, z - 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x + 2 * m, i, z - 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x - 2 * m, i, z + 2 * m).getType())
+				&& valid.contains(world.getBlockAt(x + m, i, z).getType())
+				&& valid.contains(world.getBlockAt(x, i, z + m).getType())
+				&& valid.contains(world.getBlockAt(x - m, i, z).getType())
+				&& valid.contains(world.getBlockAt(x, i, z - m).getType())
+				&& valid.contains(world.getBlockAt(x + m, i, z + m).getType())
+				&& valid.contains(world.getBlockAt(x - m, i, z - m).getType())
+				&& valid.contains(world.getBlockAt(x + m, i, z - m).getType())
+				&& valid.contains(world.getBlockAt(x - m, i, z + m).getType());
+
 	}
-	
+
 	@EventHandler
 	public void onChunkLoaded(ChunkPopulateEvent event) {
 		World World = event.getWorld();
 		Chunk Chunk = event.getChunk();
-		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.dungeon-spawn-chance") && Plugin.Settings.areDungeonsEnabledInWorld(World)) {
-			int x=16*Chunk.getX()*Plugin.Random.nextInt(15);
+		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.dungeon-spawn-chance")
+				&& Plugin.Settings.areDungeonsEnabledInWorld(World)) {
+			int x = 16 * Chunk.getX() * Plugin.Random.nextInt(15);
 			int y = 0;
-			int z=16*Chunk.getZ()*Plugin.Random.nextInt(15);
-			
-			for (int i=World.getMaxHeight()-1; i>0; i--) {
-				//if (World.getBlockAt(x, i, z).getType() != Material.AIR) {
-				if(isBlockValid(World,x, i, z))	{
+			int z = 16 * Chunk.getZ() * Plugin.Random.nextInt(15);
+
+			for (int i = World.getMaxHeight() - 1; i > 0; i--) {
+				// if (World.getBlockAt(x, i, z).getType() != Material.AIR) {
+				if (isBlockValid(World, x, i, z)) {
 					y = i;
 					break;
 				}
 			}
-			
+
 			String[] List = Plugin.LandRuins.list();
 			if (List.length > 0) {
 				File File = new File(Plugin.LandRuins + "/" + List[Plugin.Random.nextInt(List.length)]);
