@@ -35,23 +35,23 @@ import com.APOCRPG.Main.Plugin;
 public class EntityEvents implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockDamageEvent eve) {
-		if(EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune"))
-		{
-			eve.getPlayer().addPotionEffect(
-					new PotionEffect(
-							PotionEffectType.FAST_DIGGING,
-							EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand())
-							.get("Fortune"), 20));
+		if (EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune")) {
+			eve.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING,
+					EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).get("Fortune"), 20));
 		}
-		
+
 	}
+
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
 		EntityType Type = Event.getEntityType();
-		if ((Type == EntityType.CREEPER || Type == EntityType.ZOMBIE || Type == EntityType.PIG_ZOMBIE || Type == EntityType.SKELETON || Type == EntityType.SPIDER || Type == EntityType.GHAST || Type == EntityType.ENDERMAN || Type == EntityType.WITHER || Type == EntityType.ENDER_DRAGON) && Plugin.Random.nextInt(100) <= 25) {
+		if ((Type == EntityType.CREEPER || Type == EntityType.ZOMBIE || Type == EntityType.PIG_ZOMBIE
+				|| Type == EntityType.SKELETON || Type == EntityType.SPIDER || Type == EntityType.GHAST
+				|| Type == EntityType.ENDERMAN || Type == EntityType.WITHER || Type == EntityType.ENDER_DRAGON)
+				&& Plugin.Random.nextInt(100) <= 25) {
 			LivingEntity Entity = Event.getEntity();
 			int Amount = Plugin.Random.nextInt(2) + 1;
-			for (int i=0; i<Amount; i++) {
+			for (int i = 0; i < Amount; i++) {
 				int Gear = Plugin.Random.nextInt(5);
 				if (Gear == 0) {
 					Entity.getEquipment().setItemInHand(ItemAPI.createArmor(4));
@@ -67,29 +67,33 @@ public class EntityEvents implements Listener {
 			}
 		}
 	}
+
 	@EventHandler
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		Player po = event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
-		//Bukkit.getServer().broadcastMessage(devent.getMessage());
+		// Bukkit.getServer().broadcastMessage(devent.getMessage());
 	}
+
 	@EventHandler
 	public void onItemSwitched(PlayerItemHeldEvent event) {
 		Player po = event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
-		//Bukkit.getServer().broadcastMessage(devent.getMessage());
+		// Bukkit.getServer().broadcastMessage(devent.getMessage());
 	}
-	
+
 	/**
-	 * This method is used to prevent a player from taking inventory items owned by another player
+	 * This method is used to prevent a player from taking inventory items owned
+	 * by another player
+	 * 
 	 * @param event
 	 */
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		// get player who did the action
-		Player po= (Player) event.getWhoClicked();
+		Player po = (Player) event.getWhoClicked();
 		// get polling event
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		// get item
@@ -97,10 +101,10 @@ public class EntityEvents implements Listener {
 		// get lore containing "Player bound:"
 		ArrayList<String> boundPlayers = (ArrayList<String>) Plugin.getLoreContaining(item, Plugin.LORE_PLAYER_BOUND);
 		// iterate through lore to make sure that the item belongs to the player
-		for ( String bp : boundPlayers ) {
-			if ( !bp.replace(Plugin.LORE_PLAYER_BOUND+" ", "").equals(po.getName()))  {
+		for (String bp : boundPlayers) {
+			if (!bp.replace(Plugin.LORE_PLAYER_BOUND + " ", "").equals(po.getName())) {
 				// item belongs to another player
-				po.sendMessage( Plugin.APOCRPG_ERROR + "This item does not belong to you!");
+				po.sendMessage(Plugin.APOCRPG_ERROR + "This item does not belong to you!");
 				event.setCancelled(true);
 				return;
 			}
@@ -108,59 +112,58 @@ public class EntityEvents implements Listener {
 		// if still here, item is not owned or owned by player
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 	}
-	
+
 	@EventHandler
 	public void onInventoryClose(InventoryCloseEvent event) {
-		Player po = (Player)event.getPlayer();
+		Player po = (Player) event.getPlayer();
 		EffectPollingEvent devent = new EffectPollingEvent(po);
 		Bukkit.getServer().getPluginManager().callEvent(devent);
 	}
-	
+
 	@EventHandler
-	public void onEnitityDeath(EntityDeathEvent event){
-		//EntityType et = event.getEntityType();
+	public void onEnitityDeath(EntityDeathEvent event) {
+		// EntityType et = event.getEntityType();
 		LivingEntity entity = event.getEntity();
-		if ( entity instanceof Player ){
-			ArrayList<ItemStack> is = (ArrayList<ItemStack>)event.getDrops();
-			for ( ItemStack item:is){
-				((Player) entity).sendMessage("Dropping: "+item.getItemMeta().getDisplayName());
+		if (entity instanceof Player) {
+			ArrayList<ItemStack> is = (ArrayList<ItemStack>) event.getDrops();
+			for (ItemStack item : is) {
+				((Player) entity).sendMessage("Dropping: " + item.getItemMeta().getDisplayName());
 			}
 		}
 	}
-	
-	
+
 	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event){
+	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		boolean isEmpty = true;
-		if ( block != null && block.getType().equals(Material.CHEST)){
-			if ( Plugin.CHEST_LOCKABLE ) {
-				if ( !block.getMetadata("locked").isEmpty()) {
+		if (block != null && block.getType().equals(Material.CHEST)) {
+			if (Plugin.CHEST_LOCKABLE) {
+				if (!block.getMetadata("locked").isEmpty()) {
 					ArrayList<MetadataValue> meta = new ArrayList<MetadataValue>(block.getMetadata("locked"));
-					for ( int i = 0; meta != null && i < meta.size(); i++ ){
-						MetadataValue metaValue = (MetadataValue)meta.get(i);
+					for (int i = 0; meta != null && i < meta.size(); i++) {
+						MetadataValue metaValue = (MetadataValue) meta.get(i);
 						boolean nameFound = false;
 						try {
 							@SuppressWarnings("unchecked")
-							ArrayList<String> names = (ArrayList<String>)metaValue.value();
-							for ( int j = 0; names != null && j < names.size(); j++) {
+							ArrayList<String> names = (ArrayList<String>) metaValue.value();
+							for (int j = 0; names != null && j < names.size(); j++) {
 								String name = (String) names.get(j);
 								Plugin.debugConsole(name);
-								if ( player.getName().equals(name) ) {
+								if (player.getName().equals(name)) {
 									nameFound = true;
-									if ( !player.hasPermission("op") ) {
+									if (!player.hasPermission("op")) {
 										player.sendMessage(Plugin.APOCRPG_ERROR + "This chest is locked to you!");
 										event.setCancelled(true);
 									}
 								}
 							}
-							if ( !nameFound ) {
+							if (!nameFound) {
 								names.add(player.getName());
 								FixedMetadataValue fmv = new FixedMetadataValue(Plugin.instance, names);
 								block.setMetadata("locked", fmv);
 							}
-						} catch (Exception e){
+						} catch (Exception e) {
 							// do nothing
 						}
 					}
@@ -171,22 +174,21 @@ public class EntityEvents implements Listener {
 					block.setMetadata("locked", fmv);
 				}
 			}
-			if ( player.hasPermission("op") && player.getItemInHand() != null) {
+			if (player.hasPermission("op") && player.getItemInHand() != null) {
 				ItemStack hand = player.getItemInHand();
 				ItemMeta meta = hand.getItemMeta();
-				if ( meta != null && meta.getDisplayName() != null 
-				&& meta.getDisplayName().equals(Plugin.DISPLAY_NAME_UNIDENTIFIED_ITEM)) 
-				{
-					Chest chest = (Chest)block.getState();
+				if (meta != null && meta.getDisplayName() != null
+						&& meta.getDisplayName().equals(Plugin.DISPLAY_NAME_UNIDENTIFIED_ITEM)) {
+					Chest chest = (Chest) block.getState();
 					Inventory chestInv = chest.getInventory();
 					ItemStack[] contents = chestInv.getContents();
-					for ( int i = 0; i < contents.length && isEmpty; i++ ){
-						ItemStack item = (ItemStack)contents[i];
-						if ( item != null ) {
+					for (int i = 0; i < contents.length && isEmpty; i++) {
+						ItemStack item = (ItemStack) contents[i];
+						if (item != null) {
 							isEmpty = false;
 						}
 					}
-					if ( isEmpty){
+					if (isEmpty) {
 						ItemAPI.fillChest(block);
 						FixedMetadataValue fmv = new FixedMetadataValue(Plugin.instance, "true");
 						block.setMetadata("lockable", fmv);
@@ -195,30 +197,33 @@ public class EntityEvents implements Listener {
 			}
 		}
 	}
+
 	/**
-	 * This method is used to prevent the player from picking up items bound to another player
+	 * This method is used to prevent the player from picking up items bound to
+	 * another player
+	 * 
 	 * @param event
 	 */
 	@EventHandler
-	public void onPlayerPickupItem(PlayerPickupItemEvent event ){
-		//get item
+	public void onPlayerPickupItem(PlayerPickupItemEvent event) {
+		// get item
 		ItemStack item = event.getItem().getItemStack();
 		// check item for lore
-		if ( Plugin.hasLore(item) ){
-			//get player
-			Player player = (Player)event.getPlayer();
-			//get player name
+		if (Plugin.hasLore(item)) {
+			// get player
+			Player player = (Player) event.getPlayer();
+			// get player name
 			String playerName = player.getName();
 			// create lore string as it would be if the player owns the item
 			String loreString = Plugin.LORE_PLAYER_BOUND + " " + playerName;
 			// default lore array list
-			ArrayList<String> lore = (ArrayList<String>)item.getItemMeta().getLore();
-			// iterate through lore 
-			for ( String s : lore ) {
-				// if lore starts with "Player bound" but does not equal player's
+			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
+			// iterate through lore
+			for (String s : lore) {
+				// if lore starts with "Player bound" but does not equal
+				// player's
 				// lore string, this item is owned by another player.
-				if ( s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString))  
-				{
+				if (s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString)) {
 					// cancel event as item is owned by another player
 					event.setCancelled(true);
 				}
