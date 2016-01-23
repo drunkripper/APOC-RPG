@@ -1,3 +1,7 @@
+DEVELOPMENT PROGRESS
+- [ ] Fixing this list
+
+
 APOC-RPG What is it?
 ========
 
