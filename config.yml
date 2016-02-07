@@ -5,7 +5,7 @@
 
 Plugin:
     #Do not edit this!
-    version: 1.0
+    version: 0.0
     #Should operators bypass all permissions?
     op-bypass-permissions: false
     #Use servers economy for fancy stuff?
