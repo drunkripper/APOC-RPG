@@ -12,6 +12,7 @@ public class Economy {
 		addMoney(Player.getName(), amount);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void addMoney(String Player, double amount) {
 		Economy.depositPlayer(Player, amount);
 	}
@@ -20,6 +21,7 @@ public class Economy {
 		removeMoney(Player.getName(), amount);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static void removeMoney(String Player, double amount) {
 		Economy.withdrawPlayer(Bukkit.getPlayer(Player), amount);
 	}
@@ -32,6 +34,7 @@ public class Economy {
 		return hasMoney(Player.getName(), amount);
 	}
 
+	@SuppressWarnings("deprecation")
 	public static boolean hasMoney(String Player, double amount) {
 		return Economy.has(Bukkit.getPlayer(Player), amount);
 	}

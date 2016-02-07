@@ -311,10 +311,14 @@ public class ApocRPGCommand implements CommandExecutor {
 										+ Economy.format(Plugin.COST_BUY_GEAR) + "!");
 							}
 						} else if (arg2.equalsIgnoreCase("name")) {
-							if (arg3 != null) {
-								arg3 = arg3.replaceAll("_", " ").trim();
+							String name = "";
+							for (int i = 2; i < args.length; i++) {
+								if ( name.length() > 0 ) {
+									name += " ";
+								}
+								name += args[i];
 							}
-							if (arg3 == null || arg3.equals(Plugin.LORE_UNKNOWN_ITEM)) {
+							if ( name.equals("") || name.equals(Plugin.LORE_UNKNOWN_ITEM)) {
 								_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid item name!");
 							} else if (_emptyHand) {
 								_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
@@ -330,7 +334,7 @@ public class ApocRPGCommand implements CommandExecutor {
 									return true;
 								}
 								Economy.removeMoney(_player, Plugin.COST_BUY_NAME);
-								_handMeta.setDisplayName(arg3.replaceAll("_", " ").trim());
+								_handMeta.setDisplayName(name);
 								Plugin.addLoreText(_handMeta, Plugin.LORE_PLAYER_BOUND, _player.getName());
 								_handItem.setItemMeta(_handMeta);
 							}

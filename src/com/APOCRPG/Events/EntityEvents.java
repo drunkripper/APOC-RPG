@@ -32,6 +32,7 @@ import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 
+@SuppressWarnings("unused")
 public class EntityEvents implements Listener {
 	@EventHandler
 	public void onBlockBreak(BlockDamageEvent eve) {
@@ -134,6 +135,9 @@ public class EntityEvents implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent event) {
+		/* -- this code is broken.  this writes to block metadata which affects
+		 * -- all objects of the type.  so, locking against a player would lock
+		 * -- ALL chests against a player.  Replace this with calls to a DB.
 		Player player = event.getPlayer();
 		Block block = event.getClickedBlock();
 		boolean isEmpty = true;
@@ -196,6 +200,7 @@ public class EntityEvents implements Listener {
 				}
 			}
 		}
+		/**/
 	}
 
 	/**
