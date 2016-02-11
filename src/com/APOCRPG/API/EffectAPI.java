@@ -29,6 +29,8 @@ public class EffectAPI {
 		ArmorEffects.add("Resistance");
 		ArmorEffects.add("Speed");
 		ArmorEffects.add("Taunting");
+		//ArmorEffects.add("Courage");
+		//ArmorEffects.add("Synchro");
 	}
 
 	private static ArrayList<String> PassiveWeaponEffects = new ArrayList<String>();
@@ -48,6 +50,8 @@ public class EffectAPI {
 		HitWeaponEffects.add("Sacrifice");
 		HitWeaponEffects.add("Slashing");
 		HitWeaponEffects.add("Cleaving");
+		//HitWeaponEffects.add("Force");
+		//HitWeaponEffects.add("Venom");
 	}
 
 	private static ArrayList<String> BowEffects = new ArrayList<String>();
@@ -62,6 +66,8 @@ public class EffectAPI {
 
 	static {
 		ToolEffects.add("Fortune");
+		//ToolEffects.add("Demolition");
+		//ToolEffects.add("Smelting");
 	}
 
 	private static HashMap<String, String> TypeLookup = new HashMap<String, String>();
