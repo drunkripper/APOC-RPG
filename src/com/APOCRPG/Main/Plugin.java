@@ -1123,7 +1123,7 @@ public class Plugin extends JavaPlugin {
 		case "LXXXIX":
 			retval = 89;
 			break;
-		case "LXL":
+		case "XC":
 			retval = 90;
 			break;
 

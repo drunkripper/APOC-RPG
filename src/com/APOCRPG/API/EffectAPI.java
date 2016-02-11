@@ -106,7 +106,7 @@ public class EffectAPI {
 	}
 
 	public static Effect getRandomEffect() {
-		int Random = Plugin.Random.nextInt(5);
+		int Random = Plugin.Random.nextInt(6);
 		switch (Random) {
 		case 0:
 			return getRandomEffect(TYPE_ARMOR);

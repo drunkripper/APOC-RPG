@@ -1,6 +1,7 @@
 package com.APOCRPG.Commands;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +52,8 @@ public class ApocRPGCommand implements CommandExecutor {
 				: Plugin.instance.getServer().getItemFactory().getItemMeta(_handItem.getType());
 		ArrayList<String> _handLore = (_handMeta != null && _handMeta.hasLore())
 				? (ArrayList<String>) _handMeta.getLore() : new ArrayList<String>();
-
+		
+		Plugin.logger.log(Plugin.logger.getLevel(),"Today's time in millis: "+Calendar.getInstance().getTimeInMillis());
 		if (Command.getLabel().equalsIgnoreCase("apocrpg")) {
 			// if no arguments, give the user the list of commands
 			if (args.length == 0) {
@@ -289,16 +291,31 @@ public class ApocRPGCommand implements CommandExecutor {
 
 							}
 						} else if (arg2.equalsIgnoreCase("gem")) {
-							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEM)) {
-								Economy.removeMoney(_player, Plugin.COST_BUY_GEM);
-								if (!arg3.isEmpty() && !arg4.isEmpty()) {
-									_inventory.addItem(GemAPI.createGem(arg3, arg4));
+							_player.sendMessage("You are trying to buy a gem: "+arg3);
+							if ( _player.hasPermission("op") && !arg3.isEmpty() ) {
+								String type = EffectAPI.getEffectTypeFromName(arg3);
+								if ( type == null ) {
+									_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid effect!");
 								} else {
-									_inventory.addItem(GemAPI.createGem());
+									// make sure arg4 (level) is between 1 and 3. If not, set to "1"
+									try {
+										int i = Integer.parseInt(arg4);
+										if ( i < 1 || i > 3 ) {
+											arg4 = "1";
+										}
+									} catch ( Exception e ) {
+										arg4 = "1";
+									}
+									_inventory.addItem(GemAPI.createGem(arg3, type, arg4));
 								}
-							} else {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-										+ Economy.format(Plugin.COST_BUY_GEM) + "!");
+							} else { 
+								if (Economy.hasMoney(_player, Plugin.COST_BUY_GEM)) {
+									Economy.removeMoney(_player, Plugin.COST_BUY_GEM);
+									_inventory.addItem(GemAPI.createGem());
+								} else {
+									_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
+											+ Economy.format(Plugin.COST_BUY_GEM) + "!");
+								}
 							}
 						} else if (arg2.equalsIgnoreCase("item")) {
 							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
