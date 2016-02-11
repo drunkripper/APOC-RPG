@@ -61,7 +61,11 @@ public class SocketEvents implements Listener {
 					gem1Level = s1.substring(s1.lastIndexOf(" ") + 1);
 					// remove gem lore prefix and level
 					gem1Effect = s1.replace(Plugin.LORE_GEM_OF, "").replace(" " + gem1Level, "");
-					gem1IntLvl = Plugin.romanToInt(gem1Level);
+					try {
+						gem1IntLvl = Integer.parseInt(gem1Level);
+					} catch (Exception e) {
+						gem1IntLvl = Plugin.romanToInt(gem1Level);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -85,7 +89,11 @@ public class SocketEvents implements Listener {
 					gem2Level = s2.substring(s2.lastIndexOf(" ") + 1);
 					// remove gem lore prefix and level
 					gem2Effect = s2.replace(Plugin.LORE_GEM_OF, "").replace(" " + gem2Level, "");
-					gem2IntLvl = Plugin.romanToInt(gem2Level);
+					try {
+						gem2IntLvl = Integer.parseInt(gem2Level);
+					} catch (Exception e) {
+						gem2IntLvl = Plugin.romanToInt(gem2Level);
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					return null;
@@ -106,7 +114,7 @@ public class SocketEvents implements Listener {
 			return null;
 		}
 
-		return GemAPI.createGem(gem1Effect, gem2Effect, Plugin.intToRoman((gem1IntLvl + gem2IntLvl)));
+		return GemAPI.createGem(gem1Effect, gem1Type, Plugin.intToRoman((gem1IntLvl + gem2IntLvl)));
 	}
 
 	@SuppressWarnings("deprecation")

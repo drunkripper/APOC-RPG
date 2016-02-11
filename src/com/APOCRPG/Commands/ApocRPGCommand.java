@@ -295,14 +295,20 @@ public class ApocRPGCommand implements CommandExecutor {
 								if ( type == null ) {
 									_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid effect!");
 								} else {
-									// make sure arg4 (level) is between 1 and 3. If not, set to "1"
-									try {
-										int i = Integer.parseInt(arg4);
-										if ( i < 1 || i > 3 ) {
-											arg4 = "1";
+									if ( arg4 == null || "".equals(arg4)) {
+										arg4 = "I";
+									} else if ( !arg4.equalsIgnoreCase("I") && !arg4.equalsIgnoreCase("II") && !arg4.equalsIgnoreCase("III")) {
+										// see if an int was passed
+										try {
+											int i = Integer.parseInt(arg4);
+											if ( i < 1 || i > 3 ) {
+												arg4 = "I";
+											} else {
+												arg4 = Plugin.intToRoman(i);
+											}
+										} catch ( Exception e ) {
+											arg4 = "I";
 										}
-									} catch ( Exception e ) {
-										arg4 = "1";
 									}
 									_inventory.addItem(GemAPI.createGem(arg3, type, arg4));
 								}
