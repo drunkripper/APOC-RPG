@@ -53,7 +53,6 @@ public class ApocRPGCommand implements CommandExecutor {
 		ArrayList<String> _handLore = (_handMeta != null && _handMeta.hasLore())
 				? (ArrayList<String>) _handMeta.getLore() : new ArrayList<String>();
 		
-		Plugin.logger.log(Plugin.logger.getLevel(),"Today's time in millis: "+Calendar.getInstance().getTimeInMillis());
 		if (Command.getLabel().equalsIgnoreCase("apocrpg")) {
 			// if no arguments, give the user the list of commands
 			if (args.length == 0) {
@@ -291,7 +290,6 @@ public class ApocRPGCommand implements CommandExecutor {
 
 							}
 						} else if (arg2.equalsIgnoreCase("gem")) {
-							_player.sendMessage("You are trying to buy a gem: "+arg3);
 							if ( _player.hasPermission("op") && !arg3.isEmpty() ) {
 								String type = EffectAPI.getEffectTypeFromName(arg3);
 								if ( type == null ) {
