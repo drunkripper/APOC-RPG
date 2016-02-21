@@ -110,10 +110,11 @@ public final class PollingEventListener implements Listener {
 							if (Hostiles.contains(e.getType())) {
 								e.setMetadata("Targeting", (MetadataValue) p);
 							}
-						//case "Courage":
-						//add the total amount of enemies in a 5 block radius and give player 2.5% damage resist per enemy
-						//add 2.5% and 1 block radius per upgrade.
-						break;
+					//case "Courage":
+						//for (Entity e : p.getNearbyEntities(effect.getValue(), effect.getValue(), effect.getValue()))
+							//if (Hostiles.contains(e.getType())) {
+								//Total Hostiles and + damage reduction to player, still looking to how to implement this.					
+						//break;
 					}
 				}
 			}
