@@ -3,7 +3,6 @@ package com.APOCRPG.Events;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
-
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -18,7 +17,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import com.APOCRPG.API.EffectAPI;
 
-public final class PollingEventListener implements Listener {
+public final class PollingEventListener implements Listener {	
+	
+	//This array needs to point to a .yml for adding modpack hostiles
 	private static ArrayList<EntityType> Hostiles = new ArrayList<EntityType>();
 
 	static {
@@ -59,7 +60,13 @@ public final class PollingEventListener implements Listener {
 				stuff.add(a);// Keep only the non null armor objects
 			}
 		}
-
+	@EventHandler
+	public void onDamage(EntityDamageEvent event) {
+		if(event.getEntity() instanceof Player) {
+			Player player = (Player)e.getEntity();
+		double damage = event.getDamage();
+			}
+		}
 		if (!stuff.isEmpty()) {
 			for (ItemStack a : stuff) {
 				// TODO Constant Effects go here
@@ -104,17 +111,19 @@ public final class PollingEventListener implements Listener {
 							else if (e.getType().equals(EntityType.WOLF) && ((Wolf) e).isTamed())
 								((Wolf) e).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 666, 1));
 						break;
+					//Takes surrounding Enemies from the surrounding aura area xyz * increase 2.5/level + 5 blocks to start.
 					case "Taunting":
-						for (Entity e : p.getNearbyEntities(effect.getValue() * 2.5 + 5.0,
-								effect.getValue() * 2.5 + 5.0, effect.getValue() * 2.5 + 5.0))
+						for (Entity e : p.getNearbyEntities(effect.getValue() * 2.5 + 4.0,
+								effect.getValue() * 2.5 + 4.0, effect.getValue() * 2.5 + 4.0))
 							if (Hostiles.contains(e.getType())) {
 								e.setMetadata("Targeting", (MetadataValue) p);
+						break;
 							}
-					//case "Courage":
-						//for (Entity e : p.getNearbyEntities(effect.getValue(), effect.getValue(), effect.getValue()))
-							//if (Hostiles.contains(e.getType())) {
-								//Total Hostiles and + damage reduction to player, still looking to how to implement this.					
-						//break;
+					//Takes surrounding living entities and gives the player 2.5% resistance per entity, at first level the aura is 5 blocks (level + 4)
+					case "Courage":
+						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0))
+							if (!e.getType().equals(EntityType.PLAYER))				//Total Hostile and + damage reduction to player, still looking to how to implement this.					
+						break;
 					}
 				}
 			}
