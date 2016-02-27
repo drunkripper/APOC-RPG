@@ -3,12 +3,14 @@ package com.APOCRPG.Events;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.Listener;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
@@ -61,10 +63,10 @@ public final class PollingEventListener implements Listener {
 			}
 		}
 	@EventHandler
-	public void onDamage(EntityDamageEvent event) {
-		if(event.getEntity() instanceof Player) {
+	public void onDamage(EntityDamageEvent event2) {
+		if(event2.getEntity() instanceof Player) {
 			Player player = (Player)e.getEntity();
-		double damage = event.getDamage();
+		double damage = event2.getDamage();
 			}
 		}
 		if (!stuff.isEmpty()) {
@@ -122,7 +124,11 @@ public final class PollingEventListener implements Listener {
 					//Takes surrounding living entities and gives the player 2.5% resistance per entity, at first level the aura is 5 blocks (level + 4)
 					case "Courage":
 						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0))
-							if (!e.getType().equals(EntityType.PLAYER))				//Total Hostile and + damage reduction to player, still looking to how to implement this.					
+							if (!e.getType().equals(EntityType.PLAYER))	{
+								int entcount = entcount + 2; //2 is filler
+								double pdamage = pdamage * .025 * entcount; //basicly how gem will work, still have to check math
+								
+							}			//Total Hostile and + damage reduction to player, still looking to how to implement this.					
 						break;
 					}
 				}
