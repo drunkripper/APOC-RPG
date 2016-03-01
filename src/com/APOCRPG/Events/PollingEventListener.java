@@ -62,13 +62,14 @@ public final class PollingEventListener implements Listener {
 				stuff.add(a);// Keep only the non null armor objects
 			}
 		}
-	@EventHandler
-	public void onDamage(EntityDamageEvent event2) {
-		if(event2.getEntity() instanceof Player) {
-			Player player = (Player)e.getEntity();
-		double damage = event2.getDamage();
-			}
+		@EventHandler
+	    public void onDamage(EntityDamageEvent event2) {
+	        double damage = event2.getDamage();
+	        if (event2.getEntity() instanceof Player) {
+	            Player player = (Player) event2.getEntity();
+	        }
 		}
+		
 		if (!stuff.isEmpty()) {
 			for (ItemStack a : stuff) {
 				// TODO Constant Effects go here
@@ -126,9 +127,10 @@ public final class PollingEventListener implements Listener {
 						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0))
 							if (!e.getType().equals(EntityType.PLAYER))	{
 								int entcount = entcount + 2; //2 is filler
-								double pdamage = pdamage * .025 * entcount; //basicly how gem will work, still have to check math
-								
-							}			//Total Hostile and + damage reduction to player, still looking to how to implement this.					
+								damage = damage - damage*.025;  //damage is defined in the event call onDamage but doesn't like the call down here.
+																//also the resistence amount .025 will be moved to a variable so levels can be added to it
+																//I'm basicly waiting on bukkit forums responce to help with the onDamage issue.
+							}					
 						break;
 					}
 				}
