@@ -21,6 +21,7 @@ import com.APOCRPG.API.EffectAPI;
 
 public final class PollingEventListener implements Listener {	
 	
+	double damage = 0;
 	//This array needs to point to a .yml for adding modpack hostiles
 	private static ArrayList<EntityType> Hostiles = new ArrayList<EntityType>();
 
@@ -64,7 +65,7 @@ public final class PollingEventListener implements Listener {
 		}
 		@EventHandler
 	    public void onDamage(EntityDamageEvent event2) {
-	        double damage = event2.getDamage();
+	        damage = event2.getDamage();
 	        if (event2.getEntity() instanceof Player) {
 	            Player player = (Player) event2.getEntity();
 	        }
@@ -127,9 +128,9 @@ public final class PollingEventListener implements Listener {
 						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0))
 							if (!e.getType().equals(EntityType.PLAYER))	{
 								int entcount = entcount + 2; //2 is filler
-								damage = damage - damage*.025;  //damage is defined in the event call onDamage but doesn't like the call down here.
+								damage = damage - damage * .025;  //damage is defined in the event call onDamage but doesn't like the call down here.
 																//also the resistence amount .025 will be moved to a variable so levels can be added to it
-																//I'm basicly waiting on bukkit forums responce to help with the onDamage issue.
+			
 							}					
 						break;
 					}
