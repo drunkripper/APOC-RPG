@@ -21,17 +21,16 @@ import com.APOCRPG.API.EffectAPI;
 
 public final class PollingEventListener implements Listener {	
 	
+	//Direct damage var
 	double damage = 0;
-	double resist = 0;
-	int entcount = 0;
 	
 	//Direct damage handler
 	@EventHandler
     public void onDamage(EntityDamageEvent event2) {
         damage = event2.getDamage();
-        if (event2.getEntity() instanceof Player) {
-            Player player = (Player) event2.getEntity();
-        }
+        //if (event2.getEntity() instanceof Player) {
+        //    Player player = (Player) event2.getEntity();
+        //}
 	}
 	//This array needs to point to a .yml for adding modpack hostiles
 	private static ArrayList<EntityType> Hostiles = new ArrayList<EntityType>();
@@ -129,14 +128,17 @@ public final class PollingEventListener implements Listener {
 							}
 					//Takes surrounding living entities and gives the player 2.5% resistance per entity, at first level the aura is 5 blocks (level + 4)
 					case "Courage":
-						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0))
-							if (!e.getType().equals(EntityType.PLAYER))	{
-								entcount = entcount + 2; //2 is filler
-								resist = resist + entcount;
-								damage = damage - damage * resist;  //damage is defined in the event call onDamage but doesn't like the call down here.
-																//also the resistence amount .025 will be moved to a variable so levels can be added to it
-			
-							}					
+
+						double resist = 0.025;
+						int entcount = 0;
+						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0)) {
+							if (!e.isDead()) {
+									entcount++;
+							}
+						}
+						resist = resist * effect.getValue() * entcount;
+						damage = damage - damage * resist;
+						p.sendMessage("# of entities = " + entcount + "resistance = " + resist);
 						break;
 					}
 				}
