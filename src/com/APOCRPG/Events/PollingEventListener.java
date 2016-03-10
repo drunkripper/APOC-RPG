@@ -132,13 +132,15 @@ public final class PollingEventListener implements Listener {
 						double resist = 0.025;
 						int entcount = 0;
 						for (Entity e : p.getNearbyEntities(effect.getValue() + 4.0, effect.getValue() + 4.0, effect.getValue() + 4.0)) {
-							if (!e.isDead()) {
+							if (e.getType().isAlive()) {
 									entcount++;
 							}
-						}
 						resist = resist * effect.getValue() * entcount;
 						damage = damage - damage * resist;
-						p.sendMessage("# of entities = " + entcount + "resistance = " + resist);
+						//debug messages, they lag the server.
+						//p.sendMessage("level "+effect.getValue());
+						//p.sendMessage("# of entities = " + entcount + " resistance = " + resist);
+						}
 						break;
 					}
 				}
