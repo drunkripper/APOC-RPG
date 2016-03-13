@@ -105,6 +105,11 @@ public class CombatEvents implements Listener {
 								playa.damage(5.0);
 							}
 							break;
+						case "Force":
+							if (2.5 + (e.getValue() * .75) >= Plugin.Random.nextInt(100)){
+								event.setDamage(event.getDamage() * 1.5);
+							}
+							break;
 						case "Ravaging":
 							event.setDamage(event.getDamage() * (1.1 + .025 * e.getValue()));
 							break;

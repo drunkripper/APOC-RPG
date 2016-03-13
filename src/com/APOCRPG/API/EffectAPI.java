@@ -50,7 +50,7 @@ public class EffectAPI {
 		HitWeaponEffects.add("Sacrifice");
 		HitWeaponEffects.add("Slashing");
 		HitWeaponEffects.add("Cleaving");
-		//HitWeaponEffects.add("Force");
+		HitWeaponEffects.add("Force");
 		//HitWeaponEffects.add("Venom");
 	}
 
