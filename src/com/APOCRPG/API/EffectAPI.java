@@ -29,7 +29,7 @@ public class EffectAPI {
 		ArmorEffects.add("Resistance");
 		ArmorEffects.add("Speed");
 		ArmorEffects.add("Taunting");
-		//ArmorEffects.add("Courage");
+		ArmorEffects.add("Courage");
 		//ArmorEffects.add("Synchro");
 	}
 
