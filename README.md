@@ -1,24 +1,24 @@
 DEVELOPMENT PROGRESS
-- [ ] Dungeons
+- [x] Dungeons
 - [ ] Abilities
 - [ ] Effects
 - [ ] Monster Customization & Bosses
 - [ ] Skills
 - [ ] Stats
-- [ ] Item Customization
+- [x] Item Customization
 - [ ] Item Tiers
 - [ ] Item Features
 - [ ] Item Sets
 - [ ] Gems
-- [ ] Economy Support
-- [ ] Commands
-- [ ] Salvaging
+- [x] Economy Support
+- [x] Commands
+- [x] Salvaging
 - [ ] Upgrading Items
 - [ ] Upgrading Gems
 - [ ] Upgrading Enchantments
-- [ ] Dungeon Loot
+- [x] Dungeon Loot
 - [ ] Anti-Grief for Dungeons
-- [ ] Per-Player Dungeon Chests
+- [x] Per-Player Dungeon Chests
 
 
 APOC-RPG What is it?
