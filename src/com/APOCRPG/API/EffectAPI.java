@@ -51,7 +51,7 @@ public class EffectAPI {
 		HitWeaponEffects.add("Slashing");
 		HitWeaponEffects.add("Cleaving");
 		HitWeaponEffects.add("Force");
-		//HitWeaponEffects.add("Venom");
+		HitWeaponEffects.add("Venom");
 	}
 
 	private static ArrayList<String> BowEffects = new ArrayList<String>();
