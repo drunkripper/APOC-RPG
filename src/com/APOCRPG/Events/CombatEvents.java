@@ -110,6 +110,9 @@ public class CombatEvents implements Listener {
 								event.setDamage(event.getDamage() * 1.5);
 							}
 							break;
+						case "Venom":
+							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.POISON, (int) ((e.getValue() - 1) * 1.5), 0));
+							break;
 						case "Ravaging":
 							event.setDamage(event.getDamage() * (1.1 + .025 * e.getValue()));
 							break;
