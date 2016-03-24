@@ -32,16 +32,18 @@ import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
 
-@SuppressWarnings("unused")
-public class EntityEvents implements Listener {
-	@EventHandler
-	public void onBlockBreak(BlockDamageEvent eve) {
-		if (EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune")) {
-			eve.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING,
-					EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).get("Fortune"), 20));
-		}
+//Being added to PollingEventListener.java for consistancy.
 
-	}
+//@SuppressWarnings("unused")
+//public class EntityEvents implements Listener {
+//	@EventHandler
+//	public void onBlockBreak(BlockDamageEvent eve) {
+//		if (EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune")) {
+//			eve.getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING,
+//					EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).get("Fortune"), 20));
+//		}
+//
+//	}
 //This needs to reference a hostiles list set in a config.
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
