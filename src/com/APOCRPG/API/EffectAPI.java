@@ -65,7 +65,7 @@ public class EffectAPI {
 	private static ArrayList<String> ToolEffects = new ArrayList<String>();
 
 	static {
-		ToolEffects.add("Fortune");
+		ToolEffects.add("Breaking");
 		//ToolEffects.add("Demolition");
 		//ToolEffects.add("Smelting");
 	}
