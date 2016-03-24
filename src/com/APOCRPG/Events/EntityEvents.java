@@ -42,7 +42,7 @@ public class EntityEvents implements Listener {
 		}
 
 	}
-
+//This needs to reference a hostiles list set in a config.
 	@EventHandler
 	public void onCreatureSpawn(CreatureSpawnEvent Event) {
 		EntityType Type = Event.getEntityType();
