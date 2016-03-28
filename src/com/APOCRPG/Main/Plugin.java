@@ -1,15 +1,9 @@
 package com.APOCRPG.Main;
 
-import com.APOCRPG.Commands.ApocRPGCommand;
-import com.APOCRPG.Events.ChunkEvents;
-import com.APOCRPG.Events.CombatEvents;
-import com.APOCRPG.Events.EffectPollingEvent;
-import com.APOCRPG.Events.EntityEvents;
-import com.APOCRPG.Events.PollingEventListener;
-import com.APOCRPG.Events.ProjectileEvents;
-import com.APOCRPG.Events.SocketEvents;
-
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -26,6 +20,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.APOCRPG.Commands.ApocRPGCommand;
+import com.APOCRPG.Events.ChunkEvents;
+import com.APOCRPG.Events.CombatEvents;
+import com.APOCRPG.Events.EffectPollingEvent;
+import com.APOCRPG.Events.EntityEvents;
+import com.APOCRPG.Events.PollingEventListener;
+import com.APOCRPG.Events.ProjectileEvents;
+import com.APOCRPG.Events.SocketEvents;
+import com.APOCRPG.SkillPoints.DBApi;
 
 public class Plugin extends JavaPlugin {
 	public static Random Random = new Random();
@@ -258,6 +262,34 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ProjectileListener, this);
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
+		
+		String databaseHost = Plugin.Settings.getString("server_ip");
+    	int port = Plugin.Settings.getInt("server_port");
+    	String username = Plugin.Settings.getString("server_user");
+    	String password = Plugin.Settings.getString("server_password");
+    	
+        Connection conn;
+        String url = "jdbc:mysql://" + databaseHost + ":" + port;
+       
+        //Attempt to connect
+        try{
+          //Connection succeeded
+          conn = DriverManager.getConnection(url, username, password);
+          ResultSet rs = conn.getMetaData().getTables(null, null, "Skill", null);
+          if(!rs.next()) {
+        	  String sql = "CREATE TABLE Skill " +
+                      "(player VARCHAR(17) not NULL, " +
+                      " skill_points INTEGER, " + 
+                      " xp_roof INTEGER, " +  
+                      " PRIMARY KEY ( player ))";
+        	  DBApi.executeQuery(sql);
+        	  getLogger().info("table not found. Created!");
+          } else {
+        	  getLogger().info("Table Found!");
+          }
+        } catch(Exception e) {
+        	
+        }
 	}
 
 	public void onDisable() {
