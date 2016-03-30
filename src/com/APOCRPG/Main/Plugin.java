@@ -263,10 +263,10 @@ public class Plugin extends JavaPlugin {
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
 		
-		String databaseHost = Plugin.Settings.getString("server_ip");
-    	int port = Plugin.Settings.getInt("server_port");
-    	String username = Plugin.Settings.getString("server_user");
-    	String password = Plugin.Settings.getString("server_password");
+		String databaseHost = getConfig().getString("server_ip");
+    	int port = getConfig().getInt("server_port");
+    	String username = getConfig().getString("server_user");
+    	String password = getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port;
@@ -279,8 +279,9 @@ public class Plugin extends JavaPlugin {
           if(!rs.next()) {
         	  String sql = "CREATE TABLE Skill " +
                       "(player VARCHAR(17) not NULL, " +
-                      " skill_points INTEGER, " + 
-                      " xp_roof INTEGER, " +  
+                      " skill_points INTEGER DEFAULT 0, " + 
+                      " xp_roof INTEGER DEFAULT 100, " +  
+                      " current_xp INTEGER DEFAULT 0" +
                       " PRIMARY KEY ( player ))";
         	  DBApi.executeQuery(sql);
         	  getLogger().info("table not found. Created!");
