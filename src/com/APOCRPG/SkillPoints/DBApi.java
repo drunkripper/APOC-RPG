@@ -49,7 +49,7 @@ public class DBApi {
         try{
           //Connection succeeded
           conn = DriverManager.getConnection(url, username, password);
-          PreparedStatement sql = conn.prepareStatement("SELECT * FROM `Skill` WHERE player=?");
+          PreparedStatement sql = conn.prepareStatement("SELECT * FROM `Skill` WHERE player_name=?");
           sql.setString(1, p.getName());
           ResultSet rs = sql.executeQuery();
           boolean containsPlayer = rs.next();
@@ -77,10 +77,10 @@ public class DBApi {
           //Connection succeeded
           conn = DriverManager.getConnection(url, username, password);
           
-          PreparedStatement stat = conn.prepareStatement("SELECT * FROM `Skill` WHERE player=?");
+          PreparedStatement stat = conn.prepareStatement("SELECT * FROM `Skill` WHERE player_name=?");
           stat.setString(1, p.getName());
           ResultSet rs = stat.executeQuery();
-          PreparedStatement statement = conn.prepareStatement("UPDATE `Skill` SET current_xp=? WHERE player=?;");
+          PreparedStatement statement = conn.prepareStatement("UPDATE `Skill` SET current_xp=? WHERE player_name=?;");
           statement.setDouble(1, rs.getDouble("current_xp") + amt);
           statement.setString(2, p.getName());
           statement.executeUpdate();
@@ -136,6 +136,34 @@ public class DBApi {
           return sr;
         }catch(Exception e){
         	return "Poo";
+        }
+    }
+    
+    public static void addSkillp(Player p, double amt) {
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
+    	
+        Connection conn;
+        String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
+       
+        //Attempt to connect
+        try{
+          //Connection succeeded
+          conn = DriverManager.getConnection(url, username, password);
+          
+          PreparedStatement stat = conn.prepareStatement("SELECT * FROM `Skill` WHERE player_name=?");
+          stat.setString(1, p.getName());
+          ResultSet rs = stat.executeQuery();
+          PreparedStatement statement = conn.prepareStatement("UPDATE `Skill` SET skill_points=? WHERE player_name=?;");
+          statement.setDouble(1, rs.getDouble("skill_pointss") + amt);
+          statement.setString(2, p.getName());
+          statement.executeUpdate();
+          statement.close();
+          conn.close();
+        } catch(Exception e){
+          //Couldn't connect to the database
         }
     }
 }
