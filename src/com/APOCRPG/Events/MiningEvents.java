@@ -26,15 +26,19 @@ public class MiningEvents implements Listener {
 				for (Entry<String, Integer> e : effects.entrySet()) {
 					switch (e.getKey()) {
 					case "Breaking":
-						if (2.5 + (e.getValue() * .75) >= Plugin.Random.nextInt(100)) {
-							((Player)e).addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20, 1));
+						int lvl = e.getValue();
+						if (lvl >= 26) {
+							lvl = 25;
+						}
+						if (2.5 + (lvl * .75) >= Plugin.Random.nextInt(100)) {
+							((Player)e).addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 200, lvl));
 						}
 					break;
 					case "Demolition":
-					//something clever	
+						
 					break;
 					case "Smelting":
-					//something else just as great	
+						
 					break;
 					}					
 				}
