@@ -26,11 +26,17 @@ public class MiningEvents implements Listener {
 				for (Entry<String, Integer> e : effects.entrySet()) {
 					switch (e.getKey()) {
 					case "Breaking":
-						int lvl = e.getValue();
-						if (lvl >= 26) {
-							lvl = 25;
+						//level limiter to scale back the effect of the gem
+						int lvl = e.getValue() / 2;
+						double chance = 2.5 + (e.getValue() * .75);
+						if (lvl >= 13) {
+							lvl = 12;
 						}
-						if (2.5 + (lvl * .75) >= Plugin.Random.nextInt(100)) {
+						if (chance >= 26) {
+							chance = 25;
+						}
+						//Effect of the gem
+						if (chance >= Plugin.Random.nextInt(100)) {
 							((Player)e).addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 200, lvl));
 						}
 					break;
