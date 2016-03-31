@@ -4,17 +4,20 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 
 import org.bukkit.entity.Player;
 
 import com.APOCRPG.Main.Plugin;
 
 public class DBApi {
+	
+	static Plugin pl = new Plugin();
     public static void executeQuery(String query){
-    	String databaseHost = Plugin.Settings.getString("server_ip");
-    	int port = Plugin.Settings.getInt("server_port");
-    	String username = Plugin.Settings.getString("server_user");
-    	String password = Plugin.Settings.getString("server_password");
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -34,10 +37,10 @@ public class DBApi {
 
     
     public static boolean checkPlayerExist(Player p) {
-    	String databaseHost = Plugin.Settings.getString("server_ip");
-    	int port = Plugin.Settings.getInt("server_port");
-    	String username = Plugin.Settings.getString("server_user");
-    	String password = Plugin.Settings.getString("server_password");
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -61,10 +64,10 @@ public class DBApi {
     }
     
     public static void addXp(Player p, double amt) {
-    	String databaseHost = Plugin.Settings.getString("server_ip");
-    	int port = Plugin.Settings.getInt("server_port");
-    	String username = Plugin.Settings.getString("server_user");
-    	String password = Plugin.Settings.getString("server_password");
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -85,6 +88,54 @@ public class DBApi {
           conn.close();
         } catch(Exception e){
           //Couldn't connect to the database
+        }
+    }
+    
+    public static void addLog(String mob, String player, Timestamp ts) {
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
+    	
+        Connection conn;
+        String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
+       
+        //Attempt to connect
+        try{
+          //Connection succeeded
+          conn = DriverManager.getConnection(url, username, password);
+          
+          PreparedStatement stet = conn.prepareStatement("INSERT INTO Logs (player_name,killed,time) VALUES (?,?,?);");
+          stet.setString(1, player);
+          stet.setString(2, mob);
+          stet.setTimestamp(3, ts);
+          stet.close();
+          conn.close();
+        } catch(Exception e) {
+        	e.printStackTrace();
+        }
+    }
+    
+    public static String grabData(String tn, String pname, String fld) {
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
+    	
+        Connection conn;
+        String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
+       
+        //Attempt to connect
+        try{
+          //Connection succeeded
+          conn = DriverManager.getConnection(url, username, password);
+          
+          PreparedStatement stet = conn.prepareStatement("SELECT " + fld + " FROM " + tn + " WHERE player_name = \"" + pname + "\";");
+          ResultSet rs = stet.executeQuery();
+          String sr = rs.getString(1);
+          return sr;
+        }catch(Exception e){
+        	return "Poo";
         }
     }
 }
