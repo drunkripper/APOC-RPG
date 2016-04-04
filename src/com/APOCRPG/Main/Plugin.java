@@ -30,6 +30,8 @@ import com.APOCRPG.Events.PollingEventListener;
 import com.APOCRPG.Events.ProjectileEvents;
 import com.APOCRPG.Events.SocketEvents;
 import com.APOCRPG.SkillPoints.DBApi;
+import com.APOCRPG.SkillPoints.InSkill;
+import com.APOCRPG.SkillPoints.SkillGet;
 
 public class Plugin extends JavaPlugin {
 	public static Random Random = new Random();
@@ -41,7 +43,9 @@ public class Plugin extends JavaPlugin {
 	public static EntityEvents EntityListener = new EntityEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
 	public static ProjectileEvents ProjectileListener = new ProjectileEvents();
+	public static SkillGet SkillListener = new SkillGet();
 	public static SocketEvents SocketListener = null;
+	public static InSkill SpendSkillListener = new InSkill();
 	// global constants - general
 	public static String APOCRPG_ERROR = ChatColor.RED + "[APOC-RPG] ";
 	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR + "You have nothing in your hand!";
@@ -260,6 +264,8 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getServer().getPluginManager().registerEvents(PollListener, this);
 		getServer().getPluginManager().registerEvents(ProjectileListener, this);
+		getServer().getPluginManager().registerEvents(SkillListener, this);
+		getServer().getPluginManager().registerEvents(SpendSkillListener, this);
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
 		
@@ -278,15 +284,26 @@ public class Plugin extends JavaPlugin {
           ResultSet rs = conn.getMetaData().getTables(null, null, "Skill", null);
           if(!rs.next()) {
         	  String sql = "CREATE TABLE Skill " +
-                      "(player VARCHAR(17) not NULL, " +
-                      " skill_points INTEGER DEFAULT 0, " + 
-                      " xp_roof INTEGER DEFAULT 100, " +  
-                      " current_xp INTEGER DEFAULT 0" +
+                      "(player_name VARCHAR(17) not NULL, " +
+                      " skill_points INTEGER DEFAULT 0, "   + 
+                      " xp_roof INTEGER DEFAULT 100, "      +  
+                      " current_xp INTEGER DEFAULT 0,"      +
+                      " recovery INTEGER DEFAULT 0,"        +
+                      " evasion INTEGER DEFAULT 0,"         +
+                      " agility INTEGER DEFAULT 0,"         +
+                      " luck INTEGER DEFAULT 0,"            +
+                      " armor INTEGER DEFAULT 0,"          +
                       " PRIMARY KEY ( player ))";
         	  DBApi.executeQuery(sql);
-        	  getLogger().info("table not found. Created!");
+        	  sql = "CREATE TABLE Logs "                    +
+                      "(player_name VARCHAR(17), "          +
+                      " killed VARCHAR(100), "              +  
+                      " time_killed TIMESTAMP, "            +
+                      " PRIMARY KEY ( player ))";
+        	  DBApi.executeQuery(sql);
+        	  getLogger().info("Tables not found. Created!");
           } else {
-        	  getLogger().info("Table Found!");
+        	  getLogger().info("Tables Found!");
           }
         } catch(Exception e) {
         	
