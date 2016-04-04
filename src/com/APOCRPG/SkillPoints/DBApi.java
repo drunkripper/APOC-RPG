@@ -166,4 +166,33 @@ public class DBApi {
           //Couldn't connect to the database
         }
     }
+    
+    public static void addAbility(Player p, double amt, String ability) {
+    	String databaseHost = pl.getConfig().getString("server_ip");
+    	int port = pl.getConfig().getInt("server_port");
+    	String username = pl.getConfig().getString("server_user");
+    	String password = pl.getConfig().getString("server_password");
+    	
+        Connection conn;
+        String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
+       
+        //Attempt to connect
+        try{
+          //Connection succeeded
+          conn = DriverManager.getConnection(url, username, password);
+          
+          PreparedStatement stat = conn.prepareStatement("SELECT * FROM `Skill` WHERE player_name=?");
+          stat.setString(1, p.getName());
+          ResultSet rs = stat.executeQuery();
+          PreparedStatement statement = conn.prepareStatement("UPDATE `Skill` SET ?=? WHERE player_name=?;");
+          statement.setString(1, ability);
+          statement.setDouble(2, rs.getDouble(ability) + amt);
+          statement.setString(3, p.getName());
+          statement.executeUpdate();
+          statement.close();
+          conn.close();
+        } catch(Exception e){
+          //Couldn't connect to the database
+        }
+    }
 }

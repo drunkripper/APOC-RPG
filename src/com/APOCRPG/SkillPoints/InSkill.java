@@ -76,19 +76,19 @@ public class InSkill implements Listener {
 				}, 600);
 			}
 			
-			//Armour
+			//Armor
 			if (p.getInventory().getArmorContents() != null) {
 				ItemStack[] aCts = p.getInventory().getArmorContents();
 				ItemStack head = aCts[0];
 				ItemStack chest = aCts[1];
 				ItemStack leg = aCts[2];
 				ItemStack booty = aCts[3];
-				if(Double.parseDouble(DBApi.grabData("Skill", p.getName(), "armour")) != 0.0) {
+				if(Double.parseDouble(DBApi.grabData("Skill", p.getName(), "armor")) != 0.0) {
 					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 						public void run() {
 							long t = System.currentTimeMillis();
 							long end = t + 10000;
-							short points = Short.parseShort(DBApi.grabData("Skill", p.getName(), "armour"));
+							short points = Short.parseShort(DBApi.grabData("Skill", p.getName(), "armor"));
 							short armo = (short) (points * 1);
 							while (System.currentTimeMillis() < end) {
 								head.setDurability((short) (head.getDurability() + armo));
