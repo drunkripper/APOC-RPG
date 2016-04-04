@@ -1,16 +1,12 @@
 package com.APOCRPG.Commands;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -25,6 +21,7 @@ import com.APOCRPG.API.GemAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Economy;
 import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.SkillPoints.DBApi;
 
 /**
  * 
@@ -37,6 +34,7 @@ public class ApocRPGCommand implements CommandExecutor {
 	@Override
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender Sender, Command Command, String label, String[] args) {
+		
 		ChatColor CommandColor = ChatColor.GOLD;
 		ChatColor DescColor = ChatColor.BLUE;
 		String arg1 = new String();
@@ -115,6 +113,16 @@ public class ApocRPGCommand implements CommandExecutor {
 					_player.sendMessage(CommandColor + "Programmed by the Apocalyptic Gaming Network");
 					_player.sendMessage(CommandColor + "http://apocgaming.org");
 					_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
+				} else if (arg1.equalsIgnoreCase("levelup")) {
+					if(arg2.equalsIgnoreCase("evasion")) {
+						DBApi.addAbility(_player, 1.0, "evasion");
+					} else if(arg2.equalsIgnoreCase("armor")) {
+						DBApi.addAbility(_player, 1.0, "armor");
+					}else if(arg2.equalsIgnoreCase("luck")) {
+						DBApi.addAbility(_player, 1.0, "luck");
+					}else if(arg2.equalsIgnoreCase("recovery")) {
+						DBApi.addAbility(_player, 1.0, "recovery");
+					}
 				}
 				// check for command permissions
 				// else if ( !_player.hasPermission("apocrpg."+arg1+((arg2 !=
@@ -724,6 +732,7 @@ public class ApocRPGCommand implements CommandExecutor {
 			System.out.println(Plugin.APOCRPG_ERROR + "Unknown command sent.");
 			return false;
 		}
+		
 	}
 	/*
 	 * private ArrayList<String> addItemSocket ( ArrayList<String> lore ) {
