@@ -3,6 +3,8 @@ package com.APOCRPG.Events;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,10 +43,13 @@ public class MiningEvents implements Listener {
 						}
 					break;
 					case "Demolition":
-						
+						if (2.5 + (e.getValue() * .75) >= Plugin.Random.nextInt(100)) {
+							World w = loc.getWorld();
+					        w.createExplosion(loc.getX(), loc.getY(), loc.getZ(), 2F, false, true);
+						}
 					break;
 					case "Smelting":
-						
+						//breaking event that changes block to air then drops ingot of material mined
 					break;
 					}					
 				}
