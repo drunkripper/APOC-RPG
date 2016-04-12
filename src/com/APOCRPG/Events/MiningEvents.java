@@ -3,8 +3,9 @@ package com.APOCRPG.Events;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
+//import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,6 +19,7 @@ import com.APOCRPG.Main.Plugin;
 
 
 public class MiningEvents implements Listener {
+	Location loc = new Location(null, 0, 0, 0);
 	@EventHandler
 	public void onBlockBreak(BlockDamageEvent eve) {
 		Player plyr = eve.getPlayer();
