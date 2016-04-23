@@ -51,7 +51,29 @@ public class MiningEvents implements Listener {
 						}
 					break;
 					case "Smelting":
-						//breaking event that changes block to air then drops ingot of material mined
+						public void onBlockBreak(BlockBreakEvent event){
+        Material block = event.getBlock().getType();
+        Player player = event.getPlayer();
+        if (orelist.containsKey(block)){
+                BreakReward reward = orelist.get(block);
+                if (player.getItemInHand().containsEnchantment(Enchantment.SILK_TOUCH)) {
+                } else {
+                        giveMoney(reward.money, player);
+                }
+               
+                if (reward.toDrop != null) {
+                        event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(reward.toDrop, 1));
+                        event.setCancelled(true);
+                        event.getBlock().setType(Material.AIR);
+                }                    
+        }
+    }
+ 
+        private void giveMoney(Integer money, Player player) {
+                plugin.econ.depositPlayer(player.getName(), money);
+                player.sendMessage("§b+ " + money);          
+        }
+}
 					break;
 					}					
 				}
