@@ -9,11 +9,12 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
+import org.bukkit.Material;
 import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.Main.Plugin;
 
@@ -51,13 +52,13 @@ public class MiningEvents implements Listener {
 						}
 					break;
 					case "Smelting":
-						if (10 + (e.getValue() * .75) >= Plugin.Random.nextInt(100)) {
-							if (!(event instanceof BlockBreakEvent)) {
+						if (10 + (e.getValue() * 10) >= Plugin.Random.nextInt(100)) {
+							if (!(e instanceof BlockBreakEvent)) {
 					            return;
 					        }
-							if (event.getBlock().getType().equals(new ItemStack(Material.IRON_BLOCK))) {
-					            event.getBlock().setType(Material.AIR);
-					            event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), new ItemStack(Material.DIAMOND_BLOCK));
+							if (((Location) e).getBlock().getType().equals(new ItemStack(Material.IRON_BLOCK))) {
+					            ((Location) e).getBlock().setType(Material.AIR);
+					            ((Location) e).getBlock().getWorld().dropItemNaturally(((Location) e).getBlock().getLocation(), new ItemStack(Material.DIAMOND_BLOCK));
 					        }
 						}
 					break;
