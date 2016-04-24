@@ -56,9 +56,13 @@ public class MiningEvents implements Listener {
 							if (!(e instanceof BlockBreakEvent)) {
 					            return;
 					        }
-							if (((Location) e).getBlock().getType().equals(new ItemStack(Material.IRON_BLOCK))) {
+							if (((Location) e).getBlock().getType().equals(new ItemStack(Material.IRON_ORE))) {
 					            ((Location) e).getBlock().setType(Material.AIR);
-					            ((Location) e).getBlock().getWorld().dropItemNaturally(((Location) e).getBlock().getLocation(), new ItemStack(Material.DIAMOND_BLOCK));
+					            ((Location) e).getBlock().getWorld().dropItemNaturally(((Location) e).getBlock().getLocation(), new ItemStack(Material.IRON_INGOT));
+					        }
+							if (((Location) e).getBlock().getType().equals(new ItemStack(Material.GOLD_ORE))) {
+					            ((Location) e).getBlock().setType(Material.AIR);
+					            ((Location) e).getBlock().getWorld().dropItemNaturally(((Location) e).getBlock().getLocation(), new ItemStack(Material.GOLD_INGOT));
 					        }
 						}
 					break;
