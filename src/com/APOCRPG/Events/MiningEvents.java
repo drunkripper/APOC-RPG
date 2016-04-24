@@ -51,7 +51,7 @@ public class MiningEvents implements Listener {
 					        w.createExplosion(loc.getX(), loc.getY(), loc.getZ(), 2F, false, true);
 						}
 					break;
-					case "Smelting":
+					case "Smelting": //only added vanilla ores, looking up a way to add modded ore.
 						if (10 + (e.getValue() * 10) >= Plugin.Random.nextInt(100)) {
 							if (!(e instanceof BlockBreakEvent)) {
 					            return;
