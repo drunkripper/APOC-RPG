@@ -21,6 +21,7 @@ public class PlayerEvents implements Listener {
 
         if (!(killed instanceof Monster)) return;
 
+
     }
 
     //Player joins the game
