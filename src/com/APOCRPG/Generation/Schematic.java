@@ -24,7 +24,6 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.CreatureType;
 
 // imports above;
-
 @SuppressWarnings("deprecation")
 public class Schematic {
 

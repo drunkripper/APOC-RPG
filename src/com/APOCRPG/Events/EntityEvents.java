@@ -34,6 +34,8 @@ import com.APOCRPG.Main.Plugin;
 
 //Being added to PollingEventListener.java for consistancy.
 
+// Is anyone tackling this issue yet? I'm more than OK to -K
+
 //@SuppressWarnings("unused")
 //public class EntityEvents implements Listener {
 //	@EventHandler

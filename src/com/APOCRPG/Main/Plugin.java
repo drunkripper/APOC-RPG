@@ -4,14 +4,10 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.logging.Logger;
 
+import com.APOCRPG.Events.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -22,13 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.APOCRPG.Commands.ApocRPGCommand;
-import com.APOCRPG.Events.ChunkEvents;
-import com.APOCRPG.Events.CombatEvents;
-import com.APOCRPG.Events.EffectPollingEvent;
-import com.APOCRPG.Events.EntityEvents;
-import com.APOCRPG.Events.PollingEventListener;
-import com.APOCRPG.Events.ProjectileEvents;
-import com.APOCRPG.Events.SocketEvents;
+//import com.APOCRPG.Events.EntityEvents;
 import com.APOCRPG.SkillPoints.DBApi;
 import com.APOCRPG.SkillPoints.InSkill;
 import com.APOCRPG.SkillPoints.SkillGet;
@@ -40,13 +30,23 @@ public class Plugin extends JavaPlugin {
 	public static File LandRuins = null;
 	public static PollingEventListener PollListener = new PollingEventListener();
 	public static ChunkEvents ChunkListener = new ChunkEvents();
-	public static EntityEvents EntityListener = new EntityEvents();
+	//public static EntityEvents EntityListener = new EntityEvents();
+	public static PlayerEvents PlayerListener = new PlayerEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
 	public static ProjectileEvents ProjectileListener = new ProjectileEvents();
 	public static SkillGet SkillListener = new SkillGet();
 	public static SocketEvents SocketListener = null;
 	public static InSkill SpendSkillListener = new InSkill();
-	// global constants - general
+
+	// global constants - database
+	public final String globalDatabase = "apoc_db"; //Global Database name for the plugin
+
+	public final String DATABASE_HOST = getConfig().getString("db.server_ip");
+	public final int DATABASE_PORT = getConfig().getInt("db.server_port");
+	public final String DATABASE_UNAME = getConfig().getString("db.server_user");
+	public final String DATABASE_PASSWD = getConfig().getString("db.server_password");
+
+	// Global constants - general
 	public static String APOCRPG_ERROR = ChatColor.RED + "[APOC-RPG] ";
 	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR + "You have nothing in your hand!";
 	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR + "You do not have permission for that command!";
@@ -61,7 +61,7 @@ public class Plugin extends JavaPlugin {
 	public static String LORE_REPAIRED = ChatColor.DARK_GRAY + "Repaired";
 	public static String LORE_TOME = "Identify the Unknown";
 	public static String LORE_UNKNOWN_ITEM = "Unidentified Item";
-	// global constants - dungeon chests
+	// Global constants - dungeon chests
 	public static boolean CHEST_FILL_RPG = true;
 	public static boolean CHEST_LOCKABLE = true;
 	public static int CHEST_MAX_RANDOM = 100;
@@ -78,7 +78,7 @@ public class Plugin extends JavaPlugin {
 	public static int CHEST_MAX_CHANCE_TIER_COMMON = 100;
 	public static SortedMap<Integer, String> chestItems = new TreeMap<Integer, String>();
 
-	// global constants - config settings
+	// Global constants - config settings
 	public static double COST_BUY_GEAR = 750;
 	public static double COST_BUY_GEM = 500;
 	public static double COST_BUY_LORE = 150;
@@ -102,7 +102,7 @@ public class Plugin extends JavaPlugin {
 	public static double COST_SOCKET_1 = 1500;
 	public static double COST_SOCKET_2 = 3000;
 	public static double COST_SOCKET_3 = 4500;
-	public static Boolean DEBUG = false;
+	public static boolean DEBUG = false;
 	public static double EXP_DISENCHANT = 5;
 	public static String VERSION = "";
 
@@ -241,7 +241,7 @@ public class Plugin extends JavaPlugin {
 		SocketListener = new SocketEvents();
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
-				Collection<? extends Player> ps = instance.getServer().getOnlinePlayers();
+				Player[] ps = instance.getServer().getOnlinePlayers();
 				for (Player p : ps) {
 					EffectPollingEvent event = new EffectPollingEvent(p);
 					instance.getServer().getPluginManager().callEvent(event);
@@ -259,7 +259,8 @@ public class Plugin extends JavaPlugin {
 		}
 
 		getServer().getPluginManager().registerEvents(ChunkListener, this);
-		getServer().getPluginManager().registerEvents(EntityListener, this);
+		//getServer().getPluginManager().registerEvents(EntityListener, this);
+		getServer().getPluginManager().registerEvents(PlayerListener, this);
 		getServer().getPluginManager().registerEvents(CombatListener, this);
 		getServer().getPluginManager().registerEvents(SocketListener, this);
 		getServer().getPluginManager().registerEvents(PollListener, this);
@@ -895,321 +896,26 @@ public class Plugin extends JavaPlugin {
 	 *            - Roman numeral to be converted to int.
 	 * @return int
 	 */
-	public static int romanToInt(String roman) {
-		int retval = -1;
-		switch (roman.toUpperCase()) {
-		case "I":
-			retval = 1;
-			break;
-		case "II":
-			retval = 2;
-			break;
-		case "III":
-			retval = 3;
-			break;
-		case "IV":
-			retval = 4;
-			break;
-		case "V":
-			retval = 5;
-			break;
-		case "VI":
-			retval = 6;
-			break;
-		case "VII":
-			retval = 7;
-			break;
-		case "VIII":
-			retval = 8;
-			break;
-		case "IX":
-			retval = 9;
-			break;
-		case "X":
-			retval = 10;
-			break;
+	public static int romanToInt(String romanNumber) {
+		Hashtable<Character, Integer> romanNumbers = new Hashtable<>();
+		romanNumbers.put('I', 1);	romanNumbers.put('V', 5);
+		romanNumbers.put('X', 10);	romanNumbers.put('L', 50);
+		romanNumbers.put('C', 100);	romanNumbers.put('D', 500);
+		romanNumbers.put('M', 1000);
 
-		case "XI":
-			retval = 11;
-			break;
-		case "XII":
-			retval = 12;
-			break;
-		case "XIII":
-			retval = 13;
-			break;
-		case "XIV":
-			retval = 14;
-			break;
-		case "XV":
-			retval = 15;
-			break;
-		case "XVI":
-			retval = 16;
-			break;
-		case "XVII":
-			retval = 17;
-			break;
-		case "XVIII":
-			retval = 18;
-			break;
-		case "XIX":
-			retval = 19;
-			break;
-		case "XX":
-			retval = 20;
-			break;
+		int decNum = 0;
+		int prevNum = 0;
 
-		case "XXI":
-			retval = 21;
-			break;
-		case "XXII":
-			retval = 22;
-			break;
-		case "XXIII":
-			retval = 23;
-			break;
-		case "XXIV":
-			retval = 24;
-			break;
-		case "XXV":
-			retval = 25;
-			break;
-		case "XXVI":
-			retval = 26;
-			break;
-		case "XXVII":
-			retval = 27;
-			break;
-		case "XXVIII":
-			retval = 28;
-			break;
-		case "XXIX":
-			retval = 29;
-			break;
-		case "XXX":
-			retval = 30;
-			break;
-
-		case "XXXI":
-			retval = 31;
-			break;
-		case "XXXII":
-			retval = 32;
-			break;
-		case "XXXIII":
-			retval = 33;
-			break;
-		case "XXXIV":
-			retval = 34;
-			break;
-		case "XXXV":
-			retval = 35;
-			break;
-		case "XXXVI":
-			retval = 36;
-			break;
-		case "XXXVII":
-			retval = 37;
-			break;
-		case "XXXVIII":
-			retval = 38;
-			break;
-		case "XXXIX":
-			retval = 39;
-			break;
-		case "XL":
-			retval = 40;
-			break;
-
-		case "XLI":
-			retval = 41;
-			break;
-		case "XLII":
-			retval = 42;
-			break;
-		case "XLIII":
-			retval = 43;
-			break;
-		case "XLIV":
-			retval = 44;
-			break;
-		case "XLV":
-			retval = 45;
-			break;
-		case "XLVI":
-			retval = 46;
-			break;
-		case "XLVII":
-			retval = 47;
-			break;
-		case "XLVIII":
-			retval = 48;
-			break;
-		case "XLIX":
-			retval = 49;
-			break;
-		case "L":
-			retval = 50;
-			break;
-
-		case "LI":
-			retval = 51;
-			break;
-		case "LII":
-			retval = 52;
-			break;
-		case "LIII":
-			retval = 53;
-			break;
-		case "LIV":
-			retval = 54;
-			break;
-		case "LV":
-			retval = 55;
-			break;
-		case "LVI":
-			retval = 56;
-			break;
-		case "LVII":
-			retval = 57;
-			break;
-		case "LVIII":
-			retval = 58;
-			break;
-		case "LIX":
-			retval = 59;
-			break;
-		case "LX":
-			retval = 60;
-			break;
-
-		case "LXI":
-			retval = 61;
-			break;
-		case "LXII":
-			retval = 62;
-			break;
-		case "LXIII":
-			retval = 63;
-			break;
-		case "LXIV":
-			retval = 64;
-			break;
-		case "LXV":
-			retval = 65;
-			break;
-		case "LXVI":
-			retval = 66;
-			break;
-		case "LXVII":
-			retval = 67;
-			break;
-		case "LXVIII":
-			retval = 68;
-			break;
-		case "LXIX":
-			retval = 69;
-			break;
-		case "LXX":
-			retval = 70;
-			break;
-
-		case "LXXI":
-			retval = 71;
-			break;
-		case "LXXII":
-			retval = 72;
-			break;
-		case "LXXIII":
-			retval = 73;
-			break;
-		case "LXXIV":
-			retval = 74;
-			break;
-		case "LXXV":
-			retval = 75;
-			break;
-		case "LXXVI":
-			retval = 76;
-			break;
-		case "LXXVII":
-			retval = 77;
-			break;
-		case "LXXVIII":
-			retval = 78;
-			break;
-		case "LXXIX":
-			retval = 79;
-			break;
-		case "LXXX":
-			retval = 80;
-			break;
-
-		case "LXXXI":
-			retval = 81;
-			break;
-		case "LXXXII":
-			retval = 82;
-			break;
-		case "LXXXIII":
-			retval = 83;
-			break;
-		case "LXXXIV":
-			retval = 84;
-			break;
-		case "LXXXV":
-			retval = 85;
-			break;
-		case "LXXXVI":
-			retval = 86;
-			break;
-		case "LXXXVII":
-			retval = 87;
-			break;
-		case "LXXXVIII":
-			retval = 88;
-			break;
-		case "LXXXIX":
-			retval = 89;
-			break;
-		case "XC":
-			retval = 90;
-			break;
-
-		case "XCI":
-			retval = 91;
-			break;
-		case "XCII":
-			retval = 92;
-			break;
-		case "XCIII":
-			retval = 93;
-			break;
-		case "XCIV":
-			retval = 94;
-			break;
-		case "XCV":
-			retval = 95;
-			break;
-		case "XCVI":
-			retval = 96;
-			break;
-		case "XCVII":
-			retval = 97;
-			break;
-		case "XCVIII":
-			retval = 98;
-			break;
-		case "XCIX":
-			retval = 99;
-			break;
-		case "C":
-			retval = 100;
-			break;
-
+		for (int x = romanNumber.length()-1; x >= 0; x--) {
+			int temp = romanNumbers.get(romanNumber.toUpperCase().charAt(x));
+			if (temp < prevNum) {
+				decNum -= temp;
+			} else {
+				decNum += temp;
+			}
+			prevNum = temp;
 		}
-		return retval;
+		return decNum;
 	}
 
 	/**
@@ -1220,6 +926,8 @@ public class Plugin extends JavaPlugin {
 	 * @return String roman numeral
 	 */
 	public static String intToRoman(int nbr) {
+
+		// I'm still coming up with a smaller algorithm here && lower priority for now
 		String retval = "";
 		switch (nbr) {
 		case 1:
