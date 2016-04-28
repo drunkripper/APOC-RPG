@@ -20,7 +20,6 @@ import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.API.GemAPI;
 import com.APOCRPG.API.ItemAPI;
 import com.APOCRPG.Main.Plugin;
-import com.APOCRPG.items.IdentifyTome;
 
 @SuppressWarnings("unused")
 public class SocketEvents implements Listener {

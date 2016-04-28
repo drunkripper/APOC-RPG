@@ -128,6 +128,8 @@ Mobs:
     #Type in all world names you do not want customized mob gear to drop from mobs into here.
     disable-mob-drop-gear-on-world:
      - example
+    bosses:
+     -
 
 Gear:
     #Set this to false to disable custom naming, sets, socketing, random enchanting.

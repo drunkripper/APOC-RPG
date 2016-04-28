@@ -1,4 +1,4 @@
-package com.APOCRPG.items;
+package com.APOCRPG.Items;
 
 import java.util.ArrayList;
 import java.util.List;

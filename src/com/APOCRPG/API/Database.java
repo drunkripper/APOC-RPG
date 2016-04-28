@@ -1,12 +1,11 @@
 package com.APOCRPG.API;
 
+import com.APOCRPG.Enums.ProfileStats;
 import com.APOCRPG.Main.Plugin;
-import com.APOCRPG.Stats.PlayerStats;
+import com.APOCRPG.Enums.PlayerStats;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 public class Database {
 
@@ -17,14 +16,23 @@ public class Database {
             |-Columns
 
     APOC_DB
-        |-Players
+        |-Profiles
             |-UUID              INT(32)         // That's the trimmed UUID, no hyphens '-'
             |-LatestName        VARCHAR(35)
             |-usedIPv4          ..              // To be added (maybe)...
-        |-PlayerStats
+        |-ProfileStats
             |-UUID              INT(32)
             |-Stat              VARCHAR(40)
             |-Value             INT(5)
+        |-Players                               // I assume every profile has multiple players?
+            |-UUID              INT(32)         //Player profile's UUID
+            |-ID                INT(32)
+            |-Exp               INT(5)
+            |-Recovery          INT(5)
+            |-Evasion           INT(5)
+            |-Agility           INT(5)
+            |-Luck              INT(5)
+            |-Armor             INT(5)
         |-PlayerKills
             |-UUID              INT(32)
             |-EntityType        VARCHAR(35)
@@ -32,14 +40,15 @@ public class Database {
             |-UUID              INT(32)
             |-lastName          VARCHAR(35)
             |-newName           VARCHAR(35)
+            |-date              DATE(25)
 
     */
 
-// This sucker needs a lot of work
-// Needs a fallback methods when the remote database is unreachable
+// TODO: Needs a fallback methods when the remote database is unreachable
+// TODO: Now that a re-read the issue I noticed we are having 2 seperate tables of stats, need to fix the methods
 
     private final Plugin plugin = new Plugin();
-    private final String globalDatabase = plugin.globalDatabase; //Global Database name for the plugin
+    private final String globalDatabase = plugin.DATABASE_NAME; //Global Database name for the plugin
 
     private final String dbHost = plugin.DATABASE_HOST;
     private final int dbPort = plugin.DATABASE_PORT;
@@ -48,13 +57,33 @@ public class Database {
 
     // Public methods
     public int getPlayerStat(Player p, PlayerStats ps) {
-
         Connection conn;
         String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
 
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("SELECT value FROM playerstats WHERE UUID=? AND stat=?");
+            PreparedStatement statement = conn.prepareStatement("SELECT ? FROM players WHERE UUID=? AND ID=?");
+            statement.setString(1, ps.toString());
+            statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
+            statement.setString(3, ps.toString());
+            ResultSet result = statement.executeQuery();
+            statement.close();
+            conn.close();
+            return result.getInt(0);
+        } catch (Exception e) {
+            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(e.getMessage());
+        }
+        return -1;
+    }
+
+    public int getProfileStat(Player p, ProfileStats ps) {
+        Connection conn;
+        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
+
+        try {
+            conn = DriverManager.getConnection(url, uname, passwd);
+            PreparedStatement statement = conn.prepareStatement("SELECT value FROM profilestats WHERE UUID=? AND stat=?");
             statement.setInt(1, Integer.valueOf(p.getUniqueId().toString()));
             statement.setString(2, ps.toString());
             ResultSet result = statement.executeQuery();
@@ -69,6 +98,25 @@ public class Database {
     }
 
     public void setPlayerStat(Player p, PlayerStats ps, int value) {
+        Connection conn;
+        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
+
+        try {
+            conn = DriverManager.getConnection(url, uname, passwd);
+            PreparedStatement statement = conn.prepareStatement("UPDATE playerstats SET value=? WHERE UUID=?;");
+            statement.setInt(1, value);
+            statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
+            statement.setString(2, ps.toString());
+            ResultSet result = statement.executeQuery();
+            statement.close();
+            conn.close();
+        } catch (Exception e) {
+            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(e.getMessage());
+        }
+    }
+
+    public void setProfileStat(Player p, ProfileStats ps, int value) {
         Connection conn;
         String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
 
@@ -111,6 +159,14 @@ public class Database {
         }
     }
 
+    public void updatePlayer(Player p) {
+        // TODO: add stuffz here
+    }
+
+    public void getPlayerProfile() {
+        // TODO
+    }
+
     public Object nakedQuery(String database, String query) {
         Connection conn;
         String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + database;
@@ -139,7 +195,7 @@ public class Database {
         return false;
     }
 
-    private void initSetup() {
+    public void initSetup() {
 
     }
 

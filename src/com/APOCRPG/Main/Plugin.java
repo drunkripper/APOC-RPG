@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.APOCRPG.API.Database;
 import com.APOCRPG.Events.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -38,8 +39,8 @@ public class Plugin extends JavaPlugin {
 	public static SocketEvents SocketListener = null;
 	public static InSkill SpendSkillListener = new InSkill();
 
-	// global constants - database
-	public final String globalDatabase = "apoc_db"; //Global Database name for the plugin
+	// Global constants - database
+	public final String DATABASE_NAME = "apoc_db"; //Global Database name for the plugin
 
 	public final String DATABASE_HOST = getConfig().getString("db.server_ip");
 	public final int DATABASE_PORT = getConfig().getInt("db.server_port");
@@ -61,6 +62,7 @@ public class Plugin extends JavaPlugin {
 	public static String LORE_REPAIRED = ChatColor.DARK_GRAY + "Repaired";
 	public static String LORE_TOME = "Identify the Unknown";
 	public static String LORE_UNKNOWN_ITEM = "Unidentified Item";
+
 	// Global constants - dungeon chests
 	public static boolean CHEST_FILL_RPG = true;
 	public static boolean CHEST_LOCKABLE = true;
@@ -269,6 +271,10 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(SpendSkillListener, this);
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
+
+		//TODO: Builds the database from scratch or accesses an existing one
+		//Database db = new Database();
+		//db.initSetup();
 		
 		String databaseHost = getConfig().getString("server_ip");
     	int port = getConfig().getInt("server_port");
@@ -720,31 +726,31 @@ public class Plugin extends JavaPlugin {
 
 		chestItems = new TreeMap<Integer, String>();
 		if (CHEST_MAX_CHANCE_GEM > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_GEM), "GEM");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_GEM, "GEM");
 		}
 		if (CHEST_MAX_CHANCE_TOME > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TOME), "TOME");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TOME, "TOME");
 		}
 		if (CHEST_MAX_CHANCE_UNKNOWN > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_UNKNOWN), "UNKNOWN");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_UNKNOWN, "UNKNOWN");
 		}
 		if (CHEST_MAX_CHANCE_TIER_COMMON > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_COMMON), "COMMON");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_COMMON, "COMMON");
 		}
 		if (CHEST_MAX_CHANCE_TIER_UNCOMMON > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_UNCOMMON), "UNCOMMON");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_UNCOMMON, "UNCOMMON");
 		}
 		if (CHEST_MAX_CHANCE_TIER_RARE > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_RARE), "RARE");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_RARE, "RARE");
 		}
 		if (CHEST_MAX_CHANCE_TIER_UNIQUE > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_UNIQUE), "UNIQUE");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_UNIQUE, "UNIQUE");
 		}
 		if (CHEST_MAX_CHANCE_TIER_SET > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_SET), "SET");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_SET, "SET");
 		}
 		if (CHEST_MAX_CHANCE_TIER_LEGENDARY > 0) {
-			chestItems.put(Integer.valueOf(Plugin.CHEST_MAX_CHANCE_TIER_LEGENDARY), "LEGENDARY");
+			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_LEGENDARY, "LEGENDARY");
 		}
 
 		COST_BUY_GEAR = Settings.getDouble("Command-Settings.cost-for-gear");

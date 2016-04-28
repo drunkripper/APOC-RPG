@@ -28,6 +28,9 @@ import com.APOCRPG.SkillPoints.DBApi;
  * @author ???, whiteknave
  *
  */
+
+//TODO: Break up the class to seperate each command for late convinence
+
 @SuppressWarnings("unused")
 public class ApocRPGCommand implements CommandExecutor {
 

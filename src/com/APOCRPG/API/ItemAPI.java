@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.SortedMap;
 
 import com.APOCRPG.Main.Plugin;
-import com.APOCRPG.items.IdentifyTome;
+import com.APOCRPG.Items.IdentifyTome;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
