@@ -29,7 +29,7 @@ import com.APOCRPG.SkillPoints.DBApi;
  *
  */
 
-//TODO: Break up the class to seperate each command for late convinence
+//TODO: Break up the class to seperate each command for later convinence
 
 @SuppressWarnings("unused")
 public class ApocRPGCommand implements CommandExecutor {

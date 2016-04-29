@@ -8,6 +8,8 @@ import java.util.*;
 import java.util.logging.Logger;
 
 import com.APOCRPG.API.Database;
+import com.APOCRPG.Commands.ApocCommand;
+import com.APOCRPG.Commands.CommandManager;
 import com.APOCRPG.Events.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -269,6 +271,7 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(ProjectileListener, this);
 		getServer().getPluginManager().registerEvents(SkillListener, this);
 		getServer().getPluginManager().registerEvents(SpendSkillListener, this);
+		//getCommand("apocrpg").setExecutor(new CommandManager());
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
 		debug("Completing APOC-RPG Plugin.onEnable()");
 

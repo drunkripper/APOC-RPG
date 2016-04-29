@@ -1,12 +1,9 @@
 package com.APOCRPG.Events;
 
 import com.APOCRPG.API.Database;
-import com.APOCRPG.Enums.PlayerStats;
-import com.APOCRPG.Main.Plugin;
-import com.APOCRPG.SkillPoints.DBApi;
-import org.bukkit.ChatColor;
-import org.bukkit.entity.*;
 import com.APOCRPG.Entities.APlayer;
+import com.APOCRPG.Main.Plugin;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -30,43 +27,44 @@ public class PlayerEvents implements Listener {
 
         Entity killed = e.getEntity();
         APlayer killer = (APlayer) e.getEntity().getKiller();
+        int expToBeAdded = 0;
 
         //If it's one of the bosses from the list = 5 XP
         if (BOSSES.contains(killed.getEntityId())) {
 
-            killer.increaseStat(PlayerStats.EXP, 5);
+            expToBeAdded += 5;
 
         //If it's one of the vanilla bosses = 5 XP
         } else if (killed.getType().equals(EntityType.ENDER_DRAGON) ||
                    killed.getType().equals(EntityType.WITHER)) {
 
-            killer.increaseStat(PlayerStats.EXP, 5);
+            expToBeAdded += 5;
 
         //If it's another player = 2 XP
         } else if (killed instanceof Player) {
 
-            killer.increaseStat(PlayerStats.EXP, 2);
+            expToBeAdded += 2;
 
         //If it's a mob (Monster, animal, etc) = 1 XP
-        } else if (killed instanceof LivingEntity) {
+        } else if (killed instanceof Monster) {
 
-            //TODO: Killed a mob
+            //TODO: Player killed some other entity type
 
         }
 
-
+        //Checks if player levels up after the kill
+        if (killer.isLevelingUp(expToBeAdded)) {
+            //killer.increaseStat(PlayerStats.);
+            //TODO: What happens here, do we add the points to the profile or the player? dunno
+        }
     }
 
     //Player joins the game
     //Adds player to the DB and updates it
+    //Reassigning all skills if needed
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         APlayer p = (APlayer) e.getPlayer();
         p.addToDatabase();
-    }
-
-    //Private methods
-    public int calculateExpRoof() {
-        return 0;
     }
 }
