@@ -1,7 +1,6 @@
 package com.APOCRPG.SkillPoints;
 
-import java.util.Random;
-
+import com.APOCRPG.Main.Plugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,7 +10,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 
-import com.APOCRPG.Main.Plugin;
+import java.util.Random;
 
 public class InSkill implements Listener {
 	//Class for the diff abilities

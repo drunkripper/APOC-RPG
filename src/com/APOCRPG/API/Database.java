@@ -26,8 +26,8 @@ public class Database {
             |-Value             INT(5)
         |-Players                               // I assume every profile has multiple players?
             |-UUID              INT(32)         //Player profile's UUID
-            |-ID                INT(32)
             |-Exp               INT(5)
+            |-StatPoints        int(5)
             |-Recovery          INT(5)
             |-Evasion           INT(5)
             |-Agility           INT(5)
@@ -45,7 +45,7 @@ public class Database {
     */
 
 // TODO: Needs a fallback methods when the remote database is unreachable
-// TODO: Now that a re-read the issue I noticed we are having 2 seperate tables of stats, need to fix the methods
+// TODO: Deal with NoPlayerStat exception
 
     private final Plugin plugin = new Plugin();
     private final String globalDatabase = plugin.DATABASE_NAME; //Global Database name for the plugin
@@ -103,7 +103,7 @@ public class Database {
 
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("UPDATE playerstats SET value=? WHERE UUID=?;");
+            PreparedStatement statement = conn.prepareStatement("UPDATE players SET value=? WHERE UUID=?;");
             statement.setInt(1, value);
             statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
             statement.setString(2, ps.toString());

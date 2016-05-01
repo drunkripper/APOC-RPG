@@ -1,16 +1,11 @@
 package com.APOCRPG.Main;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.util.*;
-import java.util.logging.Logger;
-
-import com.APOCRPG.API.Database;
-import com.APOCRPG.Commands.ApocCommand;
-import com.APOCRPG.Commands.CommandManager;
+import com.APOCRPG.Commands.ApocRPGCommand;
+import com.APOCRPG.Entities.APlayer;
 import com.APOCRPG.Events.*;
+import com.APOCRPG.SkillPoints.DBApi;
+import com.APOCRPG.SkillPoints.InSkill;
+import com.APOCRPG.SkillPoints.SkillGet;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -20,11 +15,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.APOCRPG.Commands.ApocRPGCommand;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.util.*;
+import java.util.logging.Logger;
+
 //import com.APOCRPG.Events.EntityEvents;
-import com.APOCRPG.SkillPoints.DBApi;
-import com.APOCRPG.SkillPoints.InSkill;
-import com.APOCRPG.SkillPoints.SkillGet;
 
 public class Plugin extends JavaPlugin {
 	public static Random Random = new Random();
@@ -40,6 +38,7 @@ public class Plugin extends JavaPlugin {
 	public static SkillGet SkillListener = new SkillGet();
 	public static SocketEvents SocketListener = null;
 	public static InSkill SpendSkillListener = new InSkill();
+	public static HashMap<APlayer, Integer> PlayersInCombat= new HashMap<>();
 
 	// Global constants - database
 	public final String DATABASE_NAME = "apoc_db"; //Global Database name for the plugin
@@ -51,6 +50,8 @@ public class Plugin extends JavaPlugin {
 
 	// Global constants - general
 	public static String APOCRPG_ERROR = ChatColor.RED + "[APOC-RPG] ";
+	public static String APOCRPG_WARNING = ChatColor.YELLOW + "[APOC-RPG] ";
+	public static String APOCRPG_SUCCESS = ChatColor.GREEN + "[APOC-RPG] ";
 	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR + "You have nothing in your hand!";
 	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR + "You do not have permission for that command!";
 	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR + "Not enough money!";
@@ -727,7 +728,7 @@ public class Plugin extends JavaPlugin {
 		CHEST_MAX_CHANCE_TIER_UNCOMMON = Settings.getInt("Dungeons.chest-max-chance-tier-uncommon");
 		CHEST_MAX_CHANCE_TIER_COMMON = Settings.getInt("Dungeons.chest-max-chance-tier-common");
 
-		chestItems = new TreeMap<Integer, String>();
+		chestItems = new TreeMap<>();
 		if (CHEST_MAX_CHANCE_GEM > 0) {
 			chestItems.put(Plugin.CHEST_MAX_CHANCE_GEM, "GEM");
 		}
