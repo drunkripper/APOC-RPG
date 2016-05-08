@@ -80,6 +80,14 @@ public final class PollingEventListener implements Listener {
 				HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(a);
 				for (Entry<String, Integer> effect : effects.entrySet()) {
 					switch (effect.getKey()) {
+					case "Impact":
+						// All damage dealt to the wearer when receiving fall damage will be dealt to all enemies within a 3 block (+1 block per upgrade) radius. 
+						// (This is nullified if the wearer has fall protection, as the damage from falling is reduced the damage to the enemies around them is reduced.
+						break;
+					case "Nullify":
+						// Reduced the duration of impaired effects by 5% (+5% per upgrade). So if an enemy 
+						// poisons you for 10 seconds and you have 50% nullify the duration will be 5 seconds.
+					 	break;
 					case "Velocity":
 						p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 666, effect.getValue()));
 						break;
