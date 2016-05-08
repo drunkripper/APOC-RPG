@@ -19,6 +19,8 @@ public class EffectAPI {
 	private static ArrayList<String> ArmorEffects = new ArrayList<String>();
 
 	static {
+		ArmorEffects.add("Impact");
+		ArmorEffects.add("Nullify");
 		ArmorEffects.add("Warding");
 		ArmorEffects.add("Velocity");
 		ArmorEffects.add("Vaulting");
@@ -30,7 +32,6 @@ public class EffectAPI {
 		ArmorEffects.add("Speed");
 		ArmorEffects.add("Taunting");
 		ArmorEffects.add("Courage");
-		//ArmorEffects.add("Synchro");
 	}
 
 	private static ArrayList<String> PassiveWeaponEffects = new ArrayList<String>();
@@ -66,8 +67,8 @@ public class EffectAPI {
 
 	static {
 		ToolEffects.add("Breaking");
-		//ToolEffects.add("Demolition");
-		//ToolEffects.add("Smelting");
+		ToolEffects.add("Demolition");
+		ToolEffects.add("Smelting");
 	}
 
 	private static HashMap<String, String> TypeLookup = new HashMap<String, String>();
