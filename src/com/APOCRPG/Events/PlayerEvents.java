@@ -3,9 +3,11 @@ package com.APOCRPG.Events;
 import com.APOCRPG.API.Database;
 import com.APOCRPG.Entities.APlayer;
 import com.APOCRPG.Enums.PlayerStats;
+import com.APOCRPG.Enums.ProfileStats;
 import com.APOCRPG.Main.Plugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import com.APOCRPG.Main.Settings;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
@@ -15,9 +17,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.List;
 import java.util.Random;
@@ -26,11 +31,11 @@ public class PlayerEvents implements Listener {
 
     //List the negative potions here
     private enum NegativeEffects{
-        CONFUSION, HARM, HUNGER,POISON, SLOW_DIGGING, SLOW, WEAKNESS, WITHER;
+        CONFUSION, HARM, HUNGER,POISON, SLOW_DIGGING, SLOW, WEAKNESS, WITHER
     }
 
     private Database db = new Database();
-    private Plugin plugin;
+    public Plugin plugin;
 
     private List<String> BOSSES = plugin.getConfig().getStringList("Mobs.bosses");
 
@@ -43,80 +48,116 @@ public class PlayerEvents implements Listener {
 
         Entity killed = e.getEntity();
         APlayer killer = (APlayer) e.getEntity().getKiller();
-        int expToBeAdded = 0;
 
         //If it's one of the bosses from the list = 5 XP
         if (BOSSES.contains(String.valueOf(killed.getEntityId()))) {
 
-            expToBeAdded += 5;
+            killer.increaseStat(PlayerStats.STAT_POINTS, 5);
+            killer.increaseStat(ProfileStats.TOTAL_STAT_POINTS, 5);
 
         //If it's one of the vanilla bosses = 5 XP
         } else if (killed.getType().equals(EntityType.ENDER_DRAGON) ||
                    killed.getType().equals(EntityType.WITHER)) {
 
-            expToBeAdded += 5;
+            killer.increaseStat(PlayerStats.STAT_POINTS, 5);
+            killer.increaseStat(ProfileStats.TOTAL_STAT_POINTS, 5);
 
         //If it's another player = 2 XP
         } else if (killed instanceof Player) {
 
-            expToBeAdded += 2;
+            killer.increaseStat(PlayerStats.STAT_POINTS, 2);
+            killer.increaseStat(ProfileStats.TOTAL_STAT_POINTS, 2);
 
         //If it's a mob (Monster, animal, etc) = 1 XP
         } else if (killed instanceof Monster) {
 
-            //TODO: Player killed some other entity type
+            killer.increaseStat(PlayerStats.STAT_POINTS, 1);
+            killer.increaseStat(ProfileStats.TOTAL_STAT_POINTS, 1);
 
-        }
-
-        //Checks if player levels up after the kill
-        if (killer.isLevelingUp(expToBeAdded)) {
-            //killer.increaseStat(PlayerStats.);
-            //TODO: What happens here, do we add the points to the profile or the player? dunno
         }
     }
 
     //Player joins the game
-    //Adds player to the DB and updates it
-    //Re-assigning healing
+    //Creating armor and health recovery runnable for player
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         APlayer p = (APlayer) e.getPlayer();
         p.addToDatabase();
 
-        if (p.getStat(PlayerStats.RECOVERY) > 0) {
-            Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+        //Recovery
+        new BukkitRunnable() {
+            public void run() {
+                if (p.getStat(PlayerStats.RECOVERY) > 0) return;
+
+                //If the player's at full health we won't run any more code
+                if (p.getHealth() == p.getMaxHealth()) return;
+
+                if (!p.isOnline()) { this.cancel(); }
 
                 //We won't heal the player:
-                //    if he's been in combat in 30 secs,
-                //    if he's hungry
-                if (p.inCombat() || p.getFoodLevel() < 16) return;
+                //    if he's been in combat in the past 30 secs,
+                //    if his hunger is below 14
+                if (p.inCombat() || p.getFoodLevel() < 14) return;
                 //    if he's affected by any bad potions
                 for(PotionEffect effects: p.getActivePotionEffects()){
                     for(NegativeEffects bad: NegativeEffects.values()){
-                        if(effects.getType().getName().equalsIgnoreCase(bad.name())){
-                            return;
-                        }
+                        if(effects.getType().getName().equalsIgnoreCase(bad.name())) return;
                     }
                 }
 
                 //Now we are healing that poor sucker
-                while (p.getHealth() != p.getMaxHealth()) {
-
-                    //TODO: Come up with a solution: the health is made of 20 decimals, but we're dealing with floats here
-
+                //TODO: Not the best solution, under 100 points, you won't get healed at all
+                //TODO: Need to set up a system to store health in the player's class
+                if (p.getHealth()+getHealthPerPoint(p) >= p.getMaxHealth()) {
+                    p.setHealth(p.getMaxHealth());
+                } else {
+                    p.setHealth(p.getHealth()+getHealthPerPoint(p)); //There's no problem going over to double
                 }
+            }
 
-            }, 200); //runs forever for every 200 ticks e 10 seconds
-        }
+            private int getHealthPerPoint(APlayer p) {
+                return (p.getStat(PlayerStats.RECOVERY)/100);
+            }
+        }.runTaskTimer(plugin, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
+
+        //Armor
+        new BukkitRunnable() {
+            public void run() {
+                ItemStack[] armor = p.getEquipment().getArmorContents();
+                List<ItemStack> updatedArmor = null;
+
+                if (p.getStat(PlayerStats.ARMOR) > 0) return;
+
+                //Cancel the runnable if player's not online
+                if (!p.isOnline()) { this.cancel(); }
+
+                //We won't heal the player if he's been in combat in the past 30 secs
+                if (p.inCombat()) return;
+
+                //If all the player's armor is at full health return
+                for (ItemStack is : armor) {
+                    if (is.getDurability()-getDurabilityPerPoint(p) <= 0) {
+                        is.setDurability((short) 0);
+                        updatedArmor.add(is);
+                    } else {
+                        is.setDurability((short) (is.getDurability()-getDurabilityPerPoint(p)));
+                    }
+                }
+                p.getEquipment().setArmorContents((ItemStack[]) updatedArmor.toArray());
+            }
+
+            private short getDurabilityPerPoint(APlayer p) {
+                return  (short) p.getStat(PlayerStats.RECOVERY);
+            }
+        }.runTaskTimer(plugin, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
     }
 
+    //Checking for players that engage in combat
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent e) {
         //If player is damaged, set him a the 30 sec combat counter
         if (e.getEntity() instanceof Player) { ((APlayer) e.getEntity()).setInCombat(); }
     }
-
-    // SKILLS
 
     //Agility
     @EventHandler
@@ -137,7 +178,7 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent e) {
 
-        //If the damager is not a player, stop
+        //If the damager isn't a player, stop
         if (!(e.getDamager() instanceof Player)) return;
         APlayer damager = (APlayer) e.getDamager();
 
@@ -148,11 +189,27 @@ public class PlayerEvents implements Listener {
             e.setDamage(0);
             //Or cancel the event, dunno
             //e.setCancelled(true);
-            damager.sendMessage(ChatColor.GREEN + "Dodged"); //I don't like to spam the chat, but... here's the message
+            damager.sendMessage(Settings.Cfg.APOCRPG_SUCCESS.getString() + "Dodged"); //I personally don't like to spam the chat, but... here's the message
         }
     }
 
     //Luck
 
-    //Armor
+    //Neater version, just no way to get the location of the chest, custom dungeon chest material would come handy here
+    /*@EventHandler
+    public void onInventoryOpenEvent(InventoryOpenEvent e) {
+        if (!(e.getInventory().getHolder() instanceof Chest ||
+              e.getInventory().getHolder() instanceof DoubleChest ) ||
+              CHECK FOR DUNGEON CHEST) return;
+    }*/
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        //Return if the opened block ain't a dungeon chest
+        if (!(plugin.dungeonChestLocations.contains(e.getClickedBlock().getLocation()) &&
+            (e.getClickedBlock() instanceof Chest || e.getClickedBlock() instanceof  DoubleChest))) return;
+
+        //TODO: Fill the chest accordingly
+
+    }
 }

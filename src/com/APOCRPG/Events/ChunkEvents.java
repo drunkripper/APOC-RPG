@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.APOCRPG.Enums.Folders;
+import com.APOCRPG.Main.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -68,8 +70,8 @@ public class ChunkEvents implements Listener {
 	public void onChunkLoaded(ChunkPopulateEvent event) {
 		World World = event.getWorld();
 		Chunk Chunk = event.getChunk();
-		if (Plugin.Random.nextInt(100) <= Plugin.Settings.getInt("Dungeons.dungeon-spawn-chance")
-				&& Plugin.Settings.areDungeonsEnabledInWorld(World)) {
+		if (Plugin.Random.nextInt(100) <= Settings.Cfg.DUNGEON_SPAWN_RATE.getInt() &&
+		    Settings.areDungeonsEnabledInWorld(World)) {
 			int x = 16 * Chunk.getX() * Plugin.Random.nextInt(15);
 			int y = 0;
 			int z = 16 * Chunk.getZ() * Plugin.Random.nextInt(15);
@@ -82,9 +84,9 @@ public class ChunkEvents implements Listener {
 				}
 			}
 
-			String[] List = Plugin.LandRuins.list();
+			String[] List = Folders.LandRuins.getValue().list();
 			if (List.length > 0) {
-				File File = new File(Plugin.LandRuins + "/" + List[Plugin.Random.nextInt(List.length)]);
+				File File = new File(Folders.LandRuins.getValue() + "/" + List[Plugin.Random.nextInt(List.length)]);
 				try {
 					Schematic.pasteSchematic(World, new Location(World, x, y, z), Schematic.loadSchematic(File));
 				} catch (IOException e) {

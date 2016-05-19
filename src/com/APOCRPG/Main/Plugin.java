@@ -1,14 +1,20 @@
 package com.APOCRPG.Main;
 
+import com.APOCRPG.API.Database;
 import com.APOCRPG.Commands.ApocRPGCommand;
 import com.APOCRPG.Entities.APlayer;
+import com.APOCRPG.Enums.Files;
+import com.APOCRPG.Enums.Folders;
 import com.APOCRPG.Events.*;
 import com.APOCRPG.SkillPoints.DBApi;
 import com.APOCRPG.SkillPoints.InSkill;
 import com.APOCRPG.SkillPoints.SkillGet;
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -25,225 +31,57 @@ import java.util.logging.Logger;
 //import com.APOCRPG.Events.EntityEvents;
 
 public class Plugin extends JavaPlugin {
+
+	//General
 	public static Random Random = new Random();
 	public static Plugin instance = null;
-	public static Settings Settings = null;
-	public static File LandRuins = null;
+	public static Logger logger = null;
+
+	//Config
+	private static boolean DEBUG;
+
+	//Listeners
 	public static PollingEventListener PollListener = new PollingEventListener();
 	public static ChunkEvents ChunkListener = new ChunkEvents();
-	//public static EntityEvents EntityListener = new EntityEvents();
 	public static PlayerEvents PlayerListener = new PlayerEvents();
 	public static CombatEvents CombatListener = new CombatEvents();
 	public static ProjectileEvents ProjectileListener = new ProjectileEvents();
 	public static SkillGet SkillListener = new SkillGet();
 	public static SocketEvents SocketListener = null;
 	public static InSkill SpendSkillListener = new InSkill();
-	public static HashMap<APlayer, Integer> PlayersInCombat= new HashMap<>();
 
-	// Global constants - database
-	public final String DATABASE_NAME = "apoc_db"; //Global Database name for the plugin
+	//Lists, arrays, hash-maps
+	public static Map<APlayer, Integer> playersInCombat = new HashMap<>();
+	public static SortedMap<Integer, String> chestItems = new TreeMap<>();
+	public static List<Location> dungeonChestLocations;
 
-	public final String DATABASE_HOST = getConfig().getString("db.server_ip");
-	public final int DATABASE_PORT = getConfig().getInt("db.server_port");
-	public final String DATABASE_UNAME = getConfig().getString("db.server_user");
-	public final String DATABASE_PASSWD = getConfig().getString("db.server_password");
-
-	// Global constants - general
-	public static String APOCRPG_ERROR = ChatColor.RED + "[APOC-RPG] ";
-	public static String APOCRPG_WARNING = ChatColor.YELLOW + "[APOC-RPG] ";
-	public static String APOCRPG_SUCCESS = ChatColor.GREEN + "[APOC-RPG] ";
-	public static String APOCRPG_ERROR_EMPTY_HAND = APOCRPG_ERROR + "You have nothing in your hand!";
-	public static String APOCRPG_ERROR_NO_PERMISSION = APOCRPG_ERROR + "You do not have permission for that command!";
-	public static String APOCRPG_ERROR_NO_MONEY = APOCRPG_ERROR + "Not enough money!";
-	public static String APOCRPG_ERROR_SOCKET = APOCRPG_ERROR + "You can not socket that gem to this item!";
-	public static String DISPLAY_NAME_GEM = ChatColor.GREEN + "Socket Gem";
-	public static String DISPLAY_NAME_TOME = ChatColor.GREEN + "Tome of Identify";
-	public static String DISPLAY_NAME_UNIDENTIFIED_ITEM = ChatColor.WHITE + "Unidentified Item";
-	public static String LORE_GEM_OF = ChatColor.LIGHT_PURPLE + "Gem of ";
-	public static String LORE_ITEM_SOCKET = ChatColor.LIGHT_PURPLE + "(Socket)";
-	public static String LORE_PLAYER_BOUND = ChatColor.WHITE + "Player Bound:";
-	public static String LORE_REPAIRED = ChatColor.DARK_GRAY + "Repaired";
-	public static String LORE_TOME = "Identify the Unknown";
-	public static String LORE_UNKNOWN_ITEM = "Unidentified Item";
-
-	// Global constants - dungeon chests
-	public static boolean CHEST_FILL_RPG = true;
-	public static boolean CHEST_LOCKABLE = true;
-	public static int CHEST_MAX_RANDOM = 100;
-	public static int CHEST_MIN_ITEMS = 1;
-	public static int CHEST_MAX_ITEMS = 5;
-	public static int CHEST_MAX_CHANCE_GEM = 10;
-	public static int CHEST_MAX_CHANCE_TOME = 20;
-	public static int CHEST_MAX_CHANCE_UNKNOWN = 35;
-	public static int CHEST_MAX_CHANCE_TIER_LEGENDARY = 40;
-	public static int CHEST_MAX_CHANCE_TIER_SET = 45;
-	public static int CHEST_MAX_CHANCE_TIER_UNIQUE = 55;
-	public static int CHEST_MAX_CHANCE_TIER_RARE = 70;
-	public static int CHEST_MAX_CHANCE_TIER_UNCOMMON = 85;
-	public static int CHEST_MAX_CHANCE_TIER_COMMON = 100;
-	public static SortedMap<Integer, String> chestItems = new TreeMap<Integer, String>();
-
-	// Global constants - config settings
-	public static double COST_BUY_GEAR = 750;
-	public static double COST_BUY_GEM = 500;
-	public static double COST_BUY_LORE = 150;
-	public static double COST_BUY_NAME = 100;
-	public static double COST_BUY_TOME = 500;
-	public static double COST_DISENCHANT = 0.25;
-	public static double COST_ENCHANT_LVL_1 = 500;
-	public static double COST_ENCHANT_LVL_2 = 750;
-	public static double COST_ENCHANT_LVL_3 = 1000;
-	public static double COST_ENCHANT_LVL_4 = 1250;
-	public static double COST_ENCHANT_LVL_5 = 1500;
-	public static double COST_ENCHANT_LVL_6 = 1750;
-	public static double COST_ENCHANT_LVL_7 = 2000;
-	public static double COST_ENCHANT_LVL_8 = 2250;
-	public static double COST_ENCHANT_LVL_9 = 2500;
-	public static double COST_ENCHANT_LVL_10 = 2750;
-	public static double COST_REMOVE_GEM = 500;
-	public static double COST_REMOVE_SOCKET = 1000;
-	public static double COST_REPAIR = 1000;
-	public static double COST_SALVAGE = 25;
-	public static double COST_SOCKET_1 = 1500;
-	public static double COST_SOCKET_2 = 3000;
-	public static double COST_SOCKET_3 = 4500;
-	public static boolean DEBUG = false;
-	public static double EXP_DISENCHANT = 5;
-	public static String VERSION = "";
-
-	public static double GEAR_CHAIN_RATE = 0;
-	public static double GEAR_GOLD_RATE = 0;
-	public static double GEAR_IRON_RATE = 0;
-	public static double GEAR_DIAMOND_RATE = 0;
-	public static double GEAR_FORGE_RATE = 0;
-	public static double GEAR_LEATHER_RATE = 0;
-	public static boolean GEAR_NO_SALE_ON_REPAIR = true;
-	public static int GEAR_SOCKETS_MAX_BUY = 3;
-	public static double GEAR_STONE_RATE = 0;
-	public static double GEAR_WOOD_RATE = 0;
-
-	public static int TIER_COMMON = 0;
-	public static boolean TIER_COMMON_ENCHANTS_ALLOW = false;
-	public static int TIER_COMMON_ENCHANTS_MIN = 0;
-	public static int TIER_COMMON_ENCHANTS_MAX = 0;
-	public static int TIER_COMMON_ENCHANTS_MAX_LVL = 3;
-	public static int TIER_COMMON_MAX_CHANCE = 100;
-	public static String TIER_COMMON_NAMES_COLOR = "WHITE";
-	public static boolean TIER_COMMON_NAMING = false;
-	public static boolean TIER_COMMON_SOCKETS_ALLOW = false;
-	public static int TIER_COMMON_SOCKETS_MAX = 1;
-
-	public static int TIER_UNCOMMON = 1;
-	public static boolean TIER_UNCOMMON_ENCHANTS_ALLOW = false;
-	public static int TIER_UNCOMMON_ENCHANTS_MIN = 0;
-	public static int TIER_UNCOMMON_ENCHANTS_MAX = 0;
-	public static int TIER_UNCOMMON_ENCHANTS_MAX_LVL = 5;
-	public static int TIER_UNCOMMON_MAX_CHANCE = 50;
-	public static boolean TIER_UNCOMMON_SOCKETS_ALLOW = false;
-	public static int TIER_UNCOMMON_SOCKETS_MAX = 1;
-	public static boolean TIER_UNCOMMON_NAMING = false;
-	public static String TIER_UNCOMMON_NAMES_COLOR = "BLUE";
-
-	public static int TIER_RARE = 2;
-	public static boolean TIER_RARE_ENCHANTS_ALLOW = false;
-	public static int TIER_RARE_ENCHANTS_MIN = 0;
-	public static int TIER_RARE_ENCHANTS_MAX = 0;
-	public static int TIER_RARE_ENCHANTS_MAX_LVL = 6;
-	public static int TIER_RARE_MAX_CHANCE = 25;
-	public static boolean TIER_RARE_SOCKETS_ALLOW = false;
-	public static int TIER_RARE_SOCKETS_MAX = 1;
-	public static boolean TIER_RARE_NAMING = false;
-	public static String TIER_RARE_NAMES_COLOR = "YELLOW";
-
-	public static int TIER_UNIQUE = 3;
-	public static boolean TIER_UNIQUE_ENCHANTS_ALLOW = false;
-	public static int TIER_UNIQUE_ENCHANTS_MIN = 0;
-	public static int TIER_UNIQUE_ENCHANTS_MAX = 0;
-	public static int TIER_UNIQUE_ENCHANTS_MAX_LVL = 7;
-	public static int TIER_UNIQUE_MAX_CHANCE = 15;
-	public static boolean TIER_UNIQUE_SOCKETS_ALLOW = false;
-	public static int TIER_UNIQUE_SOCKETS_MAX = 1;
-	public static boolean TIER_UNIQUE_NAMING = false;
-	public static String TIER_UNIQUE_NAMES_COLOR = "GOLD";
-
-	public static int TIER_SET = 4;
-	public static boolean TIER_SET_ENCHANTS_ALLOW = false;
-	public static int TIER_SET_ENCHANTS_MIN = 0;
-	public static int TIER_SET_ENCHANTS_MAX = 0;
-	public static int TIER_SET_ENCHANTS_MAX_LVL = 7;
-	public static int TIER_SET_MAX_CHANCE = 10;
-	public static boolean TIER_SET_SOCKETS_ALLOW = false;
-	public static int TIER_SET_SOCKETS_MAX = 1;
-	public static boolean TIER_SET_NAMING = false;
-	public static String TIER_SET_NAMES_COLOR = "GREEN";
-
-	public static int TIER_LEGENDARY = 5;
-	public static boolean TIER_LEGENDARY_ENCHANTS_ALLOW = false;
-	public static int TIER_LEGENDARY_ENCHANTS_MIN = 0;
-	public static int TIER_LEGENDARY_ENCHANTS_MAX = 0;
-	public static int TIER_LEGENDARY_ENCHANTS_MAX_LVL = 10;
-	public static int TIER_LEGENDARY_MAX_CHANCE = 5;
-	public static boolean TIER_LEGENDARY_SOCKETS_ALLOW = false;
-	public static int TIER_LEGENDARY_SOCKETS_MAX = 1;
-	public static boolean TIER_LEGENDARY_NAMING = false;
-	public static String TIER_LEGENDARY_NAMES_COLOR = "DARK_RED";
-
-	public static Logger logger = null;
-
-	/*
-	 * boolean allowEnchant = false; int maxEnchants = 0; int minEnchants = 0;
-	 * boolean allowSocket = false; int maxSockets = 0; int minSockets = 0;
-	 * boolean usePrefix = false; boolean useSuffix = false; ChatColor nameColor
-	 * = ChatColor.WHITE;
-	 */
-
-	public static boolean PERMISSION_BUY = false;
-	public static boolean PERMISSION_BUY_ENCHANT = false;
-	public static boolean PERMISSION_BUY_GEM = false;
-	public static boolean PERMISSION_BUY_ITEM = false;
-	public static boolean PERMISSION_BUY_NAME = false;
-	public static boolean PERMISSION_BUY_SOCKET = false;
-	public static boolean PERMISSION_BUY_TOME = false;
-	public static boolean PERMISSION_BUY_UNKNOWN = false;
-	public static boolean PERMISSION_DISENCHANT = false;
-	public static boolean PERMISSION_DISENCHANT_ALL = false;
-	public static boolean PERMISSION_OP_BYPASS = false;
-	public static boolean PERMISSION_RELOAD = false;
-	public static boolean PERMISSION_REMOVE_GEM = false;
-	public static boolean PERMISSION_REMOVE_SOCKET = false;
-	public static boolean PERMISSION_REPAIR = false;
-	public static boolean PERMISSION_REPAIR_ALL = false;
-	public static boolean PERMISSION_SALVAGE = false;
-	public static boolean PERMISSION_SALVAGE_ALL = false;
-	public static boolean PERMISSION_SELL = false;
-	public static boolean PERMISSION_SELL_ALL = false;
-	public static boolean PERMISSION_VERSION = false;
-
-	public static boolean MOBS_ENABLED = true;
-	public static boolean MOBS_SPAWN_COMMON = true;
-	public static boolean MOBS_SPAWN_UNCOMMON = true;
-	public static boolean MOBS_SPAWN_RARE = true;
-	public static boolean MOBS_SPAWN_UNIQUE = true;
-	public static boolean MOBS_SPAWN_SET = true;
-	public static boolean MOBS_SPAWN_LEGENDARY = true;
-	public static boolean MOBS_SPAWN_GEMS = true;
-	public static boolean MOBS_SPAWN_TOMES = true;
-	public static boolean MOBS_SPAWN_FORGE = true;
-	public static boolean MOBS_SPAWN_WEAPON = true;
-	public static boolean MOBS_ITEM_DROP_DEATH = true;
-	public static int MOBS_ITEM_DROP_CHANCE = 10;
-	public static int MOBS_ITEM_HELD_MAX = 4;
-	public static int MOBS_ITEM_DROP_MAX = 2;
-	public static boolean MOBS_SPAWN_ENCHANTED = true;
-	public static int MOBS_SPAWN_MAX_ENCHANT_LEVEL = 10;
-	public static double MOBS_BONUS_HP_PCT = 100;
 
 	public void onEnable() {
+
 		instance = this;
 		logger = getLogger();
-		debug("Starting APOC-RPG Plugin.onEnable()");
+		DEBUG = Settings.Cfg.DEBUG.getBoolean();
 
-		SocketListener = new SocketEvents();
+		debug("Starting APOC-RPG");
+
+		debug("Initializing database checks"); //TODO
+		Database db = new Database();
+		db.initSetup();
+
+		//Runnable to remove players from combat list that have exceeded their 30sec timer
+		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			public void run() {
+				for (APlayer p : playersInCombat.keySet()) {
+					if (playersInCombat.get(p) <= 1) {
+						playersInCombat.remove(p);
+					} else if (playersInCombat.get(p) > 1) {
+						playersInCombat.put(p, playersInCombat.get(p)-1);
+					}
+				}
+			}
+		}, 0L, 20L); //Runs forever every second (20 ticks)
+
+		//Custom polling event
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
 				Player[] ps = instance.getServer().getOnlinePlayers();
@@ -253,18 +91,41 @@ public class Plugin extends JavaPlugin {
 					// Plugin.getServer().broadcastMessage(event.getMessage());
 				}
 			}
-		}, 0l, 600l);
+		}, 0L, 600L);
 
+		debug("Creating the default config");
 		saveDefaultConfig();
-		Settings = new Settings(getConfig());
-		loadConfig();
-		LandRuins = new File(getDataFolder(), "/LandRuins");
-		if (!LandRuins.exists()) {
-			LandRuins.mkdir();
+
+		debug("Checking for and creating folders");
+		//Folder hierarchy checks
+		for(Folders f : Folders.values()) {
+			if (!f.getValue().exists()) f.getValue().mkdirs();
+			if (DEBUG) debug("Created a new folder: " + f.getValue().toString());
 		}
 
+		debug("Checking for and creating needed dafault configs");
+		for(Files cfg : Files.values()) {
+			if (!cfg.getValue().exists()) cfg.getValue().mkdirs();
+			if (DEBUG) debug("Created a new config file: " + cfg.getValue().toString());
+		}
+
+		//Reading all the dungeon chests's location from the file
+		//If there's different chest types, we'll start using custom block and material classes
+		FileConfiguration dungeonChests = YamlConfiguration.loadConfiguration(Files.DungeonChestLocations.getValue());
+		List<String> tempLocations = dungeonChests.getStringList("Locations");
+		for (int x = 0; x <= tempLocations.size(); x++) {
+			String[] arg = tempLocations.get(x).split(","); //<-- TODO: need to confirm that if it works
+			double[] parsed = new double[3];
+			for (int a = 0; a < 3; a++) {
+				parsed[a] = Double.parseDouble(arg[a+1]);
+			}
+
+			Location location = new Location (Bukkit.getWorld(arg[0]), parsed[0], parsed[1], parsed[2]);
+			dungeonChestLocations.add(location);
+		}
+
+		//Registering all the event listeners
 		getServer().getPluginManager().registerEvents(ChunkListener, this);
-		//getServer().getPluginManager().registerEvents(EntityListener, this);
 		getServer().getPluginManager().registerEvents(PlayerListener, this);
 		getServer().getPluginManager().registerEvents(CombatListener, this);
 		getServer().getPluginManager().registerEvents(SocketListener, this);
@@ -274,11 +135,6 @@ public class Plugin extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(SpendSkillListener, this);
 		//getCommand("apocrpg").setExecutor(new CommandManager());
 		getCommand("apocrpg").setExecutor(new ApocRPGCommand());
-		debug("Completing APOC-RPG Plugin.onEnable()");
-
-		//TODO: Builds the database from scratch or accesses an existing one
-		//Database db = new Database();
-		//db.initSetup();
 		
 		String databaseHost = getConfig().getString("server_ip");
     	int port = getConfig().getInt("server_port");
@@ -319,25 +175,19 @@ public class Plugin extends JavaPlugin {
         } catch(Exception e) {
         	
         }
+		debug("Finished setting up APOC-RPG");
+		debug("Cheers");
 	}
 
 	public void onDisable() {
 
+		//Saving dungeon chests locations to file
+		FileConfiguration dungeonChests = YamlConfiguration.loadConfiguration(Files.DungeonChestLocations.getValue());
+		dungeonChests.set("Locations", null);
+		dungeonChests.set("Locations", dungeonChestLocations); //TODO: In theory it should work
+
 	}
 
-	/**
-	 * This method will append a single line of text to the provided List
-	 * <String> by concatenating the two provided Strings with a whitespace ' '
-	 * between them if the second String is not null.
-	 * 
-	 * @param lore
-	 *            - List<String> to have record appended
-	 * @param s1
-	 *            - String 1 to append to List with String 2
-	 * @param s2
-	 *            - String 2 to append to List with String 1
-	 * @return List<String>
-	 */
 	public static List<String> addLoreText(List<String> lore, String s1, String s2) {
 		if (s1 == null) {
 			return lore;
@@ -351,33 +201,10 @@ public class Plugin extends JavaPlugin {
 		return lore;
 	}
 
-	/**
-	 * This method will append a single line of text to the provided List
-	 * <String>.
-	 * 
-	 * @param lore
-	 *            - List<String> to have record appended.
-	 * @param s1
-	 *            - String 1 to append to List.
-	 * @return List<String>
-	 */
 	public static List<String> addLoreText(List<String> lore, String s1) {
 		return addLoreText(lore, s1, null);
 	}
 
-	/**
-	 * This method will append a single line of text to the provided ItemMeta's
-	 * lore by concatenating the two provided Strings with a whitespace ' '
-	 * between them if the second String is not null.
-	 * 
-	 * @param meta
-	 *            - ItemMeta to have record appended to its lore
-	 * @param s1
-	 *            - String 1 to append to lore with String 2
-	 * @param s2
-	 *            - String 2 to append to lore with String 1
-	 * @return ItemMeta
-	 */
 	public static ItemMeta addLoreText(ItemMeta meta, String s1, String s2) {
 		if (meta != null && !containsLoreText(meta, s1)) {
 			List<String> lore = (List<String>) meta.getLore();
@@ -386,58 +213,20 @@ public class Plugin extends JavaPlugin {
 		return meta;
 	}
 
-	/**
-	 * This method will append a single line of text to the provided ItemMeta's
-	 * lore.
-	 * 
-	 * @param meta
-	 *            - ItemMeta to have record appended to its lore
-	 * @param s1
-	 *            - String 1 to append to lore
-	 * @return ItemMeta
-	 */
 	public static ItemMeta addLoreText(ItemMeta meta, String s1) {
 		return addLoreText(meta, s1, null);
 	}
 
-	/**
-	 * This method will append a single line of text to the provided ItemStack's
-	 * lore by concatenating the two provided Strings with a whitespace ' '
-	 * between them if the second String is not null.
-	 * 
-	 * @param meta
-	 *            - ItemStack to have record appended to its lore
-	 * @param s1
-	 *            - String 1 to append to lore with String 2
-	 * @param s2
-	 *            - String 2 to append to lore with String 1
-	 * @return ItemStack
-	 */
 	public static void addLoreText(ItemStack item, String s1, String s2) {
 		if (item != null && !item.getType().equals(Material.AIR)) {
 			item.setItemMeta(addLoreText(item.getItemMeta(), s1, s2));
 		}
 	}
 
-	/**
-	 * This method will append a single line of text to the provided ItemStack's
-	 * lore.
-	 * 
-	 * @param meta
-	 *            - ItemStack to have record appended to its lore
-	 * @param s1
-	 *            - String 1 to append to lore.
-	 * @return ItemStack
-	 */
 	public static void addLoreText(ItemStack item, String s1) {
 		addLoreText(item, s1, null);
 	}
 
-	/**
-	 * This method will clear the ItemStack's existing lore.
-	 * 
-	 * @param item
-	 */
 	public static void clearLore(ItemStack item) {
 		if (item != null && !item.getType().equals(Material.AIR)) {
 			ItemMeta meta = item.getItemMeta();
@@ -450,15 +239,6 @@ public class Plugin extends JavaPlugin {
 		}
 	}
 
-	/**
-	 * Check a lore List<String> for record starting with the provided parameter
-	 * 
-	 * @param lore
-	 *            -- List<String> to be searched for particular String
-	 * @param str
-	 *            -- search String
-	 * @return retval -- true/false
-	 */
 	public static boolean containsLoreText(List<String> lore, String str) {
 		boolean retval = false;
 		if (lore != null && !lore.isEmpty()) {
@@ -471,15 +251,6 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * Check an ItemMeta's lore for record starting with the provided parameter
-	 * 
-	 * @param meta
-	 *            -- ItemMeta to be searched for particular String
-	 * @param str
-	 *            -- search String
-	 * @return retval -- true/false
-	 */
 	public static boolean containsLoreText(ItemMeta meta, String str) {
 		boolean retval = false;
 		if (meta != null && meta.hasLore() && !meta.getLore().isEmpty()) {
@@ -488,15 +259,6 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * Check a ItemStack's lore for record starting with the provided parameter
-	 * 
-	 * @param item
-	 *            -- ItemStack to be searched for particular lore String
-	 * @param str
-	 *            -- search String
-	 * @return retval -- true/false
-	 */
 	public static boolean containsLoreText(ItemStack item, String s) {
 		boolean retval = false;
 		if (item != null && !item.getType().equals(Material.AIR)) {
@@ -506,24 +268,12 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * Send a message to the server console if debugging is allowed
-	 * 
-	 * @param s
-	 *            - String message to be sent to console
-	 */
 	public static void debugConsole(String s) {
 		if (DEBUG) {
 			System.out.println(s);
 		}
 	}
 
-	/**
-	 * Send a message to the plugin log if debugging is allowed
-	 * 
-	 * @param s
-	 *            - String message to be sent to the log
-	 */
 	public static void debug(String s) {
 		if (DEBUG) {
 			logger.info("[DEBUG] " + s);
@@ -531,41 +281,18 @@ public class Plugin extends JavaPlugin {
 		}
 	}
 
-	/**
-	 * Send a message to the player if debugging is allowed
-	 * 
-	 * @param player
-	 *            - (CommandSender) player to be sent message
-	 * @param s
-	 *            - String message to be sent to the player
-	 */
-	public static void debugPlayerMsg(CommandSender player, String msg) {
+	public static void debug(CommandSender player, String msg) {
 		if (DEBUG) {
 			player.sendMessage(msg);
 		}
 	}
 
-	/**
-	 * Send a message to the player if debugging is allowed
-	 * 
-	 * @param player
-	 *            - (Player) player to be sent message
-	 * @param s
-	 *            - String message to be sent to the player
-	 */
-	public static void debugPlayerMsg(Player player, String msg) {
+	public static void debug(Player player, String msg) {
 		if (DEBUG) {
 			player.sendMessage(msg);
 		}
 	}
 
-	/**
-	 * This method will return a List of available Enchanments for this
-	 * ItemStack.
-	 * 
-	 * @param item
-	 * @return
-	 */
 	public static List<Enchantment> getEnchantmentsFor(ItemStack item) {
 		List<Enchantment> retval = new ArrayList<Enchantment>();
 		Enchantment[] allEnchants = Enchantment.values();
@@ -578,16 +305,6 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * Return a List<String> of an ItemStack's lore records that start with the
-	 * provided search String.
-	 * 
-	 * @param item
-	 *            -- ItemStack to be searched for particular lore String
-	 * @param str
-	 *            -- search String
-	 * @return List<String> all Strings starting with the search String.
-	 */
 	public static List<String> getLoreContaining(ItemStack item, String s) {
 		List<String> retval = new ArrayList<String>();
 		if (hasLore(item)) {
@@ -601,12 +318,6 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * This method returns true if the provided ItemStack contains lore.
-	 * 
-	 * @param item
-	 * @return
-	 */
 	public static boolean hasLore(ItemStack item) {
 		boolean retval = false;
 		if (item != null && item.hasItemMeta() && item.getItemMeta().hasLore()) {
@@ -615,14 +326,6 @@ public class Plugin extends JavaPlugin {
 		return retval;
 	}
 
-	/**
-	 * This method will return true if the player has the permission to issue
-	 * the command. This will check agains
-	 * 
-	 * @param player
-	 * @param args
-	 * @return
-	 */
 	public static boolean hasPermission(Player player, String[] args) {
 		boolean retval = false;
 		/*
@@ -636,61 +339,61 @@ public class Plugin extends JavaPlugin {
 		String permission = "apocrpg." + command;
 		switch (command) {
 		case "buy":
-			retval = (PERMISSION_BUY || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-enchant":
-			retval = (PERMISSION_BUY_ENCHANT || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_ENCHANT.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-gem":
-			retval = (PERMISSION_BUY_GEM || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_GEM.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-item":
-			retval = (PERMISSION_BUY_ITEM || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_ITEM.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-name":
-			retval = (PERMISSION_BUY_NAME || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_NAME.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-socket":
-			retval = (PERMISSION_BUY_SOCKET || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_SOCKET.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-tome":
-			retval = (PERMISSION_BUY_TOME || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_TOME.getBoolean() || player.hasPermission(permission));
 			break;
 		case "buy-unknown":
-			retval = (PERMISSION_BUY_UNKNOWN || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_BUY_UNKNOWN.getBoolean() || player.hasPermission(permission));
 			break;
 		case "disenchant":
-			retval = (PERMISSION_DISENCHANT || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_DISENCHANT.getBoolean()|| player.hasPermission(permission));
 			break;
 		case "disenchant-all":
-			retval = (PERMISSION_DISENCHANT_ALL || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_DISENCHANT_ALL.getBoolean() || player.hasPermission(permission));
 			break;
 		case "reload":
-			retval = (PERMISSION_RELOAD || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_RELOAD.getBoolean() || player.hasPermission(permission));
 			break;
 		case "remove-gem":
-			retval = (PERMISSION_REMOVE_GEM || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_REMOVE_GEM.getBoolean() || player.hasPermission(permission));
 			break;
 		case "remove-socket":
-			retval = (PERMISSION_REMOVE_SOCKET || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_REMOVE_SOCKET.getBoolean() || player.hasPermission(permission));
 			break;
 		case "repair":
-			retval = (PERMISSION_REPAIR || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_REPAIR.getBoolean() || player.hasPermission(permission));
 			break;
 		case "repair-all":
-			retval = (PERMISSION_REPAIR_ALL || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_REPAIR_ALL.getBoolean() || player.hasPermission(permission));
 			break;
 		case "sell":
-			retval = (PERMISSION_SELL || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_SELL.getBoolean() || player.hasPermission(permission));
 			break;
 		case "sell-all":
-			retval = (PERMISSION_SELL_ALL || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_SELL_ALL.getBoolean() || player.hasPermission(permission));
 			break;
 		case "salvage":
-			retval = (PERMISSION_SALVAGE || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_SALVAGE.getBoolean() || player.hasPermission(permission));
 			break;
 		case "salvage-all":
-			retval = (PERMISSION_SALVAGE_ALL || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_SALVAGE_ALL.getBoolean() || player.hasPermission(permission));
 			break;
 		case "spawn":
 			retval = player.hasPermission(permission);
@@ -702,210 +405,12 @@ public class Plugin extends JavaPlugin {
 			retval = player.hasPermission(permission);
 			break;
 		case "version":
-			retval = (PERMISSION_VERSION || player.hasPermission(permission));
+			retval = (Settings.Cfg.PERMISSION_VERSION.getBoolean() || player.hasPermission(permission));
 			break;
 		}
 		return retval;
 	}
 
-	/**
-	 * This method will set internal variables to stored configuration values.
-	 */
-	public static void loadConfig() {
-
-		CHEST_FILL_RPG = Settings.getBoolean("Dungeons.chest-fill-rpg");
-		CHEST_LOCKABLE = Settings.getBoolean("Dungeons.chest-lockable");
-		CHEST_MAX_RANDOM = Settings.getInt("Dungeons.chest-max-random");
-		CHEST_MIN_ITEMS = Settings.getInt("Dungeons.chest-min-items");
-		CHEST_MAX_ITEMS = Settings.getInt("Dungeons.chest-max-items");
-		CHEST_MAX_CHANCE_GEM = Settings.getInt("Dungeons.chest-max-chance-gem");
-		CHEST_MAX_CHANCE_TOME = Settings.getInt("Dungeons.chest-max-chance-tome");
-		CHEST_MAX_CHANCE_UNKNOWN = Settings.getInt("Dungeons.chest-max-chance-unknown");
-		CHEST_MAX_CHANCE_TIER_LEGENDARY = Settings.getInt("Dungeons.chest-max-chance-tier-legendary");
-		CHEST_MAX_CHANCE_TIER_SET = Settings.getInt("Dungeons.chest-max-chance-tier-set");
-		CHEST_MAX_CHANCE_TIER_UNIQUE = Settings.getInt("Dungeons.chest-max-chance-tier-unique");
-		CHEST_MAX_CHANCE_TIER_RARE = Settings.getInt("Dungeons.chest-max-chance-tier-rare");
-		CHEST_MAX_CHANCE_TIER_UNCOMMON = Settings.getInt("Dungeons.chest-max-chance-tier-uncommon");
-		CHEST_MAX_CHANCE_TIER_COMMON = Settings.getInt("Dungeons.chest-max-chance-tier-common");
-
-		chestItems = new TreeMap<>();
-		if (CHEST_MAX_CHANCE_GEM > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_GEM, "GEM");
-		}
-		if (CHEST_MAX_CHANCE_TOME > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TOME, "TOME");
-		}
-		if (CHEST_MAX_CHANCE_UNKNOWN > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_UNKNOWN, "UNKNOWN");
-		}
-		if (CHEST_MAX_CHANCE_TIER_COMMON > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_COMMON, "COMMON");
-		}
-		if (CHEST_MAX_CHANCE_TIER_UNCOMMON > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_UNCOMMON, "UNCOMMON");
-		}
-		if (CHEST_MAX_CHANCE_TIER_RARE > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_RARE, "RARE");
-		}
-		if (CHEST_MAX_CHANCE_TIER_UNIQUE > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_UNIQUE, "UNIQUE");
-		}
-		if (CHEST_MAX_CHANCE_TIER_SET > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_SET, "SET");
-		}
-		if (CHEST_MAX_CHANCE_TIER_LEGENDARY > 0) {
-			chestItems.put(Plugin.CHEST_MAX_CHANCE_TIER_LEGENDARY, "LEGENDARY");
-		}
-
-		COST_BUY_GEAR = Settings.getDouble("Command-Settings.cost-for-gear");
-		COST_BUY_GEM = Settings.getDouble("Command-Settings.cost-for-gem");
-		COST_BUY_LORE = Settings.getDouble("Command-Settings.cost-for-lore");
-		COST_BUY_NAME = Settings.getDouble("Command-Settings.cost-for-name");
-		COST_BUY_TOME = Settings.getDouble("Command-Settings.cost-for-tome");
-		COST_DISENCHANT = Settings.getDouble("Command-Settings.cost-to-disenchant");
-		COST_ENCHANT_LVL_1 = Settings.getDouble("Command-Settings.cost-to-enchant-1");
-		COST_ENCHANT_LVL_2 = Settings.getDouble("Command-Settings.cost-to-enchant-2");
-		COST_ENCHANT_LVL_3 = Settings.getDouble("Command-Settings.cost-to-enchant-3");
-		COST_ENCHANT_LVL_4 = Settings.getDouble("Command-Settings.cost-to-enchant-4");
-		COST_ENCHANT_LVL_5 = Settings.getDouble("Command-Settings.cost-to-enchant-5");
-		COST_ENCHANT_LVL_6 = Settings.getDouble("Command-Settings.cost-to-enchant-6");
-		COST_ENCHANT_LVL_7 = Settings.getDouble("Command-Settings.cost-to-enchant-7");
-		COST_ENCHANT_LVL_8 = Settings.getDouble("Command-Settings.cost-to-enchant-8");
-		COST_ENCHANT_LVL_9 = Settings.getDouble("Command-Settings.cost-to-enchant-9");
-		COST_ENCHANT_LVL_10 = Settings.getDouble("Command-Settings.cost-to-enchant-10");
-		COST_REMOVE_GEM = Settings.getDouble("Command-Settings.cost-to-degem");
-		COST_REMOVE_SOCKET = Settings.getDouble("Command-Settings.cost-to-desocket");
-		COST_REPAIR = Settings.getDouble("Command-Settings.cost-to-repair");
-		COST_SALVAGE = Settings.getDouble("Command-Settings.cost-to-salvage");
-		COST_SOCKET_1 = Settings.getDouble("Command-Settings.cost-to-socket-1");
-		COST_SOCKET_2 = Settings.getDouble("Command-Settings.cost-to-socket-2");
-		COST_SOCKET_3 = Settings.getDouble("Command-Settings.cost-to-socket-3");
-
-		DEBUG = Settings.getBoolean("Plugin.debug");
-
-		EXP_DISENCHANT = Settings.getDouble("Command-Settings.disenchant-exp");
-
-		GEAR_SOCKETS_MAX_BUY = Settings.getInt("Tiers.sockets-max-buy");
-		GEAR_NO_SALE_ON_REPAIR = Settings.getBoolean("Tiers.no-sell-on-repair");
-		GEAR_LEATHER_RATE = Settings.getDouble("Command-Settings.leather-rate");
-		GEAR_WOOD_RATE = Settings.getDouble("Command-Settings.wood-rate");
-		GEAR_STONE_RATE = Settings.getDouble("Command-Settings.stone-rate");
-		GEAR_GOLD_RATE = Settings.getDouble("Command-Settings.gold-rate");
-		GEAR_CHAIN_RATE = Settings.getDouble("Command-Settings.chain-rate");
-		GEAR_IRON_RATE = Settings.getDouble("Command-Settings.iron-rate");
-		GEAR_DIAMOND_RATE = Settings.getDouble("Command-Settings.diamond-rate");
-		GEAR_FORGE_RATE = Settings.getDouble("Command-Settings.forge-rate");
-
-		TIER_COMMON_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-common");
-		TIER_COMMON_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-common");
-		TIER_COMMON_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-common");
-		TIER_COMMON_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-common");
-		TIER_COMMON_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-common");
-		TIER_COMMON_MAX_CHANCE = Settings.getInt("Tiers.max-chance-common");
-		TIER_COMMON_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-common");
-		TIER_COMMON_NAMING = Settings.getBoolean("Tiers.name-random-common");
-		TIER_COMMON_NAMES_COLOR = Settings.getString("Tiers.name-color-common");
-
-		TIER_UNCOMMON_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-uncommon");
-		TIER_UNCOMMON_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-uncommon");
-		TIER_UNCOMMON_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-uncommon");
-		TIER_UNCOMMON_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-uncommon");
-		TIER_UNCOMMON_MAX_CHANCE = Settings.getInt("Tiers.max-chance-uncommon");
-		TIER_UNCOMMON_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-uncommon");
-		TIER_UNCOMMON_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-uncommon");
-		TIER_UNCOMMON_NAMING = Settings.getBoolean("Tiers.name-random-uncommon");
-		TIER_UNCOMMON_NAMES_COLOR = Settings.getString("Tiers.name-color-uncommon");
-
-		TIER_RARE_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-rare");
-		TIER_RARE_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-rare");
-		TIER_RARE_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-rare");
-		TIER_RARE_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-rare");
-		TIER_RARE_MAX_CHANCE = Settings.getInt("Tiers.max-chance-rare");
-		TIER_RARE_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-rare");
-		TIER_RARE_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-rare");
-		TIER_RARE_NAMING = Settings.getBoolean("Tiers.name-random-rare");
-		TIER_RARE_NAMES_COLOR = Settings.getString("Tiers.name-color-rare");
-
-		TIER_UNIQUE_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-unique");
-		TIER_UNIQUE_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-unique");
-		TIER_UNIQUE_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-unique");
-		TIER_UNIQUE_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-unique");
-		TIER_UNIQUE_MAX_CHANCE = Settings.getInt("Tiers.max-chance-unique");
-		TIER_UNIQUE_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-unique");
-		TIER_UNIQUE_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-unique");
-		TIER_UNIQUE_NAMING = Settings.getBoolean("Tiers.name-random-unique");
-		TIER_UNIQUE_NAMES_COLOR = Settings.getString("Tiers.name-color-unique");
-
-		TIER_SET_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-set");
-		TIER_SET_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-set");
-		TIER_SET_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-set");
-		TIER_SET_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-set");
-		TIER_SET_MAX_CHANCE = Settings.getInt("Tiers.max-chance-set");
-		TIER_SET_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-set");
-		TIER_SET_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-set");
-		TIER_SET_NAMING = Settings.getBoolean("Tiers.name-random-set");
-		TIER_SET_NAMES_COLOR = Settings.getString("Tiers.name-color-set");
-
-		TIER_LEGENDARY_ENCHANTS_ALLOW = Settings.getBoolean("Tiers.enchant-allow-legendary");
-		TIER_LEGENDARY_ENCHANTS_MIN = Settings.getInt("Tiers.enchant-min-legendary");
-		TIER_LEGENDARY_ENCHANTS_MAX = Settings.getInt("Tiers.enchant-max-legendary");
-		TIER_LEGENDARY_ENCHANTS_MAX_LVL = Settings.getInt("Tiers.enchant-max-level-legendary");
-		TIER_LEGENDARY_MAX_CHANCE = Settings.getInt("Tiers.max-chance-legendary");
-		TIER_LEGENDARY_SOCKETS_ALLOW = Settings.getBoolean("Tiers.allow-sockets-legendary");
-		TIER_LEGENDARY_SOCKETS_MAX = Settings.getInt("Tiers.sockets-max-legendary");
-		TIER_LEGENDARY_NAMING = Settings.getBoolean("Tiers.name-random-legendary");
-		TIER_LEGENDARY_NAMES_COLOR = Settings.getString("Tiers.name-color-legendary");
-
-		PERMISSION_BUY = Settings.getBoolean("Permissions.buy");
-		PERMISSION_BUY_ENCHANT = Settings.getBoolean("Permissions.buy-enchant");
-		PERMISSION_BUY_GEM = Settings.getBoolean("Permissions.buy-gem");
-		PERMISSION_BUY_ITEM = Settings.getBoolean("Permissions.buy-item");
-		PERMISSION_BUY_NAME = Settings.getBoolean("Permissions.buy-name");
-		PERMISSION_BUY_SOCKET = Settings.getBoolean("Permissions.buy-socket");
-		PERMISSION_BUY_TOME = Settings.getBoolean("Permissions.buy-tome");
-		PERMISSION_BUY_UNKNOWN = Settings.getBoolean("Permissions.buy-unknown");
-		PERMISSION_DISENCHANT = Settings.getBoolean("Permissions.disenchant");
-		PERMISSION_DISENCHANT_ALL = Settings.getBoolean("Permissions.disenchant-all");
-		PERMISSION_OP_BYPASS = Settings.getBoolean("Plugin.op-bypass-permissions");
-		PERMISSION_REMOVE_GEM = Settings.getBoolean("Permissions.remove-gem");
-		PERMISSION_REMOVE_SOCKET = Settings.getBoolean("Permissions.remove-socket");
-		PERMISSION_RELOAD = Settings.getBoolean("Permissions.reload");
-		PERMISSION_REPAIR = Settings.getBoolean("Permissions.repair");
-		PERMISSION_REPAIR_ALL = Settings.getBoolean("Permissions.repair-all");
-		PERMISSION_SALVAGE = Settings.getBoolean("Permissions.salvage");
-		PERMISSION_SALVAGE_ALL = Settings.getBoolean("Permissions.salvage-all");
-		PERMISSION_SELL = Settings.getBoolean("Permissions.sell");
-		PERMISSION_SELL_ALL = Settings.getBoolean("Permissions.sell-all");
-		PERMISSION_VERSION = Settings.getBoolean("Permissions.version");
-		VERSION = Settings.getString("Plugin.version");
-
-		MOBS_ENABLED = Settings.getBoolean("Mobs.enabled");
-		MOBS_SPAWN_COMMON = Settings.getBoolean("Mobs.spawn-common");
-		MOBS_SPAWN_UNCOMMON = Settings.getBoolean("Mobs.spawn-uncommond");
-		MOBS_SPAWN_RARE = Settings.getBoolean("Mobs.spawn-rare");
-		MOBS_SPAWN_UNIQUE = Settings.getBoolean("Mobs.spawn-unique");
-		MOBS_SPAWN_SET = Settings.getBoolean("Mobs.spawn-set");
-		MOBS_SPAWN_LEGENDARY = Settings.getBoolean("Mobs.spawn-legendary");
-		MOBS_SPAWN_GEMS = Settings.getBoolean("Mobs.spawn-gems");
-		MOBS_SPAWN_TOMES = Settings.getBoolean("Mobs.spawn-tomes");
-		MOBS_SPAWN_FORGE = Settings.getBoolean("Mobs.spawn-forge");
-		MOBS_SPAWN_WEAPON = Settings.getBoolean("Mobs.spawn-weapon");
-		MOBS_ITEM_DROP_DEATH = Settings.getBoolean("Mobs.item-drop-death");
-		MOBS_ITEM_DROP_CHANCE = Settings.getInt("Mobs.item-drop-chance");
-		MOBS_ITEM_HELD_MAX = Settings.getInt("Mobs.item-held-max");
-		MOBS_ITEM_DROP_MAX = Settings.getInt("Mobs.item-drop-max");
-		MOBS_SPAWN_ENCHANTED = Settings.getBoolean("Mobs.spawn-enchanted");
-		MOBS_SPAWN_MAX_ENCHANT_LEVEL = Settings.getInt("Mobs.spawn-max-enchant-level");
-		MOBS_BONUS_HP_PCT = Settings.getDouble("Mobs.bonus-hp-pct");
-	}
-
-	/**
-	 * This method will convert a String roman numeral to an int.
-	 * 
-	 * @param roman
-	 *            - Roman numeral to be converted to int.
-	 * @return int
-	 */
 	public static int romanToInt(String romanNumber) {
 		Hashtable<Character, Integer> romanNumbers = new Hashtable<>();
 		romanNumbers.put('I', 1);	romanNumbers.put('V', 5);
@@ -928,13 +433,6 @@ public class Plugin extends JavaPlugin {
 		return decNum;
 	}
 
-	/**
-	 * This method will convert an int to a String roman numeral.
-	 * 
-	 * @param roman
-	 *            - int to be converted to roman numeral.
-	 * @return String roman numeral
-	 */
 	public static String intToRoman(int nbr) {
 
 		// I'm still coming up with a smaller algorithm here && lower priority for now

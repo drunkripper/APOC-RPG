@@ -20,6 +20,17 @@ Plugin:
     #Turn this on to enable debug logs. All debugging logs will be stored in /Logs/Type.yml
     debug: true
 
+#All the database's shenanigans
+Database:
+  #Database IP
+  ip: localhost
+  #Port that database is listening on
+  port: 3306
+  #Username of a privileged user
+  username: toor
+  #The password of the user declared above
+  password: Pa$$W0rd
+
 Permissions:
     buy: true
     buy-enchant: true

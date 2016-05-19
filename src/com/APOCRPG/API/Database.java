@@ -1,11 +1,14 @@
 package com.APOCRPG.API;
 
+import com.APOCRPG.Enums.DatabaseTables;
 import com.APOCRPG.Enums.ProfileStats;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.Enums.PlayerStats;
+import com.APOCRPG.Main.Settings;
 import org.bukkit.entity.Player;
 
 import java.sql.*;
+import java.util.List;
 
 public class Database {
 
@@ -19,15 +22,15 @@ public class Database {
         |-Profiles
             |-UUID              INT(32)         // That's the trimmed UUID, no hyphens '-'
             |-LatestName        VARCHAR(35)
-            |-usedIPv4          ..              // To be added (maybe)...
+            |-usedIPv4s         DUNNO_YET       // To be added (maybe)...
         |-ProfileStats
             |-UUID              INT(32)
             |-Stat              VARCHAR(40)
             |-Value             INT(5)
-        |-Players                               // I assume every profile has multiple players?
-            |-UUID              INT(32)         //Player profile's UUID
+        |-Players
+            |-UUID              INT(32)         //Same as above
             |-Exp               INT(5)
-            |-StatPoints        int(5)
+            |-Stat_Points       INT(5)
             |-Recovery          INT(5)
             |-Evasion           INT(5)
             |-Agility           INT(5)
@@ -48,97 +51,75 @@ public class Database {
 // TODO: Deal with NoPlayerStat exception
 
     private final Plugin plugin = new Plugin();
-    private final String globalDatabase = plugin.DATABASE_NAME; //Global Database name for the plugin
+    private final String globalDatabase = Settings.Cfg.DATABASE_NAME.getString(); //Global Database name for the plugin
 
-    private final String dbHost = plugin.DATABASE_HOST;
-    private final int dbPort = plugin.DATABASE_PORT;
-    private final String uname = plugin.DATABASE_UNAME;
-    private final String passwd = plugin.DATABASE_PASSWD;
+    private final String dbHost = Settings.Cfg.DATABASE_HOST.getString();
+    private final int dbPort = Settings.Cfg.DATABASE_PORT.getInt();
+    private final String uname = Settings.Cfg.DATABASE_UNAME.getString();
+    private final String passwd = Settings.Cfg.DATABASE_PASSWD.getString();
+
+    private String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
+    Connection conn;
 
     // Public methods
-    public int getPlayerStat(Player p, PlayerStats ps) {
-        Connection conn;
-        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-
+    public int getStat(Player p, PlayerStats ps) {
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("SELECT ? FROM players WHERE UUID=? AND ID=?");
-            statement.setString(1, ps.toString());
-            statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
-            statement.setString(3, ps.toString());
+            PreparedStatement statement = conn.prepareStatement("SELECT ? FROM players WHERE UUID=?");
+            statement.setString(1, ps.toString()); statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
             ResultSet result = statement.executeQuery();
             statement.close();
             conn.close();
             return result.getInt(0);
         } catch (Exception e) {
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
         return -1;
     }
 
-    public int getProfileStat(Player p, ProfileStats ps) {
-        Connection conn;
-        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-
+    public int getStat(Player p, ProfileStats ps) {
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("SELECT value FROM profilestats WHERE UUID=? AND stat=?");
-            statement.setInt(1, Integer.valueOf(p.getUniqueId().toString()));
-            statement.setString(2, ps.toString());
+            PreparedStatement statement = conn.prepareStatement("SELECT value FROM profilestats WHERE UUID=? AND Stat=?");
+            statement.setInt(1, Integer.valueOf(p.getUniqueId().toString())); statement.setString(2, ps.toString());
             ResultSet result = statement.executeQuery();
-            statement.close();
-            conn.close();
+            statement.close(); conn.close();
             return result.getInt(0);
         } catch (Exception e) {
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
         return -1;
     }
 
-    public void setPlayerStat(Player p, PlayerStats ps, int value) {
-        Connection conn;
-        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-
+    public void setStat(Player p, PlayerStats ps, int value) {
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("UPDATE players SET value=? WHERE UUID=?;");
-            statement.setInt(1, value);
-            statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
-            statement.setString(2, ps.toString());
-            ResultSet result = statement.executeQuery();
-            statement.close();
-            conn.close();
+            PreparedStatement statement = conn.prepareStatement("UPDATE players SET ?=? WHERE UUID=?;");
+            statement.setString(1, ps.name()); statement.setInt(2, value); Integer.valueOf(p.getUniqueId().toString());
+            statement.executeQuery();
+            statement.close(); conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
     }
 
-    public void setProfileStat(Player p, ProfileStats ps, int value) {
-        Connection conn;
-        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-
+    public void setStat(Player p, ProfileStats ps, int value) {
         try {
             conn = DriverManager.getConnection(url, uname, passwd);
-            PreparedStatement statement = conn.prepareStatement("UPDATE playerstats SET value=? WHERE UUID=?;");
-            statement.setInt(1, value);
-            statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
-            statement.setString(2, ps.toString());
-            ResultSet result = statement.executeQuery();
-            statement.close();
-            conn.close();
+            PreparedStatement statement = conn.prepareStatement("UPDATE profilestats SET value=? WHERE UUID=? AND Stat=?;");
+            statement.setInt(1, value); statement.setInt(2, Integer.valueOf(p.getUniqueId().toString())); statement.setString(2, ps.name());
+            statement.executeQuery();
+            statement.close(); conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
     }
 
     public void addPlayer(Player p) {
-        Connection conn;
-        String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-
         try {
             //Checking if player's already exists
             conn = DriverManager.getConnection(url, uname, passwd);
@@ -154,7 +135,7 @@ public class Database {
             statement.close();
             conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
     }
@@ -167,7 +148,7 @@ public class Database {
         // TODO
     }
 
-    public Object nakedQuery(String database, String query) {
+    public Object insecureQuery(String database, String query) {
         Connection conn;
         String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + database;
 
@@ -180,7 +161,7 @@ public class Database {
             conn.close();
             return result;
         } catch(Exception e){
-            plugin.getLogger().warning(Plugin.APOCRPG_ERROR + "Couldn't establish connection to remote DB.");
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
         }
         return null;
@@ -192,6 +173,26 @@ public class Database {
     }
 
     private boolean createTable() {
+        return false;
+    }
+
+    private boolean checkExistingDb() {
+        /*List<String> tables = null;
+        try {
+            conn = DriverManager.getConnection(url, uname, passwd);
+
+            //Checking for tables
+            ResultSet rs = conn.getMetaData().getTables(Settings.Cfg.DATABASE_NAME.getString(),
+                                                        null, "%", null);
+            while (rs.next()) {
+                tables.add(rs.getString(3));
+            }
+
+            rs.close();
+        } catch (Exception e) {
+            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+            plugin.getLogger().warning(e.getMessage());
+        }*/
         return false;
     }
 

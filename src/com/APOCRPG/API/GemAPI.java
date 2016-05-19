@@ -2,6 +2,7 @@ package com.APOCRPG.API;
 
 import java.util.ArrayList;
 
+import com.APOCRPG.Main.Settings;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,9 +15,9 @@ public class GemAPI {
 		ItemStack gem = new ItemStack(Material.EMERALD);
 		ItemMeta meta = gem.getItemMeta();
 		ArrayList<String> lore = new ArrayList<String>();
-		lore.add(Plugin.LORE_GEM_OF + name + " " + level);
+		lore.add(Settings.Cfg.LORE_GEM_OF.getString() + name + " " + level);
 		lore.add(type + " type");
-		meta.setDisplayName(Plugin.DISPLAY_NAME_GEM);
+		meta.setDisplayName(Settings.Cfg.DISPLAY_NAME_GEM.getString());
 		meta.setLore(lore);
 		gem.setItemMeta(meta);
 

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.APOCRPG.Main.Settings;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -66,7 +67,7 @@ public class ApocRPGCommand implements CommandExecutor {
 				_player.sendMessage(
 						CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your item.");
 				_player.sendMessage(CommandColor + "/apocrpg buy socket " + DescColor
-						+ "    | Buy another socket for your item. Max allowed: " + Plugin.GEAR_SOCKETS_MAX_BUY);
+						+ "    | Buy another socket for your item. Max allowed: " + Settings.Cfg.GEAR_SOCKETS_MAX_BUY.getString());
 				_player.sendMessage(CommandColor + "/apocrpg buy tome " + DescColor + "       | Buy an identity tome.");
 				_player.sendMessage(CommandColor + "/apocrpg disenchant" + DescColor + "     | Disenchant an item.");
 				_player.sendMessage(CommandColor + "/apocrpg disenchant all" + DescColor
@@ -92,7 +93,7 @@ public class ApocRPGCommand implements CommandExecutor {
 			} else {
 				// determine if the player has the proper permissions.
 				if (!Plugin.hasPermission(_player, args)) {
-					_player.sendMessage(Plugin.APOCRPG_ERROR + "You do not have permission to do that!");
+					_player.sendMessage(Settings.Cfg.APOCRPG_ERROR + "You do not have permission to do that!");
 					return true;
 				}
 
@@ -112,7 +113,7 @@ public class ApocRPGCommand implements CommandExecutor {
 
 				if (arg1.equalsIgnoreCase("version")) {
 					// display Plugin version information
-					_player.sendMessage(CommandColor + "APOC RPG Plugin | Version " + Plugin.VERSION);
+					_player.sendMessage(CommandColor + "APOC RPG Plugin | Version " + Settings.Cfg.VERSION.getInt());
 					_player.sendMessage(CommandColor + "Programmed by the Apocalyptic Gaming Network");
 					_player.sendMessage(CommandColor + "http://apocgaming.org");
 					_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
@@ -140,7 +141,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						if (arg2.equalsIgnoreCase("enchant")) {
 							// if nothing in hand, send error message and return
 							if (_emptyHand) {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_EMPTY_HAND.getString());
 								return true;
 							}
 
@@ -150,7 +151,7 @@ public class ApocRPGCommand implements CommandExecutor {
 									.getEnchantmentsFor(_handItem);
 							if (enchList == null || enchList.isEmpty()) {
 								_player.sendMessage(
-										Plugin.APOCRPG_ERROR + "No enchantments are available for that item!");
+										Settings.Cfg.APOCRPG_ERROR.getString() + "No enchantments are available for that item!");
 							} else if (arg3 == null || arg3.equals("") || arg3.equalsIgnoreCase("list")) {
 								_player.sendMessage(ChatColor.BLUE + "Enchantments available for this item:");
 								for (int i = 0; i < enchList.size(); i++) {
@@ -200,7 +201,7 @@ public class ApocRPGCommand implements CommandExecutor {
 									// or enchantment is not available for this
 									// ItemStack
 									if (ench == null) {
-										_player.sendMessage(Plugin.APOCRPG_ERROR
+										_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString()
 												+ "That enchantment is not recognized for this item!");
 										return true;
 									} else {
@@ -218,7 +219,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								}
 
 								if (powerLvl < 1 || (powerLvl > 10 && !_player.hasPermission("op"))) {
-									_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid enchantment level!");
+									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Invalid enchantment level!");
 									return true;
 								}
 
@@ -235,34 +236,34 @@ public class ApocRPGCommand implements CommandExecutor {
 										do {
 											switch (currLevel) {
 											case 0:
-												cost += Plugin.COST_ENCHANT_LVL_1;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_1.getInt();
 												break;
 											case 1:
-												cost += Plugin.COST_ENCHANT_LVL_2;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_2.getInt();
 												break;
 											case 2:
-												cost += Plugin.COST_ENCHANT_LVL_3;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_3.getInt();
 												break;
 											case 3:
-												cost += Plugin.COST_ENCHANT_LVL_4;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_4.getInt();
 												break;
 											case 4:
-												cost += Plugin.COST_ENCHANT_LVL_5;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_5.getInt();
 												break;
 											case 5:
-												cost += Plugin.COST_ENCHANT_LVL_6;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_6.getInt();
 												break;
 											case 6:
-												cost += Plugin.COST_ENCHANT_LVL_7;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_7.getInt();
 												break;
 											case 7:
-												cost += Plugin.COST_ENCHANT_LVL_8;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_8.getInt();
 												break;
 											case 8:
-												cost += Plugin.COST_ENCHANT_LVL_9;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_9.getInt();
 												break;
 											default:
-												cost += Plugin.COST_ENCHANT_LVL_10;
+												cost += Settings.Cfg.COST_ENCHANT_LVL_10.getInt();
 												break;
 											}
 											currLevel++;
@@ -270,21 +271,21 @@ public class ApocRPGCommand implements CommandExecutor {
 										} while (currLevel < powerLvl);
 									} else if (currLevel > powerLvl && buyEnchants.size() == 1) {
 										_player.sendMessage(
-												Plugin.APOCRPG_ERROR + "This item exceeds that enchantment level.");
+												Settings.Cfg.APOCRPG_ERROR + "This item exceeds that enchantment level.");
 										return true;
 									} else if (currLevel == powerLvl && buyEnchants.size() == 1) {
 										_player.sendMessage(
-												Plugin.APOCRPG_ERROR + "This item already has that enchantment level.");
+												Settings.Cfg.APOCRPG_ERROR + "This item already has that enchantment level.");
 										return true;
 									}
 								}
 
 								if (applyEnchants.isEmpty()) {
-									_player.sendMessage(Plugin.APOCRPG_ERROR
+									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString()
 											+ "There are no more enchantments available for this item.");
 								} else if (!Economy.hasMoney(_player, cost)) {
 									_player.sendMessage(
-											Plugin.APOCRPG_ERROR_NO_MONEY + "You need $" + Economy.format(cost) + "!");
+											Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need $" + Economy.format(cost) + "!");
 								} else {
 									Economy.removeMoney(_player, cost);
 									for (Enchantment e : buyEnchants) {
@@ -294,7 +295,7 @@ public class ApocRPGCommand implements CommandExecutor {
 										}
 									}
 									// add player bound
-									Plugin.addLoreText(_handItem, Plugin.LORE_PLAYER_BOUND, _player.getName());
+									Plugin.addLoreText(_handItem, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 									_player.sendMessage(buyEnchants.size() + " enchantment"
 											+ (buyEnchants.size() > 1 ? "s" : "") + " added for: $" + cost);
 								}
@@ -304,7 +305,7 @@ public class ApocRPGCommand implements CommandExecutor {
 							if ( _player.hasPermission("op") && !arg3.isEmpty() ) {
 								String type = EffectAPI.getEffectTypeFromName(arg3);
 								if ( type == null ) {
-									_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid effect!");
+									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Invalid effect!");
 								} else {
 									if ( arg4 == null || "".equals(arg4)) {
 										arg4 = "I";
@@ -324,23 +325,23 @@ public class ApocRPGCommand implements CommandExecutor {
 									_inventory.addItem(GemAPI.createGem(arg3, type, arg4));
 								}
 							} else { 
-								if (Economy.hasMoney(_player, Plugin.COST_BUY_GEM)) {
-									Economy.removeMoney(_player, Plugin.COST_BUY_GEM);
+								if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEM.getInt())) {
+									Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEM.getInt());
 									_inventory.addItem(GemAPI.createGem());
 								} else {
-									_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-											+ Economy.format(Plugin.COST_BUY_GEM) + "!");
+									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need $"
+											+ Economy.format(Settings.Cfg.COST_BUY_GEM.getInt()) + "!");
 								}
 							}
 						} else if (arg2.equalsIgnoreCase("item")) {
-							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
-								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
+							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt())) {
+								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt());
 								ItemStack item = ItemAPI.createItem();
-								Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
+								Plugin.addLoreText(item, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 								_inventory.addItem(item);
 							} else {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-										+ Economy.format(Plugin.COST_BUY_GEAR) + "!");
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
+										+ Economy.format(Settings.Cfg.COST_BUY_GEAR.getInt()) + "!");
 							}
 						} else if (arg2.equalsIgnoreCase("name")) {
 							String name = "";
@@ -350,89 +351,89 @@ public class ApocRPGCommand implements CommandExecutor {
 								}
 								name += args[i];
 							}
-							if ( name.equals("") || name.equals(Plugin.LORE_UNKNOWN_ITEM)) {
-								_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid item name!");
+							if ( name.equals("") || name.equals(Settings.Cfg.LORE_UNKNOWN_ITEM.getString())) {
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR + "Invalid item name!");
 							} else if (_emptyHand) {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
-							} else if (!Economy.hasMoney(_player, Plugin.COST_BUY_NAME)) {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-										+ Economy.format(Plugin.COST_BUY_NAME) + "!");
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_EMPTY_HAND.getString());
+							} else if (!Economy.hasMoney(_player, Settings.Cfg.COST_BUY_NAME.getInt())) {
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
+										+ Economy.format(Settings.Cfg.COST_BUY_NAME.getInt()) + "!");
 							} else {
 								if (_handMeta.getDisplayName() != null
-										&& (_handMeta.getDisplayName().equals(Plugin.DISPLAY_NAME_GEM) || _handMeta
-												.getDisplayName().equals(Plugin.DISPLAY_NAME_TOME)
-										|| _handMeta.getDisplayName().equals(Plugin.DISPLAY_NAME_UNIDENTIFIED_ITEM))) {
-									_player.sendMessage(Plugin.APOCRPG_ERROR + "This item cannot be renamed!");
+										&& (_handMeta.getDisplayName().equals(Settings.Cfg.DISPLAY_NAME_GEM) || _handMeta
+												.getDisplayName().equals(Settings.Cfg.DISPLAY_NAME_TOME)
+										|| _handMeta.getDisplayName().equals(Settings.Cfg.DISPLAY_NAME_UNIDENTIFIED_ITEM))) {
+									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR + "This item cannot be renamed!");
 									return true;
 								}
-								Economy.removeMoney(_player, Plugin.COST_BUY_NAME);
+								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_NAME.getInt());
 								_handMeta.setDisplayName(name);
-								Plugin.addLoreText(_handMeta, Plugin.LORE_PLAYER_BOUND, _player.getName());
+								Plugin.addLoreText(_handMeta, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 								_handItem.setItemMeta(_handMeta);
 							}
 						} else if (arg2.equalsIgnoreCase("socket")) {
 							int currentSockets = 0;
 							double cost = 0;
 							if (_emptyHand) {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_EMPTY_HAND.getString());
 							} else {
 								// check to see if the player currently has any
 								// gems or empty sockets on item
 								for (String l : _handLore) {
-									if (l.equals(Plugin.LORE_ITEM_SOCKET) || l.startsWith(Plugin.LORE_GEM_OF)) {
+									if (l.equals(Settings.Cfg.LORE_ITEM_SOCKET) || l.startsWith(Settings.Cfg.LORE_GEM_OF.getString())) {
 										currentSockets++;
 									}
 								}
 
-								if (currentSockets >= Plugin.GEAR_SOCKETS_MAX_BUY) {
+								if (currentSockets >= Settings.Cfg.GEAR_SOCKETS_MAX_BUY.getInt()) {
 									_player.sendMessage(
-											Plugin.APOCRPG_ERROR + "No more sockets available for this item!");
+											Settings.Cfg.APOCRPG_ERROR + "No more sockets available for this item!");
 								} else {
 									// determine cost. if currentSockets = 1,
 									// the cost will be for the first socket
 									switch (currentSockets) {
 									case 0:
-										cost = Plugin.COST_SOCKET_1;
+										cost = Settings.Cfg.COST_SOCKET_1.getInt();
 										break;
 									case 1:
-										cost = Plugin.COST_SOCKET_2;
+										cost = Settings.Cfg.COST_SOCKET_2.getInt();
 										break;
 									case 2:
-										cost = Plugin.COST_SOCKET_3;
+										cost = Settings.Cfg.COST_SOCKET_3.getInt();
 										break;
 									}
 
 									if (cost > 0) {
 										if (!Economy.hasMoney(_player, cost)) {
-											_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
+											_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need $"
 													+ Economy.format(cost) + "!");
 										} else {
 											Economy.removeMoney(_player, cost);
 											_handItem = addItemSocket(_handItem);
-											Plugin.addLoreText(_handItem, Plugin.LORE_PLAYER_BOUND, _player.getName());
+											Plugin.addLoreText(_handItem, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 											_player.sendMessage("You have added a socket for $" + Economy.format(cost)
 													+ " economy.");
 										}
 									}
 								}
-								Economy.removeMoney(_player, Plugin.COST_SOCKET_1);
+								Economy.removeMoney(_player, Settings.Cfg.COST_SOCKET_1.getInt());
 							}
 						} else if (arg2.equalsIgnoreCase("tome")) {
-							if (Economy.hasMoney(_player, Plugin.COST_BUY_TOME)) {
-								Economy.removeMoney(_player, Plugin.COST_BUY_TOME);
+							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_TOME.getInt())) {
+								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_TOME.getInt());
 								_inventory.addItem(ItemAPI.createTome());
 							} else {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-										+ Economy.format(Plugin.COST_BUY_TOME) + "!");
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
+										+ Economy.format(Settings.Cfg.COST_BUY_TOME.getInt()) + "!");
 							}
 						} else if (arg2.equalsIgnoreCase("unknown")) {
-							if (Economy.hasMoney(_player, Plugin.COST_BUY_GEAR)) {
-								Economy.removeMoney(_player, Plugin.COST_BUY_GEAR);
+							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt())) {
+								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt());
 								ItemStack item = ItemAPI.createUnidentified();
 								_inventory.addItem(item);
 							} else {
-								_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need $"
-										+ Economy.format(Plugin.COST_BUY_GEAR) + "!");
+								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
+										+ Economy.format(Settings.Cfg.COST_BUY_GEAR.getInt()) + "!");
 							}
 						}
 					} else {
@@ -448,7 +449,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your item.");
 						_player.sendMessage(CommandColor + "/apocrpg buy socket " + DescColor
 								+ "    | Buy another socket for your item. Max allowed: "
-								+ Plugin.GEAR_SOCKETS_MAX_BUY);
+								+ Settings.Cfg.GEAR_SOCKETS_MAX_BUY.getInt());
 						_player.sendMessage(
 								CommandColor + "/apocrpg buy tome " + DescColor + "       | Buy an identity tome.");
 					}
@@ -475,7 +476,7 @@ public class ApocRPGCommand implements CommandExecutor {
 							}
 						}
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR + "Unknown command : '" + arg1 + " " + arg2 + "'");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Unknown command : '" + arg1 + " " + arg2 + "'");
 						return true;
 					}
 
@@ -489,7 +490,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						}
 					}
 
-					cost = levels * Plugin.COST_DISENCHANT;
+					cost = levels * Settings.Cfg.COST_DISENCHANT.getInt();
 
 					if (cost == 0) {
 						_player.sendMessage("You have nothing to disenchant.");
@@ -505,7 +506,7 @@ public class ApocRPGCommand implements CommandExecutor {
 							}
 						}
 
-						totalXP += (levels * Plugin.EXP_DISENCHANT);
+						totalXP += (levels * Settings.Cfg.EXP_DISENCHANT.getInt());
 						if (totalXP > 0) {
 							_player.giveExp((int) totalXP);
 						}
@@ -514,32 +515,32 @@ public class ApocRPGCommand implements CommandExecutor {
 								+ " economy and received " + (int) totalXP + " XP.");
 
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need " + Economy.format(cost) + "!");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need " + Economy.format(cost) + "!");
 					}
 				} else if (arg1.equalsIgnoreCase("reload")) {
-					Plugin.loadConfig();
+					//Todo
 				} else if (arg1.equalsIgnoreCase("remove")) {
 					if (arg2 == null || (!arg2.equalsIgnoreCase("gem") && !arg2.equalsIgnoreCase("socket"))) {
-						_player.sendMessage(Plugin.APOCRPG_ERROR + "Invalid command!");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR + "Invalid command!");
 					} else if (arg2.equalsIgnoreCase("gem")) {
 						// see if item has "GEM OF ..." lore
 						if (_emptyHand) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
-						} else if (!Plugin.containsLoreText(_handItem, Plugin.LORE_GEM_OF)) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR + "This item has no gems to remove!");
-						} else if (!Economy.hasMoney(_player, Plugin.COST_REMOVE_GEM)) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need "
-									+ Economy.format(Plugin.COST_REMOVE_GEM) + "!");
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_EMPTY_HAND.getString());
+						} else if (!Plugin.containsLoreText(_handItem, Settings.Cfg.LORE_GEM_OF.getString())) {
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR + "This item has no gems to remove!");
+						} else if (!Economy.hasMoney(_player, Settings.Cfg.COST_REMOVE_GEM.getInt())) {
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need "
+									+ Economy.format(Settings.Cfg.COST_REMOVE_GEM.getInt()) + "!");
 						} else {
 							String tmp = null;
 							boolean gemFound = false;
 							// iterate through lore to find first gem
 							for (int i = 0; i < _handLore.size() && !gemFound; i++) {
 								tmp = _handLore.get(i);
-								if (tmp.startsWith(Plugin.LORE_GEM_OF)) {
+								if (tmp.startsWith(Settings.Cfg.LORE_GEM_OF.getString())) {
 									// recreate gem from lore
 									String gemLevel = tmp.substring(tmp.lastIndexOf(' ')).trim();
-									String gemName = tmp.replace(Plugin.LORE_GEM_OF, "").replace(gemLevel, "").trim();
+									String gemName = tmp.replace(Settings.Cfg.LORE_GEM_OF.getString(), "").replace(gemLevel, "").trim();
 									String gemType = EffectAPI.getEffectTypeFromName(gemName);
 									ItemStack gem = GemAPI.createGem(gemName, gemType, gemLevel);
 									// give gem to player
@@ -553,26 +554,26 @@ public class ApocRPGCommand implements CommandExecutor {
 							// now add empty socket back to item
 							_handItem = addItemSocket(_handItem);
 							// add player bound
-							Plugin.addLoreText(_handItem, Plugin.LORE_PLAYER_BOUND, _player.getName());
+							Plugin.addLoreText(_handItem, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 							// remove money
-							Economy.removeMoney(_player, Plugin.COST_REMOVE_GEM);
+							Economy.removeMoney(_player, Settings.Cfg.COST_REMOVE_GEM.getInt());
 							_player.updateInventory();
 							_player.sendMessage(
-									"You have removed a gem for $" + Economy.format(Plugin.COST_REMOVE_GEM) + ".");
+									"You have removed a gem for $" + Economy.format(Settings.Cfg.COST_REMOVE_GEM.getInt()) + ".");
 						}
 					} else if (arg2.equalsIgnoreCase("socket")) {
-						if (_emptyHand || !Plugin.containsLoreText(_handItem, Plugin.LORE_ITEM_SOCKET)) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR + "There are no empty sockets to remove!");
-						} else if (!Economy.hasMoney(_player, Plugin.COST_REMOVE_SOCKET)) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need "
-									+ Economy.format(Plugin.COST_REMOVE_SOCKET) + "!");
+						if (_emptyHand || !Plugin.containsLoreText(_handItem, Settings.Cfg.LORE_ITEM_SOCKET.getString())) {
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "There are no empty sockets to remove!");
+						} else if (!Economy.hasMoney(_player, Settings.Cfg.COST_REMOVE_SOCKET.getInt())) {
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need "
+									+ Economy.format(Settings.Cfg.COST_REMOVE_SOCKET.getInt()) + "!");
 						} else {
 							String tmp = null;
 							// iterate through lore to find first empty socket
 							for (int i = 0; i < _handLore.size(); i++) {
 								tmp = _handLore.get(i);
-								if (tmp.equals(Plugin.LORE_ITEM_SOCKET)) {
-									Economy.removeMoney(_player, Plugin.COST_REMOVE_SOCKET);
+								if (tmp.equals(Settings.Cfg.LORE_ITEM_SOCKET.getString())) {
+									Economy.removeMoney(_player, Settings.Cfg.COST_REMOVE_SOCKET.getInt());
 									_handLore.remove(i);
 									_handMeta.setLore(_handLore);
 									_handItem.setItemMeta(_handMeta);
@@ -580,9 +581,9 @@ public class ApocRPGCommand implements CommandExecutor {
 								}
 							}
 							// add player bound ore
-							Plugin.addLoreText(_handItem, Plugin.LORE_PLAYER_BOUND, _player.getName());
+							Plugin.addLoreText(_handItem, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 							_player.sendMessage("You have removed a socket for $"
-									+ Economy.format(Plugin.COST_REMOVE_SOCKET) + ".");
+									+ Economy.format(Settings.Cfg.COST_REMOVE_SOCKET.getInt()) + ".");
 						}
 					}
 				} else if (arg1.equalsIgnoreCase("repair")) {
@@ -611,9 +612,9 @@ public class ApocRPGCommand implements CommandExecutor {
 							}
 						}
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR + "Unknown command : '" + arg1 + " " + arg2 + "'");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Unknown command : '" + arg1 + " " + arg2 + "'");
 					}
-					cost = items.size() * Plugin.COST_REPAIR;
+					cost = items.size() * Settings.Cfg.COST_REPAIR.getInt();
 
 					if (cost == 0) {
 						_player.sendMessage("You have nothing to repair.");
@@ -623,28 +624,28 @@ public class ApocRPGCommand implements CommandExecutor {
 							tmpItem = items.get(j);
 							tmpItem.setDurability(Short.parseShort("0"));
 
-							Plugin.addLoreText(tmpItem, Plugin.LORE_PLAYER_BOUND, _player.getName());
-							Plugin.addLoreText(tmpItem, Plugin.LORE_REPAIRED);
+							Plugin.addLoreText(tmpItem, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
+							Plugin.addLoreText(tmpItem, Settings.Cfg.LORE_REPAIRED.getString());
 						}
 						_player.sendMessage("You have repaired your item" + (items.size() > 1 ? "s" : "") + " for "
 								+ Economy.format(cost) + " economy.");
 
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR_NO_MONEY + "You need " + Economy.format(cost) + "!");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need " + Economy.format(cost) + "!");
 					}
 				} else if (arg1.equalsIgnoreCase("sell")) {
 					ArrayList<ItemStack> sold = new ArrayList<ItemStack>();
 					ItemStack tmpItem = null;
 					// if not 'sell all' make sure hand isn't empty
 					if ((arg2 == null || arg2.equals("")) && _emptyHand) {
-						_player.sendMessage(Plugin.APOCRPG_ERROR_EMPTY_HAND);
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_EMPTY_HAND.getString());
 						return true;
 					} else if ((arg2 == null || arg2.equals("")) && !_emptyHand) {
-						if (Plugin.containsLoreText(_handItem, Plugin.LORE_REPAIRED) && Plugin.GEAR_NO_SALE_ON_REPAIR) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR + "You cannot sell repaired items!");
+						if (Plugin.containsLoreText(_handItem, Settings.Cfg.LORE_REPAIRED.getString()) && Settings.Cfg.GEAR_NO_SALE_ON_REPAIR.getBoolean()) {
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You cannot sell repaired items!");
 							return true;
 						} else if (_handItem.getType().getMaxDurability() < 1) {
-							_player.sendMessage(Plugin.APOCRPG_ERROR + "You cannot sell that item! No durability");
+							_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You cannot sell that item! No durability");
 							Plugin.debugConsole("Item: " + _handItem.getTypeId() + ", type: "
 									+ _handItem.getType().toString() + "");
 							return true;
@@ -661,14 +662,14 @@ public class ApocRPGCommand implements CommandExecutor {
 							// items is disallowed
 							if (tmpItem != null && tmpItem.getType().getMaxDurability() > 0
 									&& tmpItem.getMaxStackSize() == 1
-									&& !(Plugin.containsLoreText(tmpItem, Plugin.LORE_REPAIRED)
-											&& Plugin.GEAR_NO_SALE_ON_REPAIR)) {
+									&& !(Plugin.containsLoreText(tmpItem, Settings.Cfg.LORE_REPAIRED.getString())
+											&& Settings.Cfg.GEAR_NO_SALE_ON_REPAIR.getBoolean())) {
 								sold.add(tmpItem);
 							}
 						}
 
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR + "Unknown command!");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Unknown command!");
 						return true;
 					}
 
@@ -683,21 +684,21 @@ public class ApocRPGCommand implements CommandExecutor {
 							// get material type to determine pay rate
 							String type = item.getType().toString();
 							if (type.startsWith("WOOD")) {
-								rate = Plugin.GEAR_WOOD_RATE;
+								rate = Settings.Cfg.GEAR_WOOD_RATE.getInt();
 							} else if (type.startsWith("LEATHER")) {
-								rate = Plugin.GEAR_LEATHER_RATE;
+								rate = Settings.Cfg.GEAR_LEATHER_RATE.getInt();
 							} else if (type.startsWith("STONE")) {
-								rate = Plugin.GEAR_STONE_RATE;
+								rate = Settings.Cfg.GEAR_STONE_RATE.getInt();
 							} else if (type.startsWith("IRON")) {
-								rate = Plugin.GEAR_IRON_RATE;
+								rate = Settings.Cfg.GEAR_IRON_RATE.getInt();
 							} else if (type.startsWith("GOLD")) {
-								rate = Plugin.GEAR_GOLD_RATE;
+								rate = Settings.Cfg.GEAR_GOLD_RATE.getInt();
 							} else if (type.startsWith("CHAIN")) {
-								rate = Plugin.GEAR_CHAIN_RATE;
+								rate = Settings.Cfg.GEAR_CHAIN_RATE.getInt();
 							} else if (type.startsWith("DIAMOND")) {
-								rate = Plugin.GEAR_DIAMOND_RATE;
+								rate = Settings.Cfg.GEAR_DIAMOND_RATE.getInt();
 							} else {
-								rate = Plugin.GEAR_FORGE_RATE;
+								rate = Settings.Cfg.GEAR_FORGE_RATE.getInt();
 							}
 							payment += (rate * durability);
 
@@ -709,7 +710,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								+ (sold.size() > 1 ? "s" : "") + "!");
 						_player.updateInventory();
 					} else {
-						_player.sendMessage(Plugin.APOCRPG_ERROR + "You have nothing worth selling!");
+						_player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You have nothing worth selling!");
 					}
 				} else if (arg1.equalsIgnoreCase("spawn")) {
 					if (arg2.equalsIgnoreCase("chest")) {
@@ -722,17 +723,17 @@ public class ApocRPGCommand implements CommandExecutor {
 							tier = Integer.parseInt(arg3);
 						}
 						ItemStack item = ItemAPI.createItem(tier);
-						Plugin.addLoreText(item, Plugin.LORE_PLAYER_BOUND, _player.getName());
+						Plugin.addLoreText(item, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 						_inventory.addItem(item);
 					} else {
-						System.out.println(Plugin.APOCRPG_ERROR + "Unknown command sent.");
+						System.out.println(Settings.Cfg.APOCRPG_ERROR.getString() + "Unknown command sent.");
 						return false;
 					}
 				}
 			}
 			return true;
 		} else {
-			System.out.println(Plugin.APOCRPG_ERROR + "Unknown command sent.");
+			System.out.println(Settings.Cfg.APOCRPG_ERROR.getString() + "Unknown command sent.");
 			return false;
 		}
 		
@@ -770,8 +771,8 @@ public class ApocRPGCommand implements CommandExecutor {
 				// '(Socket)'
 				// or 'Player bound:' add the new socket
 				if (!socketAdded
-						&& (text.equals(Plugin.LORE_ITEM_SOCKET) || text.startsWith(Plugin.LORE_PLAYER_BOUND))) {
-					newLore.add(newLore.size(), Plugin.LORE_ITEM_SOCKET);
+						&& (text.equals(Settings.Cfg.LORE_ITEM_SOCKET.getString()) || text.startsWith(Settings.Cfg.LORE_PLAYER_BOUND.getString()))) {
+					newLore.add(newLore.size(), Settings.Cfg.LORE_ITEM_SOCKET.getString());
 					socketAdded = true;
 				}
 				// now add existing lore
@@ -781,7 +782,7 @@ public class ApocRPGCommand implements CommandExecutor {
 			// doesn't
 			// have any empty sockets, so add socket at end of lore list
 			if (!socketAdded) {
-				newLore.add(newLore.size(), Plugin.LORE_ITEM_SOCKET);
+				newLore.add(newLore.size(), Settings.Cfg.LORE_ITEM_SOCKET.getString());
 			}
 
 			meta.setLore(newLore);

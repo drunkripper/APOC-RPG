@@ -37,7 +37,7 @@ public class CombatEvents implements Listener {
 			Player playa = (Player) event.getDamager();
 			LivingEntity hitMe = (LivingEntity) event.getEntity();
 			HashMap<String, Integer> hershmerp;
-			for (ItemStack item : hitMe.getEquipment().getArmorContents()) { // TODO:
+			for (ItemStack item : hitMe.getEquipment().getArmorContents()) { 	// TODO:
 																				// Effects
 																				// that
 																				// happen
@@ -58,7 +58,7 @@ public class CombatEvents implements Listener {
 						&& ((hershmerp.get("Demons") - 1) * 2.5 + 10) < Plugin.Random.nextInt(100)) {
 					event.setCancelled(true);
 					if (hershmerp.containsKey("Warding") && !event.isCancelled())
-						event.setDamage(event.getDamage() * (0.9 - 0.025 * (hershmerp.get("Warding") - 1)));
+						event.setDamage(event.getDamage() * ((9/10) - (20/1000) * (hershmerp.get("Warding") - 1)));
 				}
 			}
 			if (playa.getItemInHand() != null) {
@@ -91,7 +91,7 @@ public class CombatEvents implements Listener {
 								bloodyNoses.put(hitMe, bloodyNoses.get(hitMe) + 1);
 							else
 								bloodyNoses.put(hitMe, 1);
-							hitMe.damage(0.5 + 0.3 * (e.getValue()) * (bloodyNoses.get(hitMe)));
+							hitMe.damage((1/2) + (3/10) * (e.getValue()) * (bloodyNoses.get(hitMe)));
 							break;
 						case "Blinding":
 							if (5 >= Plugin.Random.nextInt(100)) {
@@ -102,19 +102,19 @@ public class CombatEvents implements Listener {
 						case "Sacrifice":
 							if ((2.5 + (e.getValue() - 1) * 1.5) >= Plugin.Random.nextInt(100)) {
 								event.setDamage(event.getDamage() * 2);
-								playa.damage(5.0);
+								playa.damage(5);
 							}
 							break;
 						case "Force":
 							if (2.5 + (e.getValue() * .75) >= Plugin.Random.nextInt(100)){
-								event.setDamage(event.getDamage() * 1.5);
+								event.setDamage(event.getDamage()* (3/2));
 							}
 							break;
 						case "Venom":
 							hitMe.addPotionEffect(new PotionEffect(PotionEffectType.POISON, (int) ((e.getValue() - 1) * 1.5), 0));
 							break;
 						case "Ravaging":
-							event.setDamage(event.getDamage() * (1.1 + .025 * e.getValue()));
+							event.setDamage(event.getDamage() * ((11/10) + (25/1000) * e.getValue()));
 							break;
 						case "Decapitation":
 							if (event.getDamage() > ((Damageable) hitMe).getHealth()) {
@@ -156,7 +156,7 @@ public class CombatEvents implements Listener {
 							bloodyNoses.put(shotMe, bloodyNoses.get(shotMe) + 1);
 						else
 							bloodyNoses.put(shotMe, 1);
-						shotMe.damage(0.5 + 0.3 * (e.getValue()) * (bloodyNoses.get(shotMe)));
+						shotMe.damage((1/2) + (3/10) * (e.getValue()) * (bloodyNoses.get(shotMe)));
 
 						break;
 					case "Blinding":
@@ -168,7 +168,7 @@ public class CombatEvents implements Listener {
 					case "Sacrifice":
 						if ((2.5 + (e.getValue() - 1) * 1.5) >= Plugin.Random.nextInt(100)) {
 							event.setDamage(event.getDamage() * 2);
-							player.damage(5.0);
+							player.damage(5);
 						}
 						break;
 					}

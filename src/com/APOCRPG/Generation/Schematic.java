@@ -1,31 +1,25 @@
 package com.APOCRPG.Generation;
 
+import com.APOCRPG.Main.Plugin;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
+import org.bukkit.block.CreatureSpawner;
+import org.bukkit.entity.CreatureType;
+import org.jnbt.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-
-import com.APOCRPG.API.ItemAPI;
-import com.APOCRPG.Main.Plugin;
-import org.jnbt.ByteArrayTag;
-import org.jnbt.CompoundTag;
-import org.jnbt.NBTInputStream;
-import org.jnbt.ShortTag;
-import org.jnbt.StringTag;
-import org.jnbt.Tag;
-
-import org.bukkit.block.CreatureSpawner;
-import org.bukkit.entity.CreatureType;
-
 // imports above;
 @SuppressWarnings("deprecation")
 public class Schematic {
+
+	private static Plugin plugin;
 
 	private byte[] blocks;
 	private byte[] data;
@@ -125,7 +119,8 @@ public class Schematic {
 
 					Material m = Material.getMaterial(b);
 					if (m == Material.CHEST) {
-						ItemAPI.fillChest(block);
+						//Adding the chest's location to the list
+						plugin.dungeonChestLocations.add(block.getLocation());
 					} else if (m == Material.MOB_SPAWNER) {
 						CreatureSpawner Spawner = (CreatureSpawner) block.getState();
 						if (Plugin.Random.nextInt(100) <= 50) {

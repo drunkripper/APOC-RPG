@@ -50,14 +50,14 @@ public class CommandManager implements CommandExecutor{
 
             //If we don't find the command they were requesting for
             if (requestedCmd == null) {
-                sender.sendMessage(plugin.APOCRPG_ERROR + ChatColor.YELLOW + "Command not found");
+                sender.sendMessage(plugin.APOCRPG_ERROR_NO_COMMAND);
                 return true;
             }
 
             //If we do find it, we'll check for permissions
             if ((requestedCmd.getClass().getAnnotation(CommandInfo.class).op() && !sender.isOp()) ||
                (!sender.hasPermission(requestedCmd.getClass().getAnnotation(CommandInfo.class).permission()))) {
-                sender.sendMessage(plugin.APOCRPG_ERROR + ChatColor.RED + "Access Denied! Try adding sudo before the command.");
+                sender.sendMessage(plugin.APOCRPG_ERROR_NO_PERMISSION);
                 return true;
             }
 

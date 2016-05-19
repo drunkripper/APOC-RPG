@@ -1,14 +1,15 @@
 package com.APOCRPG.Events;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
+import com.APOCRPG.API.EffectAPI;
+import com.APOCRPG.API.GemAPI;
+import com.APOCRPG.API.ItemAPI;
+import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.Main.Settings;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -16,10 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.APOCRPG.API.EffectAPI;
-import com.APOCRPG.API.GemAPI;
-import com.APOCRPG.API.ItemAPI;
-import com.APOCRPG.Main.Plugin;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings("unused")
 public class SocketEvents implements Listener {
@@ -55,11 +55,11 @@ public class SocketEvents implements Listener {
 
 		// parse gem1 data
 		for (String s1 : gem1Lore) {
-			if (s1.startsWith(Plugin.LORE_GEM_OF)) {
+			if (s1.startsWith(Settings.Cfg.LORE_GEM_OF.getString())) {
 				try {
 					gem1Level = s1.substring(s1.lastIndexOf(" ") + 1);
 					// remove gem lore prefix and level
-					gem1Effect = s1.replace(Plugin.LORE_GEM_OF, "").replace(" " + gem1Level, "");
+					gem1Effect = s1.replace(Settings.Cfg.LORE_GEM_OF.getString(), "").replace(" " + gem1Level, "");
 					try {
 						gem1IntLvl = Integer.parseInt(gem1Level);
 					} catch (Exception e) {
@@ -83,11 +83,11 @@ public class SocketEvents implements Listener {
 
 		// parse gem2 data
 		for (String s2 : gem2Lore) {
-			if (s2.startsWith(Plugin.LORE_GEM_OF)) {
+			if (s2.startsWith(Settings.Cfg.LORE_GEM_OF.getString())) {
 				try {
 					gem2Level = s2.substring(s2.lastIndexOf(" ") + 1);
 					// remove gem lore prefix and level
-					gem2Effect = s2.replace(Plugin.LORE_GEM_OF, "").replace(" " + gem2Level, "");
+					gem2Effect = s2.replace(Settings.Cfg.LORE_GEM_OF.getString(), "").replace(" " + gem2Level, "");
 					try {
 						gem2IntLvl = Integer.parseInt(gem2Level);
 					} catch (Exception e) {
@@ -129,7 +129,7 @@ public class SocketEvents implements Listener {
 
 		if (item != null && !item.getData().equals(Material.AIR)
 				&& (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
-			if (item.getType().equals(Material.WRITTEN_BOOK) && Plugin.containsLoreText(itemLore, Plugin.LORE_TOME)) {
+			if (item.getType().equals(Material.WRITTEN_BOOK) && Plugin.containsLoreText(itemLore, Settings.Cfg.LORE_TOME.getString())) {
 				BookMeta bm = (BookMeta) item.getItemMeta();
 				if (bm == null || !bm.hasAuthor() || !bm.hasTitle() && bm.getTitle().contains("Identify Tome")) {
 					return;
@@ -142,7 +142,7 @@ public class SocketEvents implements Listener {
 					if (invItem != null && !invItem.getType().equals(Material.AIR)) {
 						ItemMeta invMeta = invItem.getItemMeta();
 						if (item != null && invMeta.getDisplayName() != null
-								&& invMeta.getDisplayName().equals(Plugin.LORE_UNKNOWN_ITEM)
+								&& invMeta.getDisplayName().equals(Settings.Cfg.LORE_UNKNOWN_ITEM.getString())
 								&& invMeta.getLore() == null) {
 							unidItem = invItem;
 						}
@@ -151,12 +151,12 @@ public class SocketEvents implements Listener {
 				if (unidItem != null && !unidItem.getType().equals(Material.AIR)) {
 					ItemMeta unidMeta = unidItem.getItemMeta();
 					if ((unidMeta != null && unidMeta.getDisplayName() != null)
-							&& (unidMeta.getDisplayName().equals(Plugin.LORE_UNKNOWN_ITEM)
+							&& (unidMeta.getDisplayName().equals(Settings.Cfg.LORE_UNKNOWN_ITEM.getString())
 									&& unidMeta.getLore() == null)) {
 						inv.remove(unidItem);
 						ItemStack clone = ItemAPI.diablofy(unidItem.clone(), Plugin.Random.nextInt(5));
 						clone.setDurability(invItem.getDurability());
-						Plugin.addLoreText(clone, Plugin.LORE_PLAYER_BOUND, player.getName());
+						Plugin.addLoreText(clone, Settings.Cfg.LORE_PLAYER_BOUND.getString(), player.getName());
 						player.setItemInHand(clone);
 						event.setUseItemInHand(Result.DENY);
 						event.setCancelled(true);
@@ -165,7 +165,7 @@ public class SocketEvents implements Listener {
 						return;
 					}
 				} else {
-					player.sendMessage(Plugin.APOCRPG_ERROR + "You have nothing to identify!");
+					player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You have nothing to identify!");
 					event.setUseItemInHand(Result.DENY);
 					event.setCancelled(true);
 					int slot = player.getInventory().getHeldItemSlot();
@@ -185,12 +185,12 @@ public class SocketEvents implements Listener {
 					if (gem != null && gem.hasItemMeta() && gem.getItemMeta().hasDisplayName()) {
 						gemName = gem.getItemMeta().getDisplayName();
 					}
-					if (gem != null && (gemName == null || !gemName.equals(Plugin.DISPLAY_NAME_GEM))) {
+					if (gem != null && (gemName == null || !gemName.equals(Settings.Cfg.DISPLAY_NAME_GEM.getString()))) {
 						gem = null;
 					}
 				}
 
-				if (item.getType().equals(Material.EMERALD) && Plugin.containsLoreText(itemLore, Plugin.LORE_GEM_OF)) {
+				if (item.getType().equals(Material.EMERALD) && Plugin.containsLoreText(itemLore, Settings.Cfg.LORE_GEM_OF.getString())) {
 					if (gem != null) {
 						// create new gem
 						ItemStack newGem = null;
@@ -202,7 +202,7 @@ public class SocketEvents implements Listener {
 						// check to see if the player double clicked on the same
 						// stack
 						if (itemSlot == gemSlot && itemAmt < 2) {
-							player.sendMessage(Plugin.APOCRPG_ERROR + "You can not attach a gem to itself!");
+							player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You can not attach a gem to itself!");
 						} else if (itemSlot == gemSlot && itemAmt >= 2) {
 							newGem = mergeGems(gem, item);
 							if (newGem != null) {
@@ -214,7 +214,7 @@ public class SocketEvents implements Listener {
 									inv.setItem(itemSlot, newGem);
 								}
 							} else {
-								player.sendMessage(Plugin.APOCRPG_ERROR + "You can not combine those gems.");
+								player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You can not combine those gems.");
 							}
 						} else {
 							newGem = mergeGems(gem, item);
@@ -222,7 +222,7 @@ public class SocketEvents implements Listener {
 								inv.setItem(itemSlot, newGem);
 								inv.setItem(gemSlot, null);
 							} else {
-								player.sendMessage(Plugin.APOCRPG_ERROR + "You can not combine those gems.");
+								player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "You can not combine those gems.");
 							}
 						}
 						player.updateInventory();
@@ -235,12 +235,12 @@ public class SocketEvents implements Listener {
 						player.sendMessage("Select the item with an empty Socket and right click.");
 					}
 				} else if (gem != null && itemLore != null
-						&& (Plugin.containsLoreText(itemLore, Plugin.LORE_ITEM_SOCKET)
-								|| Plugin.containsLoreText(itemLore, Plugin.LORE_GEM_OF))) {
+						&& (Plugin.containsLoreText(itemLore, Settings.Cfg.LORE_ITEM_SOCKET.getString())
+								|| Plugin.containsLoreText(itemLore, Settings.Cfg.LORE_GEM_OF.getString()))) {
 					boolean socketFound = false;
 
 					if (gem != null && gem.getType().equals(Material.EMERALD)
-							&& gem.getItemMeta().getDisplayName().equals(Plugin.DISPLAY_NAME_GEM)) {
+							&& gem.getItemMeta().getDisplayName().equals(Settings.Cfg.DISPLAY_NAME_GEM.getString())) {
 						// get gem lore information for effect, type, and level
 						String gemEffect = null;
 						String gemType = null;
@@ -254,8 +254,8 @@ public class SocketEvents implements Listener {
 						List<String> gemLore = (gemMeta != null && gemMeta.hasLore()) ? gemMeta.getLore()
 								: new ArrayList<String>();
 						for (String s : gemLore) {
-							if (s.startsWith(Plugin.LORE_GEM_OF)) {
-								gemEffect = s.substring(0, s.lastIndexOf(" ")).replaceAll(Plugin.LORE_GEM_OF, "");
+							if (s.startsWith(Settings.Cfg.LORE_GEM_OF.getString())) {
+								gemEffect = s.substring(0, s.lastIndexOf(" ")).replaceAll(Settings.Cfg.LORE_GEM_OF.getString(), "");
 								gemStrLvl = s.substring(s.lastIndexOf(" ") + 1);
 								gemIntLvl = Plugin.romanToInt(gemStrLvl);
 								gemType = EffectAPI.getEffectTypeFromName(gemEffect);
@@ -298,7 +298,7 @@ public class SocketEvents implements Listener {
 						}
 						if (typeFailure) {
 							// Type Failure -- Break Event
-							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
+							player.sendMessage(Settings.Cfg.APOCRPG_ERROR_SOCKET.getString());
 							event.setCancelled(true);
 							return;
 						}
@@ -306,7 +306,7 @@ public class SocketEvents implements Listener {
 							String s = itemLore.get(i);
 							// check to see if the item already has the same gem
 							// socketed
-							if (s.startsWith(Plugin.LORE_GEM_OF + gemEffect)) {
+							if (s.startsWith(Settings.Cfg.LORE_GEM_OF.getString() + gemEffect)) {
 								itemStrLvl = s.substring(s.lastIndexOf(" ") + 1);
 								itemIntLvl = Plugin.romanToInt(itemStrLvl);
 
@@ -317,17 +317,17 @@ public class SocketEvents implements Listener {
 								// wouldn't push the item over the max level
 								if (newLevel > 0 && newLevel <= 10) {
 									itemLore.remove(i);
-									itemLore.add(i, Plugin.LORE_GEM_OF + gemEffect + " " + Plugin.intToRoman(newLevel));
+									itemLore.add(i, Settings.Cfg.LORE_GEM_OF.getString() + gemEffect + " " + Plugin.intToRoman(newLevel));
 									socketFound = true;
 								} else {
-									player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
+									player.sendMessage(Settings.Cfg.APOCRPG_ERROR_SOCKET.getString());
 									event.setCancelled(true);
 									player.updateInventory();
 									return;
 								}
-							} else if (s.equals(Plugin.LORE_ITEM_SOCKET)) {
+							} else if (s.equals(Settings.Cfg.LORE_ITEM_SOCKET.getString())) {
 								itemLore.remove(i);
-								itemLore.add(i, Plugin.LORE_GEM_OF + gemEffect + " " + gemStrLvl);
+								itemLore.add(i, Settings.Cfg.LORE_GEM_OF.getString() + gemEffect + " " + gemStrLvl);
 								socketFound = true;
 							}
 						}
@@ -354,7 +354,7 @@ public class SocketEvents implements Listener {
 								// Add some defense
 								System.out.println();
 						} else {
-							player.sendMessage(Plugin.APOCRPG_ERROR_SOCKET);
+							player.sendMessage(Settings.Cfg.APOCRPG_ERROR_SOCKET.getString());
 							event.setCancelled(true);
 						}
 						SelectedSocket.remove(player);
@@ -371,12 +371,12 @@ public class SocketEvents implements Listener {
 						 * ), coal);
 						 */
 					} else {
-						player.sendMessage(Plugin.APOCRPG_ERROR + "No socket selected!");
+						player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "No socket selected!");
 					}
 					SelectedSocket.remove(player);
 					SelectedSlot.remove(player);
 				} else if (gem != null) {
-					player.sendMessage(Plugin.APOCRPG_ERROR + "Selected Item has no sockets available!");
+					player.sendMessage(Settings.Cfg.APOCRPG_ERROR.getString() + "Selected Item has no sockets available!");
 					SelectedSocket.remove(player);
 					SelectedSlot.remove(player);
 				}

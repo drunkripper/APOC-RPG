@@ -3,6 +3,7 @@ package com.APOCRPG.API;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.APOCRPG.Main.Settings;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -100,7 +101,7 @@ public class EffectAPI {
 		if (metas.size() > 0) {
 			for (ItemMeta Meta : metas) {
 				for (String lore : Meta.getLore()) {
-					if (!lore.startsWith(Plugin.LORE_GEM_OF))
+					if (!lore.startsWith(Settings.Cfg.LORE_GEM_OF.getString()))
 						continue;
 					String Effect = lore.split(" ")[2];
 					String levelString = lore.split(" ")[3];
