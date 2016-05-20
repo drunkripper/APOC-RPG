@@ -59,12 +59,11 @@ public class Database {
     private final String passwd = Settings.Cfg.DATABASE_PASSWD.getString();
 
     private String url = "jdbc:mysql://" + dbHost + ":" + dbPort + "/" + globalDatabase;
-    Connection conn;
 
     // Public methods
     public int getStat(Player p, PlayerStats ps) {
         try {
-            conn = DriverManager.getConnection(url, uname, passwd);
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
             PreparedStatement statement = conn.prepareStatement("SELECT ? FROM players WHERE UUID=?");
             statement.setString(1, ps.toString()); statement.setInt(2, Integer.valueOf(p.getUniqueId().toString()));
             ResultSet result = statement.executeQuery();
@@ -80,7 +79,7 @@ public class Database {
 
     public int getStat(Player p, ProfileStats ps) {
         try {
-            conn = DriverManager.getConnection(url, uname, passwd);
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
             PreparedStatement statement = conn.prepareStatement("SELECT value FROM profilestats WHERE UUID=? AND Stat=?");
             statement.setInt(1, Integer.valueOf(p.getUniqueId().toString())); statement.setString(2, ps.toString());
             ResultSet result = statement.executeQuery();
@@ -95,7 +94,7 @@ public class Database {
 
     public void setStat(Player p, PlayerStats ps, int value) {
         try {
-            conn = DriverManager.getConnection(url, uname, passwd);
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
             PreparedStatement statement = conn.prepareStatement("UPDATE players SET ?=? WHERE UUID=?;");
             statement.setString(1, ps.name()); statement.setInt(2, value); Integer.valueOf(p.getUniqueId().toString());
             statement.executeQuery();
@@ -108,7 +107,7 @@ public class Database {
 
     public void setStat(Player p, ProfileStats ps, int value) {
         try {
-            conn = DriverManager.getConnection(url, uname, passwd);
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
             PreparedStatement statement = conn.prepareStatement("UPDATE profilestats SET value=? WHERE UUID=? AND Stat=?;");
             statement.setInt(1, value); statement.setInt(2, Integer.valueOf(p.getUniqueId().toString())); statement.setString(2, ps.name());
             statement.executeQuery();
@@ -122,7 +121,7 @@ public class Database {
     public void addPlayer(Player p) {
         try {
             //Checking if player's already exists
-            conn = DriverManager.getConnection(url, uname, passwd);
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
             PreparedStatement statement = conn.prepareStatement("SELECT EXISTS(SELECT 1 FROM players WHERE UUID=?)");
             statement.setInt(1, Integer.valueOf(p.getUniqueId().toString()));
             ResultSet result = statement.executeQuery();
@@ -177,11 +176,11 @@ public class Database {
     }
 
     private boolean checkExistingDb() {
-        /*List<String> tables = null;
-        try {
-            conn = DriverManager.getConnection(url, uname, passwd);
+        List<String> tables = null;
+        /* try {
+            Connection conn = DriverManager.getConnection(url, uname, passwd);
 
-            //Checking for tables
+            //Getting all the tables
             ResultSet rs = conn.getMetaData().getTables(Settings.Cfg.DATABASE_NAME.getString(),
                                                         null, "%", null);
             while (rs.next()) {
@@ -192,7 +191,7 @@ public class Database {
         } catch (Exception e) {
             plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
             plugin.getLogger().warning(e.getMessage());
-        }*/
+        } */
         return false;
     }
 

@@ -13,7 +13,7 @@ import org.bukkit.event.entity.EntityShootBowEvent;
 import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.Main.Plugin;
 
-public class ProjectileEvents implements Listener {
+public class ProjectileEventsListener implements Listener {
 	public void onShoot(EntityShootBowEvent event) {
 		HashMap<String, Integer> effects = EffectAPI.getEffectsFromItem(event.getBow());
 		if (effects != null) {

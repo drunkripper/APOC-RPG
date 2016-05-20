@@ -21,14 +21,11 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.util.*;
 import java.util.logging.Logger;
-
-//import com.APOCRPG.Events.EntityEvents;
 
 public class Plugin extends JavaPlugin {
 
@@ -41,13 +38,15 @@ public class Plugin extends JavaPlugin {
 	private static boolean DEBUG;
 
 	//Listeners
-	public static PollingEventListener PollListener = new PollingEventListener();
-	public static ChunkEvents ChunkListener = new ChunkEvents();
-	public static PlayerEvents PlayerListener = new PlayerEvents();
-	public static CombatEvents CombatListener = new CombatEvents();
-	public static ProjectileEvents ProjectileListener = new ProjectileEvents();
+	public static PollingEventListener PollingEventListener = new PollingEventListener();
+	public static ChunkEventsListener ChunkEventsListener = new ChunkEventsListener();
+	public static PlayerEventsListener PlayerEventsListener = new PlayerEventsListener();
+	public static CombatEventsListener CombatEventsListener = new CombatEventsListener();
+	public static ProjectileEventsListener ProjectileEventsListener = new ProjectileEventsListener();
+	public static SocketEventsListener SocketEventsListener = new SocketEventsListener();
+
+	//Deprecated Listeners
 	public static SkillGet SkillListener = new SkillGet();
-	public static SocketEvents SocketListener = null;
 	public static InSkill SpendSkillListener = new InSkill();
 
 	//Lists, arrays, hash-maps
@@ -125,12 +124,12 @@ public class Plugin extends JavaPlugin {
 		}
 
 		//Registering all the event listeners
-		getServer().getPluginManager().registerEvents(ChunkListener, this);
-		getServer().getPluginManager().registerEvents(PlayerListener, this);
-		getServer().getPluginManager().registerEvents(CombatListener, this);
-		getServer().getPluginManager().registerEvents(SocketListener, this);
-		getServer().getPluginManager().registerEvents(PollListener, this);
-		getServer().getPluginManager().registerEvents(ProjectileListener, this);
+		getServer().getPluginManager().registerEvents(ChunkEventsListener, this);
+		getServer().getPluginManager().registerEvents(PlayerEventsListener, this);
+		getServer().getPluginManager().registerEvents(CombatEventsListener, this);
+		getServer().getPluginManager().registerEvents(SocketEventsListener, this);
+		getServer().getPluginManager().registerEvents(PollingEventListener, this);
+		getServer().getPluginManager().registerEvents(ProjectileEventsListener, this);
 		getServer().getPluginManager().registerEvents(SkillListener, this);
 		getServer().getPluginManager().registerEvents(SpendSkillListener, this);
 		//getCommand("apocrpg").setExecutor(new CommandManager());

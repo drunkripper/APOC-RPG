@@ -18,8 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.APOCRPG.API.EffectAPI;
-import com.APOCRPG.API.GemAPI;
-import com.APOCRPG.API.ItemAPI;
+import com.APOCRPG.Items.Gems;
+import com.APOCRPG.Items.Items;
 import com.APOCRPG.Main.Economy;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.SkillPoints.DBApi;
@@ -322,12 +322,12 @@ public class ApocRPGCommand implements CommandExecutor {
 											arg4 = "I";
 										}
 									}
-									_inventory.addItem(GemAPI.createGem(arg3, type, arg4));
+									_inventory.addItem(Gems.createGem(arg3, type, arg4));
 								}
 							} else { 
 								if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEM.getInt())) {
 									Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEM.getInt());
-									_inventory.addItem(GemAPI.createGem());
+									_inventory.addItem(Gems.createGem());
 								} else {
 									_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY.getString() + "You need $"
 											+ Economy.format(Settings.Cfg.COST_BUY_GEM.getInt()) + "!");
@@ -336,7 +336,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equalsIgnoreCase("item")) {
 							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt())) {
 								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt());
-								ItemStack item = ItemAPI.createItem();
+								ItemStack item = Items.createItem();
 								Plugin.addLoreText(item, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 								_inventory.addItem(item);
 							} else {
@@ -421,7 +421,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equalsIgnoreCase("tome")) {
 							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_TOME.getInt())) {
 								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_TOME.getInt());
-								_inventory.addItem(ItemAPI.createTome());
+								_inventory.addItem(Items.createTome());
 							} else {
 								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
 										+ Economy.format(Settings.Cfg.COST_BUY_TOME.getInt()) + "!");
@@ -429,7 +429,7 @@ public class ApocRPGCommand implements CommandExecutor {
 						} else if (arg2.equalsIgnoreCase("unknown")) {
 							if (Economy.hasMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt())) {
 								Economy.removeMoney(_player, Settings.Cfg.COST_BUY_GEAR.getInt());
-								ItemStack item = ItemAPI.createUnidentified();
+								ItemStack item = Items.createUnidentified();
 								_inventory.addItem(item);
 							} else {
 								_player.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_MONEY + "You need $"
@@ -542,7 +542,7 @@ public class ApocRPGCommand implements CommandExecutor {
 									String gemLevel = tmp.substring(tmp.lastIndexOf(' ')).trim();
 									String gemName = tmp.replace(Settings.Cfg.LORE_GEM_OF.getString(), "").replace(gemLevel, "").trim();
 									String gemType = EffectAPI.getEffectTypeFromName(gemName);
-									ItemStack gem = GemAPI.createGem(gemName, gemType, gemLevel);
+									ItemStack gem = Gems.createGem(gemName, gemType, gemLevel);
 									// give gem to player
 									_inventory.addItem(gem);
 									gemFound = true;
@@ -722,7 +722,7 @@ public class ApocRPGCommand implements CommandExecutor {
 								|| arg3.equals("3") || arg3.equals("4") || arg3.equals("5"))) {
 							tier = Integer.parseInt(arg3);
 						}
-						ItemStack item = ItemAPI.createItem(tier);
+						ItemStack item = Items.createItem(tier);
 						Plugin.addLoreText(item, Settings.Cfg.LORE_PLAYER_BOUND.getString(), _player.getName());
 						_inventory.addItem(item);
 					} else {

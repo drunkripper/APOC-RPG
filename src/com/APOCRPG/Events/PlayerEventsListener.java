@@ -4,8 +4,12 @@ import com.APOCRPG.API.Database;
 import com.APOCRPG.Entities.APlayer;
 import com.APOCRPG.Enums.PlayerStats;
 import com.APOCRPG.Enums.ProfileStats;
+import com.APOCRPG.Items.Items;
 import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.Main.Settings;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Entity;
@@ -20,22 +24,28 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public class PlayerEvents implements Listener {
+import static com.APOCRPG.Items.Items.createItem;
+
+public class PlayerEventsListener implements Listener {
 
     //List the negative potions here
+    //TODO: Fill it as you please
     private enum NegativeEffects{
         CONFUSION, HARM, HUNGER,POISON, SLOW_DIGGING, SLOW, WEAKNESS, WITHER
     }
 
     private Database db = new Database();
     public Plugin plugin;
+    public Random r = Plugin.Random;
 
     private List<String> BOSSES = plugin.getConfig().getStringList("Mobs.bosses");
 
@@ -107,7 +117,7 @@ public class PlayerEvents implements Listener {
 
                 //Now we are healing that poor sucker
                 //TODO: Not the best solution, under 100 points, you won't get healed at all
-                //TODO: Need to set up a system to store health in the player's class
+                //TODO: Need to set up a system to store health as float or something
                 if (p.getHealth()+getHealthPerPoint(p) >= p.getMaxHealth()) {
                     p.setHealth(p.getMaxHealth());
                 } else {
@@ -205,11 +215,78 @@ public class PlayerEvents implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
-        //Return if the opened block ain't a dungeon chest
+        //Return if the clicked block ain't a dungeon chest
         if (!(plugin.dungeonChestLocations.contains(e.getClickedBlock().getLocation()) &&
             (e.getClickedBlock() instanceof Chest || e.getClickedBlock() instanceof  DoubleChest))) return;
 
-        //TODO: Fill the chest accordingly
+        InventoryHolder block = (InventoryHolder) e.getClickedBlock();
+        APlayer p = (APlayer) e.getPlayer();
 
+        if (!Settings.Cfg.CHEST_FILL_RPG.getBoolean()) return;
+
+        Inventory inv = Bukkit.createInventory(null, block.getInventory().getSize(), "Dungeon Chest");
+        List<ItemStack> items = null;
+
+        int minItems = Settings.Cfg.CHEST_MIN_ITEMS.getInt();
+        int maxItems = Settings.Cfg.CHEST_MAX_ITEMS.getInt();
+        boolean doubleRarity = false;
+
+        //If the players luck hits, we either double the max items or the rarity
+        if (r.nextFloat() <= (float) (p.getStat(PlayerStats.LUCK)/100)) {
+            if (r.nextBoolean() == true) {
+                maxItems=(maxItems*2);
+            } else {
+                doubleRarity = true;
+            }
+        }
+        //Calculating the number of items that get generated
+        int randomNumberOfItems = r.nextInt(maxItems - minItems + 1) + minItems;
+
+        if (maxItems <= 0) return;
+
+        //Generating random items
+        for (int x=0; x<=randomNumberOfItems; x++) {
+            //Randomly pick item's material
+            ItemStack item = new ItemStack(Items.Materials[r.nextInt(Items.Materials.length)]);
+            //Getting a random tier
+            int tier = pickRandomTier();
+            //If luck skill hits upgrade tier
+            if (doubleRarity && tier < 5) tier++;
+            //Giving the item a name
+            //Item has 25% chance to be unidentified item
+            String itemName;
+            if (r.nextFloat() <= 0.25f) {
+                itemName = Settings.Cfg.DISPLAY_NAME_UNIDENTIFIED_ITEM.getString();
+            } else {
+                itemName = Settings.getRandomPrefix()+" "+Settings.getRandomSuffix()+item.getItemMeta().getDisplayName();
+            }
+            //Randomly pick socket count for the item
+            int socketCount = getRandomSocketCount();
+            //Not yet implemented
+
+            //Build the item
+            item = Items.diablofy(item, 0, tier);
+            ItemMeta itemMeta = item.getItemMeta();
+            itemMeta.setDisplayName(itemName);
+            item.setItemMeta(itemMeta);
+        }
+    }
+
+    private int pickRandomTier() {
+        double d = Math.random() * 100;
+        if ((d -= Settings.Cfg.TIER_COMMON_MAX_CHANCE.getDouble()) < 0) return 0;
+        if ((d -= Settings.Cfg.TIER_UNCOMMON_MAX_CHANCE.getDouble()) < 0) return 1;
+        if ((d -= Settings.Cfg.TIER_RARE_MAX_CHANCE.getDouble()) < 0) return 2;
+        if ((d -= Settings.Cfg.TIER_UNIQUE_MAX_CHANCE.getDouble()) < 0) return 3;
+        if ((d -= Settings.Cfg.TIER_SET_MAX_CHANCE.getDouble()) < 0) return 4;
+        if ((d -= Settings.Cfg.TIER_LEGENDARY_MAX_CHANCE.getDouble()) < 0) return 5;
+        return -1;
+    }
+
+    private int getRandomSocketCount() {
+        if (r.nextFloat() <= 0.10f) return 1;
+        if (r.nextFloat() <= 0.05f) return 2;
+        if (r.nextFloat() <= 0.01f) return 3;
+        return 0;
     }
 }

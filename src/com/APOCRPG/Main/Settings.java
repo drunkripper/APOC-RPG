@@ -102,7 +102,7 @@ public class Settings {
         TIER_COMMON_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-common")),
         TIER_COMMON_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-common")),
         TIER_COMMON_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-common")),
-        TIER_COMMON_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-common")),
+        TIER_COMMON_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-common")),
         TIER_COMMON_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-common")),
         TIER_COMMON_NAMING(getSettings().getBoolean("Tiers.name-random-common")),
         TIER_COMMON_NAMES_COLOR(getSettings().getString("Tiers.name-color-common")),
@@ -112,7 +112,7 @@ public class Settings {
         TIER_UNCOMMON_ENCHANTS_MIN(getSettings().getInt("Tiers.enchant-min-uncommon")),
         TIER_UNCOMMON_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-uncommon")),
         TIER_UNCOMMON_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-uncommon")),
-        TIER_UNCOMMON_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-uncommon")),
+        TIER_UNCOMMON_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-uncommon")),
         TIER_UNCOMMON_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-uncommon")),
         TIER_UNCOMMON_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-uncommon")),
         TIER_UNCOMMON_NAMING(getSettings().getBoolean("Tiers.name-random-uncommon")),
@@ -123,7 +123,7 @@ public class Settings {
         TIER_RARE_ENCHANTS_MIN(getSettings().getInt("Tiers.enchant-min-rare")),
         TIER_RARE_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-rare")),
         TIER_RARE_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-rare")),
-        TIER_RARE_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-rare")),
+        TIER_RARE_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-rare")),
         TIER_RARE_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-rare")),
         TIER_RARE_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-rare")),
         TIER_RARE_NAMING(getSettings().getBoolean("Tiers.name-random-rare")),
@@ -134,7 +134,7 @@ public class Settings {
         TIER_UNIQUE_ENCHANTS_MIN(getSettings().getInt("Tiers.enchant-min-unique")),
         TIER_UNIQUE_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-unique")),
         TIER_UNIQUE_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-unique")),
-        TIER_UNIQUE_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-unique")),
+        TIER_UNIQUE_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-unique")),
         TIER_UNIQUE_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-unique")),
         TIER_UNIQUE_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-unique")),
         TIER_UNIQUE_NAMING(getSettings().getBoolean("Tiers.name-random-unique")),
@@ -145,7 +145,7 @@ public class Settings {
         TIER_SET_ENCHANTS_MIN(getSettings().getInt("Tiers.enchant-min-set")),
         TIER_SET_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-set")),
         TIER_SET_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-set")),
-        TIER_SET_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-set")),
+        TIER_SET_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-set")),
         TIER_SET_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-set")),
         TIER_SET_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-set")),
         TIER_SET_NAMING(getSettings().getBoolean("Tiers.name-random-set")),
@@ -156,7 +156,7 @@ public class Settings {
         TIER_LEGENDARY_ENCHANTS_MIN(getSettings().getInt("Tiers.enchant-min-legendary")),
         TIER_LEGENDARY_ENCHANTS_MAX(getSettings().getInt("Tiers.enchant-max-legendary")),
         TIER_LEGENDARY_ENCHANTS_MAX_LVL(getSettings().getInt("Tiers.enchant-max-level-legendary")),
-        TIER_LEGENDARY_MAX_CHANCE(getSettings().getInt("Tiers.max-chance-legendary")),
+        TIER_LEGENDARY_MAX_CHANCE(getSettings().getDouble("Tiers.max-chance-legendary")),
         TIER_LEGENDARY_SOCKETS_ALLOW(getSettings().getBoolean("Tiers.allow-sockets-legendary")),
         TIER_LEGENDARY_SOCKETS_MAX(getSettings().getInt("Tiers.sockets-max-legendary")),
         TIER_LEGENDARY_NAMING(getSettings().getBoolean("Tiers.name-random-legendary")),
@@ -222,6 +222,8 @@ public class Settings {
         public boolean getBoolean() {return (boolean) obj;}
 
         public String getString() {return (String) obj;}
+
+        public Double getDouble() {return (Double) obj;}
     }
 
     private FileConfiguration Config = null;

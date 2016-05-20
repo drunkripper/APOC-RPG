@@ -1,38 +1,8 @@
 package com.APOCRPG.Events;
 
-import java.util.ArrayList;
-
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Chest;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
-import com.APOCRPG.API.EffectAPI;
-import com.APOCRPG.API.ItemAPI;
-import com.APOCRPG.Main.Plugin;
-
-//Being added to PollingEventListener.java for consistancy.
+//Being added to PollingEventListener.java for consistency.
 
 // Is anyone tackling this issue yet? I'm more than OK to -K
 
@@ -89,12 +59,6 @@ import com.APOCRPG.Main.Plugin;
 		// Bukkit.getServer().broadcastMessage(devent.getMessage());
 	}
 
-	/**
-	 * This method is used to prevent a player from taking inventory items owned
-	 * by another player
-	 * 
-	 * @param event
-	 */
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		// get player who did the action

@@ -19,7 +19,7 @@ import com.APOCRPG.API.EffectAPI;
 import com.APOCRPG.Main.Plugin;
 
 
-public class MiningEvents implements Listener {
+public class MiningEventsListener implements Listener {
 	Location loc = new Location(null, 0, 0, 0);
 	@EventHandler
 	public void onBlockBreak(BlockDamageEvent eve) {

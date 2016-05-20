@@ -160,12 +160,13 @@ Gear:
 
 Tiers:
     #What is maximum chance that an item would be of the tier (1-100%)?
-    max-chance-common: 100
-    max-chance-uncommon: 50
-    max-chance-rare: 25
-    max-chance-unique: 15
-    max-chance-set: 10
-    max-chance-legendary: 5
+    #These are int values, divide 100 between all of them
+    max-chance-common: 50
+    max-chance-uncommon: 25
+    max-chance-rare: 15
+    max-chance-unique: 7
+    max-chance-set: 2
+    max-chance-legendary: 1
     #What tier of gear should we allow enchantments on? (Random generation)
     enchant-allow-common: true
     enchant-allow-uncommon: true
