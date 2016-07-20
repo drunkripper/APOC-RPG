@@ -18,7 +18,6 @@ public abstract class APlayer implements Player {
        +100       +110        +121                  Needed Exp per level (every level it increases by 10%)
              +10%       +10%
 
-    Notes:
 
     Each new level starts with an odd number due the roof of the previous one is even.
 
