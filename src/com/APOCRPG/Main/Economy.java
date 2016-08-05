@@ -3,6 +3,11 @@ package com.APOCRPG.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import net.milkbowl.vault.Vault;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.EconomyResponse;
+import net.milkbowl.vault.permission.Permission;
+
 public class Economy {
 
 	private static net.milkbowl.vault.economy.Economy Economy = Plugin.instance.getServer().getServicesManager()
@@ -23,7 +28,7 @@ public class Economy {
 
 	@SuppressWarnings("deprecation")
 	public static void removeMoney(String Player, double amount) {
-		Economy.withdrawPlayer(Bukkit.getPlayer(Player), amount);
+		Economy.withdrawPlayer(Player, amount);
 	}
 
 	public static String format(double amount) {
@@ -36,7 +41,7 @@ public class Economy {
 
 	@SuppressWarnings("deprecation")
 	public static boolean hasMoney(String Player, double amount) {
-		return Economy.has(Bukkit.getPlayer(Player), amount);
+		return Economy.has(Player, amount);
 	}
 
 }
