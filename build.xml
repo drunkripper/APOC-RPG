@@ -1,0 +1,45 @@
+<project name="APOCRPG" default="dist" basedir=".">
+	<property name="pluginname" value="APOCRPG"/>
+	<property name="bukkit" location="lib/bukkit-1.7.10.jar"/>
+	<property name="craftbukkit" location="lib/craftbukkit-1.7.10.jar"/>
+	<property name="bungeecord" location="lib/BungeeCord.jar"/>
+	<property name="spigot" location="lib/spigot-1.7.10.jar"/>
+	<property name="vault" location="lib/vault.jar"/>
+	<property name="plugins" location="../../Spiller/Adventure/Minecraft/plugins/"/>
+
+	<property name="src" location="src"/>
+	<property name="bin" location="bin"/>
+	<property name="dist" location="dist"/>
+	
+	<target name="init">
+		<mkdir dir="${bin}"/>
+	</target>
+	
+	<target name="compile" depends="init">
+		<javac srcdir="${src}" destdir="${bin}" includeantruntime="false">
+			<classpath>
+				<pathelement path="${bukkit}"/>
+				<pathelement path="${craftbukkit}"/>
+				<pathelement path="${bungeecord}"/>
+				<pathelement path="${spigot}"/>
+				<pathelement path="${vault}"/>
+			</classpath>
+		</javac>
+	</target>
+	
+	<target name="dist" depends="compile">
+		<jar jarfile="${plugins}/${pluginname}.jar">
+			<fileset dir="${bin}"/>
+			<fileset file="plugin.yml"/>
+		</jar>
+	</target>
+	
+	<target name="deploy" depends="dist">
+		<copy file="${dist}/${pluginname}.jar" todir="${plugins}"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="${bin}"/>
+		<delete dir="${dist}"/>
+	</target>
+</project>
