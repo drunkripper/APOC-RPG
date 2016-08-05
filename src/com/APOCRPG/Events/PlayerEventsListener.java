@@ -43,11 +43,10 @@ public class PlayerEventsListener implements Listener {
         CONFUSION, HARM, HUNGER,POISON, SLOW_DIGGING, SLOW, WEAKNESS, WITHER
     }
 
-    private Database db = new Database();
-    public Plugin plugin;
-    public Random r = Plugin.Random;
+//    private Database db = new Database();
+//    public Random r = Plugin.Random;
 
-    private List<String> BOSSES = plugin.getConfig().getStringList("Mobs.bosses");
+    private List<String> BOSSES = Plugin.instance.getConfig().getStringList("Mobs.bosses");
 
     //Player kills a monster, a boss or another player
     @EventHandler
@@ -91,7 +90,7 @@ public class PlayerEventsListener implements Listener {
     //Creating armor and health recovery runnable for player
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        APlayer p = (APlayer) e.getPlayer();
+        final APlayer p = (APlayer) e.getPlayer();
         p.addToDatabase();
 
         //Recovery
@@ -128,7 +127,7 @@ public class PlayerEventsListener implements Listener {
             private int getHealthPerPoint(APlayer p) {
                 return (p.getStat(PlayerStats.RECOVERY)/100);
             }
-        }.runTaskTimer(plugin, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
+        }.runTaskTimer(Plugin.instance, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
 
         //Armor
         new BukkitRunnable() {
@@ -159,7 +158,7 @@ public class PlayerEventsListener implements Listener {
             private short getDurabilityPerPoint(APlayer p) {
                 return  (short) p.getStat(PlayerStats.RECOVERY);
             }
-        }.runTaskTimer(plugin, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
+        }.runTaskTimer(Plugin.instance, 0, 200); //Runs every 10 seconds (20 ticks multiplied by 10)
     }
 
     //Checking for players that engage in combat
@@ -215,8 +214,10 @@ public class PlayerEventsListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent e) {
+    	Random r = new Random();
+    	
         //Return if the clicked block ain't a dungeon chest
-        if (!(plugin.dungeonChestLocations.contains(e.getClickedBlock().getLocation()) &&
+        if (!(Plugin.dungeonChestLocations.contains(e.getClickedBlock().getLocation()) &&
             (e.getClickedBlock() instanceof Chest || e.getClickedBlock() instanceof  DoubleChest))) return;
 
         InventoryHolder block = (InventoryHolder) e.getClickedBlock();
@@ -260,9 +261,10 @@ public class PlayerEventsListener implements Listener {
             } else {
                 itemName = Settings.getRandomPrefix()+" "+Settings.getRandomSuffix()+item.getItemMeta().getDisplayName();
             }
+            
             //Randomly pick socket count for the item
-            int socketCount = getRandomSocketCount();
-            //Not yet implemented
+            // TODO: implement item socketing
+//            int socketCount = getRandomSocketCount();            
 
             //Build the item
             item = Items.diablofy(item, 0, tier);
@@ -282,11 +284,12 @@ public class PlayerEventsListener implements Listener {
         if ((d -= Settings.Cfg.TIER_LEGENDARY_MAX_CHANCE.getDouble()) < 0) return 5;
         return -1;
     }
-
-    private int getRandomSocketCount() {
-        if (r.nextFloat() <= 0.10f) return 1;
-        if (r.nextFloat() <= 0.05f) return 2;
-        if (r.nextFloat() <= 0.01f) return 3;
-        return 0;
-    }
+    
+    // TODO: implement item socketing
+//    private int getRandomSocketCount() {
+//        if (r.nextFloat() <= 0.10f) return 1;
+//        if (r.nextFloat() <= 0.05f) return 2;
+//        if (r.nextFloat() <= 0.01f) return 3;
+//        return 0;
+//    }
 }
