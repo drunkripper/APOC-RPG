@@ -203,7 +203,7 @@ public class Settings {
         MOBS_SPAWN_ENCHANTED(getSettings().getBoolean("Mobs.spawn-enchanted")),
         MOBS_SPAWN_MAX_ENCHANT_LEVEL(getSettings().getInt("Mobs.spawn-max-enchant-level")),
         MOBS_BONUS_HP_PCT(getSettings().getDouble("Mobs.bonus-hp-pct")),
-
+        
         //Dungeons
         DUNGEON_SPAWN_RATE(getSettings().getInt("Dungeons.dungeon-spawn-chance"));
 
