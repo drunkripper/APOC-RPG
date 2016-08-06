@@ -59,7 +59,7 @@ public class ApocRPGCommand implements CommandExecutor {
 			ArrayList<String> _handLore = (_handMeta != null && _handMeta.hasLore())
 					? (ArrayList<String>) _handMeta.getLore() : new ArrayList<String>();
 			
-			if (Command.getLabel().equalsIgnoreCase("apocrpg")) {
+			if (Command.getLabel().toUpperCase() == String.valueOf("APOCRPG")) {
 				// if no arguments, give the user the list of commands
 				if (args.length == 0) {
 					Sender.sendMessage(
@@ -104,34 +104,101 @@ public class ApocRPGCommand implements CommandExecutor {
 					// parse the first four (4) arguments. The first two arguments
 					// are command arguements, the third and fourth arguments
 					// are optional data
+					//This is not really needed BTW.
+					//But if you decide to keep this, ALWAYS, ALWAYS DO .ToUpperCase(). Otherwise turkish uses have problems because of there "i"
 					for (int i = 0; i < args.length; i++) {
-						if (i == 0)
-							arg1 = ((String) args[i]).toLowerCase();
-						else if (i == 1)
-							arg2 = ((String) args[i]).toLowerCase();
-						else if (i == 2)
-							arg3 = (String) args[i];
-						else if (i == 3)
-							arg4 = (String) args[i];
-					}
-	
-					if (arg1.equalsIgnoreCase("version")) {
-						// display Plugin version information
-						_player.sendMessage(CommandColor + "APOC RPG Plugin | Version " + Settings.Cfg.VERSION.getInt());
-						_player.sendMessage(CommandColor + "Programmed by the Apocalyptic Gaming Network");
-						_player.sendMessage(CommandColor + "http://apocgaming.org");
-						_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
-					} else if (arg1.equalsIgnoreCase("levelup")) {
-						if(arg2.equalsIgnoreCase("evasion")) {
-							DBApi.addAbility(_player, 1.0, "evasion");
-						} else if(arg2.equalsIgnoreCase("armor")) {
-							DBApi.addAbility(_player, 1.0, "armor");
-						}else if(arg2.equalsIgnoreCase("luck")) {
-							DBApi.addAbility(_player, 1.0, "luck");
-						}else if(arg2.equalsIgnoreCase("recovery")) {
-							DBApi.addAbility(_player, 1.0, "recovery");
+						switch(i){
+							case 0:
+								arg1 = String.valueOf(args[i].toUpperCase());
+								break;
+							case 1:
+								arg2 = String.valueOf(args[i].toUpperCase());
+								break;
+							case 2:
+								arg3 = String.valueOf(args[i]);
+								break;
+							case 3:
+								arg4 = String.valueOf(args[i]);
+								break;
+							default:
+								break;
+						
 						}
+						
+					
+					switch(arg1){
+						case "VERSION":
+							_player.sendMessage(CommandColor + "APOC RPG Plugin | Version " + Settings.Cfg.VERSION.getInt());
+							_player.sendMessage(CommandColor + "Programmed by the Apocalyptic Gaming Network");
+							_player.sendMessage(CommandColor + "http://apocgaming.org");
+							_player.sendMessage(CommandColor + "https://github.com/Zilacon/APOC-RPG");
+							break;
+						case "LEVELUP":
+							switch(arg2){
+								case "EVASION":
+									DBApi.addAbility(_player, 1.0, "evasion");
+									break;
+								case "ARMOR":
+									DBApi.addAbility(_player, 1.0, "armor");
+									break;
+								case "LUCK":
+									DBApi.addAbility(_player, 1.0, "luck");
+									break;
+								case "RECOVERY":
+									DBApi.addAbility(_player, 1.0, "recovery");
+									break;
+							}
+							break;
+						case "BUY":
+							if(args.length > 1){
+								switch(arg2.toUpperCase()){
+									case "ENCHANT":
+										//Put Enchant Things Here
+										break;
+									case "GEM":
+										//Put Gem Stuff Here
+										break;
+									case "ITEM":
+										//Put Item Stuff Here
+										break;
+									case "NAME":
+										//Put Name Stuff Here
+										break;
+									case "SOCKET":
+										//Put Socket Stuff Here
+										break;
+									case "TOME":
+										//Put Tome Stuff Here
+										break;
+									case "UNKNOWN":
+										//Put Unknown Stuff Here
+										break;
+									default:
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy " + DescColor + "             | Buy an enchanted item.");
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy enchant " + DescColor + "  | Buy an enchantment.");
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy gem" + DescColor + "         | Buy a socket gem.");
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy item " + DescColor + "        | Buy a random RPG item.");
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy name " + DescColor + "      | Buy a name for your item.");
+										_player.sendMessage(CommandColor + "/apocrpg buy socket " + DescColor
+												+ "    | Buy another socket for your item. Max allowed: "
+												+ Settings.Cfg.GEAR_SOCKETS_MAX_BUY.getInt());
+										_player.sendMessage(
+												CommandColor + "/apocrpg buy tome " + DescColor + "       | Buy an identity tome.");
+										break;
+								}
+							}
+							break;
+						case "2":
+							break;
+						default:
+							break;
 					}
+
 					// check for command permissions
 					// else if ( !_player.hasPermission("apocrpg."+arg1+((arg2 !=
 					// null && !arg2.trim().equals(""))?"."+arg2:""))){
@@ -139,6 +206,7 @@ public class ApocRPGCommand implements CommandExecutor {
 					// return true;
 					// }
 					// do buy routine
+					// You really should just do a switch(args[0].toUpperCase()).
 					else if (arg1.equalsIgnoreCase("buy")) {
 						// if additional
 						if (args.length > 1) {
