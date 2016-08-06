@@ -50,9 +50,9 @@ public class Database {
 // TODO: Needs a fallback methods when the remote database is unreachable
 // TODO: Deal with NoPlayerStat exception
 
-    private final Plugin plugin = new Plugin();
+	// Only need one instance of Plugin
+//    private final Plugin plugin = new Plugin();
     private final String globalDatabase = Settings.Cfg.DATABASE_NAME.getString(); //Global Database name for the plugin
-
     private final String dbHost = Settings.Cfg.DATABASE_HOST.getString();
     private final int dbPort = Settings.Cfg.DATABASE_PORT.getInt();
     private final String uname = Settings.Cfg.DATABASE_UNAME.getString();
@@ -70,9 +70,9 @@ public class Database {
             statement.close();
             conn.close();
             return result.getInt(0);
-        } catch (Exception e) {
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+        } catch (Exception e) {        	
+            Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+            Plugin.logger.warning(e.getMessage());
         }
         return -1;
     }
@@ -86,8 +86,8 @@ public class Database {
             statement.close(); conn.close();
             return result.getInt(0);
         } catch (Exception e) {
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+            Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+            Plugin.logger.warning(e.getMessage());
         }
         return -1;
     }
@@ -100,8 +100,8 @@ public class Database {
             statement.executeQuery();
             statement.close(); conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+        	Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+        	Plugin.logger.warning(e.getMessage());
         }
     }
 
@@ -113,8 +113,8 @@ public class Database {
             statement.executeQuery();
             statement.close(); conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+        	Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+        	Plugin.logger.warning(e.getMessage());
         }
     }
 
@@ -134,8 +134,8 @@ public class Database {
             statement.close();
             conn.close();
         } catch (Exception e) {
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+        	Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+        	Plugin.logger.warning(e.getMessage());
         }
     }
 
@@ -160,8 +160,8 @@ public class Database {
             conn.close();
             return result;
         } catch(Exception e){
-            plugin.getLogger().warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
-            plugin.getLogger().warning(e.getMessage());
+        	Plugin.logger.warning(Settings.Cfg.APOCRPG_ERROR_DATABASE_CONNECTION.getString());
+        	Plugin.logger.warning(e.getMessage());
         }
         return null;
     }

@@ -12,12 +12,11 @@ import com.APOCRPG.Main.Plugin;
 
 public class DBApi {
 	
-	static Plugin pl = new Plugin();
-    public static void executeQuery(String query){
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+	public static void executeQuery(String query){
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -37,10 +36,10 @@ public class DBApi {
 
     
     public static boolean checkPlayerExist(Player p) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -64,10 +63,10 @@ public class DBApi {
     }
     
     public static void addXp(Player p, double amt) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -92,10 +91,10 @@ public class DBApi {
     }
     
     public static void addLog(String mob, String player, Timestamp ts) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -117,10 +116,10 @@ public class DBApi {
     }
     
     public static String grabData(String tn, String pname, String fld) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -140,10 +139,10 @@ public class DBApi {
     }
     
     public static void addSkillp(Player p, double amt) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";
@@ -168,10 +167,10 @@ public class DBApi {
     }
     
     public static void addAbility(Player p, double amt, String ability) {
-    	String databaseHost = pl.getConfig().getString("server_ip");
-    	int port = pl.getConfig().getInt("server_port");
-    	String username = pl.getConfig().getString("server_user");
-    	String password = pl.getConfig().getString("server_password");
+    	String databaseHost = Plugin.instance.getConfig().getString("server_ip");
+    	int port = Plugin.instance.getConfig().getInt("server_port");
+    	String username = Plugin.instance.getConfig().getString("server_user");
+    	String password = Plugin.instance.getConfig().getString("server_password");
     	
         Connection conn;
         String url = "jdbc:mysql://" + databaseHost + ":" + port + "/Skill";

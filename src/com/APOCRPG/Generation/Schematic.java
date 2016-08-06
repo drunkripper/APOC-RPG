@@ -19,8 +19,6 @@ import java.util.zip.GZIPInputStream;
 @SuppressWarnings("deprecation")
 public class Schematic {
 
-	private static Plugin plugin;
-
 	private byte[] blocks;
 	private byte[] data;
 	private short width;
@@ -120,7 +118,9 @@ public class Schematic {
 					Material m = Material.getMaterial(b);
 					if (m == Material.CHEST) {
 						//Adding the chest's location to the list
-						plugin.dungeonChestLocations.add(block.getLocation());
+						
+						// No need to instantiate classes for static access - use its static members
+						Plugin.dungeonChestLocations.add(block.getLocation());
 					} else if (m == Material.MOB_SPAWNER) {
 						CreatureSpawner Spawner = (CreatureSpawner) block.getState();
 						if (Plugin.Random.nextInt(100) <= 50) {

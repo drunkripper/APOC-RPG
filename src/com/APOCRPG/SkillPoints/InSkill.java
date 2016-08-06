@@ -52,11 +52,11 @@ public class InSkill implements Listener {
 	@EventHandler
 	public void onEd(EntityDamageEvent e) {
 		if (e.getEntity() instanceof Player) {
-			Player p = (Player) e.getEntity();
-			Plugin plugin = new Plugin();
+			final Player p = (Player) e.getEntity();
+//			Plugin plugin = new Plugin();
 			//Recovery
 			if(Double.parseDouble(DBApi.grabData("Skill", p.getName(), "recovery")) != 0.0) {
-				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable(){
+				Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Plugin.instance, new Runnable(){
 					public void run() {
 						while(p.getHealth() != p.getMaxHealth()) {
 							long t = System.currentTimeMillis();
@@ -78,12 +78,12 @@ public class InSkill implements Listener {
 			//Armor
 			if (p.getInventory().getArmorContents() != null) {
 				ItemStack[] aCts = p.getInventory().getArmorContents();
-				ItemStack head = aCts[0];
-				ItemStack chest = aCts[1];
-				ItemStack leg = aCts[2];
-				ItemStack booty = aCts[3];
+				final ItemStack head = aCts[0];
+				final ItemStack chest = aCts[1];
+				final ItemStack leg = aCts[2];
+				final ItemStack booty = aCts[3];
 				if(Double.parseDouble(DBApi.grabData("Skill", p.getName(), "armor")) != 0.0) {
-					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+					Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Plugin.instance, new Runnable() {
 						public void run() {
 							long t = System.currentTimeMillis();
 							long end = t + 10000;

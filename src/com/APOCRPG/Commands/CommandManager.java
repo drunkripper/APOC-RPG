@@ -1,6 +1,8 @@
 package com.APOCRPG.Commands;
 
 import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.Main.Settings;
+
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -13,7 +15,6 @@ import java.util.Collections;
 public class CommandManager implements CommandExecutor{
 
     private ArrayList<ApocCommand> cmds;
-    private Plugin plugin;
 
     //Add your command classes here, follow the example
     public CommandManager() {
@@ -50,14 +51,14 @@ public class CommandManager implements CommandExecutor{
 
             //If we don't find the command they were requesting for
             if (requestedCmd == null) {
-                sender.sendMessage(plugin.APOCRPG_ERROR_NO_COMMAND);
+                sender.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_COMMAND.toString());
                 return true;
             }
 
             //If we do find it, we'll check for permissions
             if ((requestedCmd.getClass().getAnnotation(CommandInfo.class).op() && !sender.isOp()) ||
                (!sender.hasPermission(requestedCmd.getClass().getAnnotation(CommandInfo.class).permission()))) {
-                sender.sendMessage(plugin.APOCRPG_ERROR_NO_PERMISSION);
+                sender.sendMessage(Settings.Cfg.APOCRPG_ERROR_NO_PERMISSION.toString());
                 return true;
             }
 

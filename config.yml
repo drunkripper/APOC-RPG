@@ -140,7 +140,16 @@ Mobs:
     disable-mob-drop-gear-on-world:
      - example
     bosses:
-     -
+        - "Yorgle the Yellow Dragon"
+        - "Rhindle the Kingslayer"
+        - "Grundle the Easy Dragon"
+        - "Netherbeast"
+        - "Displacer Xorn"
+        - "Karnoth, Scourge of Dimensions"
+        - "Magmon"
+        - "Lavos"
+        - "CitiMartWarnerCorp, Inc."
+        - "Picky"
 
 Gear:
     #Set this to false to disable custom naming, sets, socketing, random enchanting.

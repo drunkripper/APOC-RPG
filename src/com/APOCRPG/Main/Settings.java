@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Settings {
-
+	
     public enum Cfg {
 
         //Scrap
@@ -203,7 +203,7 @@ public class Settings {
         MOBS_SPAWN_ENCHANTED(getSettings().getBoolean("Mobs.spawn-enchanted")),
         MOBS_SPAWN_MAX_ENCHANT_LEVEL(getSettings().getInt("Mobs.spawn-max-enchant-level")),
         MOBS_BONUS_HP_PCT(getSettings().getDouble("Mobs.bonus-hp-pct")),
-
+        
         //Dungeons
         DUNGEON_SPAWN_RATE(getSettings().getInt("Dungeons.dungeon-spawn-chance"));
 
@@ -218,26 +218,28 @@ public class Settings {
         }
 
         public int getInt() {return (int) obj;}
-
+        
         public boolean getBoolean() {return (boolean) obj;}
-
+        
         public String getString() {return (String) obj;}
-
+        
         public Double getDouble() {return (Double) obj;}
     }
-
+    
     private FileConfiguration Config = null;
     private static List<String> Prefixes = new ArrayList<>();
     private static List<String> Suffixes = new ArrayList<>();
     private static List<String> Sets = new ArrayList<>();
     private static List<String> DisabledWorlds = new ArrayList<>();
+    private static List<String> MOBBosses = new ArrayList<>();
 
     public Settings() {
-        this.Config = new Plugin().getConfig();
+        this.Config = Plugin.instance.getConfig();
         Prefixes = Config.getStringList("RPG-Prefix");
         Suffixes = Config.getStringList("RPG-Suffix");
-        Sets = Config.getStringList("RPG-Set");
+        Sets = Config.getStringList("RPG-Set");        
         DisabledWorlds = Config.getStringList("Dungeons.disable-dungeons-on-world");
+        MOBBosses = Config.getStringList("Mobs.bosses");
     }
 
     private boolean getBoolean(String key) {

@@ -1,6 +1,5 @@
 package com.APOCRPG.Enums;
 
-import com.APOCRPG.Main.Plugin;
 import com.APOCRPG.Main.Settings;
 
 import java.io.File;

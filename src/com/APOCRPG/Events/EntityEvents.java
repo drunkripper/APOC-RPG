@@ -1,13 +1,33 @@
 package com.APOCRPG.Events;
 
+import java.util.ArrayList;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.inventory.ItemStack;
+
+import com.APOCRPG.Items.Items;
+import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.Main.Settings;
 
 //Being added to PollingEventListener.java for consistency.
 
 // Is anyone tackling this issue yet? I'm more than OK to -K
 
-//@SuppressWarnings("unused")
-//public class EntityEvents implements Listener {
+@SuppressWarnings("unused")
+public class EntityEvents implements Listener {
 //	@EventHandler
 //	public void onBlockBreak(BlockDamageEvent eve) {
 //		if (EffectAPI.getEffectsFromItem(eve.getPlayer().getItemInHand()).containsKey("Fortune")) {
@@ -29,15 +49,15 @@ import org.bukkit.event.EventHandler;
 			for (int i = 0; i < Amount; i++) {
 				int Gear = Plugin.Random.nextInt(5);
 				if (Gear == 0) {
-					Entity.getEquipment().setItemInHand(ItemAPI.createArmor(4));
+					Entity.getEquipment().setItemInHand(Items.createArmor(4));
 				} else if (Gear == 1) {
-					Entity.getEquipment().setHelmet(ItemAPI.createArmor(0));
+					Entity.getEquipment().setHelmet(Items.createArmor(0));
 				} else if (Gear == 2) {
-					Entity.getEquipment().setChestplate(ItemAPI.createArmor(1));
+					Entity.getEquipment().setChestplate(Items.createArmor(1));
 				} else if (Gear == 3) {
-					Entity.getEquipment().setLeggings(ItemAPI.createArmor(2));
+					Entity.getEquipment().setLeggings(Items.createArmor(2));
 				} else if (Gear == 4) {
-					Entity.getEquipment().setBoots(ItemAPI.createArmor(3));
+					Entity.getEquipment().setBoots(Items.createArmor(3));
 				}
 			}
 		}
@@ -68,12 +88,12 @@ import org.bukkit.event.EventHandler;
 		// get item
 		ItemStack item = event.getCurrentItem();
 		// get lore containing "Player bound:"
-		ArrayList<String> boundPlayers = (ArrayList<String>) Plugin.getLoreContaining(item, Plugin.LORE_PLAYER_BOUND);
+		ArrayList<String> boundPlayers = (ArrayList<String>) Plugin.getLoreContaining(item, Settings.Cfg.LORE_PLAYER_BOUND.toString());
 		// iterate through lore to make sure that the item belongs to the player
 		for (String bp : boundPlayers) {
-			if (!bp.replace(Plugin.LORE_PLAYER_BOUND + " ", "").equals(po.getName())) {
+			if (!bp.replace(Settings.Cfg.LORE_PLAYER_BOUND.toString() + " ", "").equals(po.getName())) {
 				// item belongs to another player
-				po.sendMessage(Plugin.APOCRPG_ERROR + "This item does not belong to you!");
+				po.sendMessage(Settings.Cfg.APOCRPG_ERROR.toString() + "This item does not belong to you!");
 				event.setCancelled(true);
 				return;
 			}
@@ -188,7 +208,7 @@ import org.bukkit.event.EventHandler;
 			// get player name
 			String playerName = player.getName();
 			// create lore string as it would be if the player owns the item
-			String loreString = Plugin.LORE_PLAYER_BOUND + " " + playerName;
+			String loreString = Settings.Cfg.LORE_PLAYER_BOUND.toString() + " " + playerName;
 			// default lore array list
 			ArrayList<String> lore = (ArrayList<String>) item.getItemMeta().getLore();
 			// iterate through lore
@@ -196,7 +216,7 @@ import org.bukkit.event.EventHandler;
 				// if lore starts with "Player bound" but does not equal
 				// player's
 				// lore string, this item is owned by another player.
-				if (s.startsWith(Plugin.LORE_PLAYER_BOUND) && !s.equals(loreString)) {
+				if (s.startsWith(Settings.Cfg.LORE_PLAYER_BOUND.toString()) && !s.equals(loreString)) {
 					// cancel event as item is owned by another player
 					event.setCancelled(true);
 				}

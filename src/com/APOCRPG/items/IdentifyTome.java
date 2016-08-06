@@ -9,7 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 
-import com.APOCRPG.Main.Plugin;
+import com.APOCRPG.Main.Settings;
 
 /**
  * @author whiteknave / deathmarine
@@ -21,8 +21,8 @@ public class IdentifyTome extends ItemStack {
 	public IdentifyTome() {
 		super(Material.WRITTEN_BOOK);
 		BookMeta meta = (BookMeta) this.getItemMeta();
-		meta.setTitle(Plugin.DISPLAY_NAME_TOME);
-		meta.setDisplayName(Plugin.DISPLAY_NAME_TOME);
+		meta.setTitle(Settings.Cfg.DISPLAY_NAME_TOME.toString());
+		meta.setDisplayName(Settings.Cfg.DISPLAY_NAME_TOME.toString());
 		String author = UUID.randomUUID().toString();
 		if (author.length() > 16)
 			author = author.substring(0, 15);

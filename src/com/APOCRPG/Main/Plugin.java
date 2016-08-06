@@ -27,42 +27,57 @@ import java.sql.ResultSet;
 import java.util.*;
 import java.util.logging.Logger;
 
-public class Plugin extends JavaPlugin {
+public final class Plugin extends JavaPlugin {
 
 	//General
 	public static Random Random = new Random();
-	public static Plugin instance = null;
-	public static Logger logger = null;
+	public static Plugin instance;
+	public static Logger logger;
 
 	//Config
 	private static boolean DEBUG;
 
 	//Listeners
-	public static PollingEventListener PollingEventListener = new PollingEventListener();
-	public static ChunkEventsListener ChunkEventsListener = new ChunkEventsListener();
-	public static PlayerEventsListener PlayerEventsListener = new PlayerEventsListener();
-	public static CombatEventsListener CombatEventsListener = new CombatEventsListener();
-	public static ProjectileEventsListener ProjectileEventsListener = new ProjectileEventsListener();
-	public static SocketEventsListener SocketEventsListener = new SocketEventsListener();
+	public static PollingEventListener PollingEventListener;
+	public static ChunkEventsListener ChunkEventsListener;
+	public static PlayerEventsListener PlayerEventsListener;
+	public static CombatEventsListener CombatEventsListener;
+	public static ProjectileEventsListener ProjectileEventsListener;
+	public static SocketEventsListener SocketEventsListener;
 
-	//Deprecated Listeners
-	public static SkillGet SkillListener = new SkillGet();
-	public static InSkill SpendSkillListener = new InSkill();
-
+	// Deprecated Listeners
+	public static SkillGet SkillListener;
+	public static InSkill SpendSkillListener;
+	
 	//Lists, arrays, hash-maps
 	public static Map<APlayer, Integer> playersInCombat = new HashMap<>();
 	public static SortedMap<Integer, String> chestItems = new TreeMap<>();
 	public static List<Location> dungeonChestLocations;
 
-
+	public Plugin getInstance() {
+      return (Plugin) getServer().getPluginManager().getPlugin("APOCRPG");
+    }
+	
 	public void onEnable() {
-
-		instance = this;
+		// Initialize global statics and core event listeners
+		debug("Starting APOC-RPG");
+		
+		instance = getInstance();
 		logger = getLogger();
 		DEBUG = Settings.Cfg.DEBUG.getBoolean();
+		
+		// TODO: There's got to be a cleaner way to register these listeners...
+		PollingEventListener = new PollingEventListener();
+		ChunkEventsListener = new ChunkEventsListener();
+		PlayerEventsListener = new PlayerEventsListener();
+		CombatEventsListener = new CombatEventsListener();
+		ProjectileEventsListener = new ProjectileEventsListener();
+		SocketEventsListener = new SocketEventsListener();		
 
-		debug("Starting APOC-RPG");
-
+		// Deprecated Listeners
+		SkillListener = new SkillGet();
+		SpendSkillListener = new InSkill();
+		
 		debug("Initializing database checks"); //TODO
 		Database db = new Database();
 		db.initSetup();
@@ -83,7 +98,7 @@ public class Plugin extends JavaPlugin {
 		//Custom polling event
 		this.getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 			public void run() {
-				Player[] ps = instance.getServer().getOnlinePlayers();
+				Collection<? extends Player> ps = instance.getServer().getOnlinePlayers();
 				for (Player p : ps) {
 					EffectPollingEvent event = new EffectPollingEvent(p);
 					instance.getServer().getPluginManager().callEvent(event);
@@ -112,15 +127,20 @@ public class Plugin extends JavaPlugin {
 		//If there's different chest types, we'll start using custom block and material classes
 		FileConfiguration dungeonChests = YamlConfiguration.loadConfiguration(Files.DungeonChestLocations.getValue());
 		List<String> tempLocations = dungeonChests.getStringList("Locations");
-		for (int x = 0; x <= tempLocations.size(); x++) {
-			String[] arg = tempLocations.get(x).split(","); //<-- TODO: need to confirm that if it works
-			double[] parsed = new double[3];
-			for (int a = 0; a < 3; a++) {
-				parsed[a] = Double.parseDouble(arg[a+1]);
+		
+		// Can't process zero-length lists
+		if(tempLocations.size() > 0)
+		{
+			for (int x = 0; x <= tempLocations.size(); x++) {
+				String[] arg = tempLocations.get(x).split(","); //<-- TODO: need to confirm that if it works
+				double[] parsed = new double[3];
+				for (int a = 0; a < 3; a++) {
+					parsed[a] = Double.parseDouble(arg[a+1]);
+				}
+	
+				Location location = new Location (Bukkit.getWorld(arg[0]), parsed[0], parsed[1], parsed[2]);
+				dungeonChestLocations.add(location);
 			}
-
-			Location location = new Location (Bukkit.getWorld(arg[0]), parsed[0], parsed[1], parsed[2]);
-			dungeonChestLocations.add(location);
 		}
 
 		//Registering all the event listeners
